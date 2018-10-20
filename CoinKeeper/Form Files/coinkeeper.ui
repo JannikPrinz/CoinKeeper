@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CoinKeeperClass</class>
+ <widget class="QMainWindow" name="CoinKeeperClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>726</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CoinKeeper</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QWidget" name="widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QTableWidget" name="tableAccounts">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
+         </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>500</number>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <column>
+          <property name="text">
+           <string>Konto</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Wert</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_2" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QPushButton" name="buttonAddAccount">
+            <property name="minimumSize">
+             <size>
+              <width>181</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Konto hinzufügen</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonModifyAccount">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Konto ändern</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonDeleteAccount">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Konto löschen</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>99</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_3" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="labelDate">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>02.04.2015</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_7" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="labelTime">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>System</family>
+                 <pointsize>16</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>15:22:33</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>143</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="widget_6" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>933</width>
+        <height>338</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QWidget" name="widget_5" native="true">
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="2">
+           <widget class="QSpinBox" name="spinBoxYear">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="minimum">
+             <number>1000</number>
+            </property>
+            <property name="maximum">
+             <number>9999</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QLineEdit" name="txtBalance">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>3.789.100,63€</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QComboBox" name="comboBoxMonth">
+            <property name="minimumSize">
+             <size>
+              <width>120</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>Alle Monate</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Januar</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Februar</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>März</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>April</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Mai</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Juni</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Juli</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>August</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>September</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Oktober</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>November</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Dezember</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QComboBox" name="comboBoxAccount">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>Alle Konten</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="5">
+           <widget class="QLabel" name="labelBalance">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>12</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Bilanz:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="7">
+           <widget class="QTableWidget" name="tableMonthOverview">
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::SingleSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Datum</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Kategorie</string>
+             </property>
+             <property name="foreground">
+              <brush brushstyle="SolidPattern">
+               <color alpha="255">
+                <red>0</red>
+                <green>0</green>
+                <blue>0</blue>
+               </color>
+              </brush>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Beschreibung</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Wert</string>
+             </property>
+             <property name="font">
+              <font>
+               <kerning>true</kerning>
+              </font>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>11</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Jahr:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_4" native="true">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QPushButton" name="buttonAddTransaction">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Transaktion hinzufügen</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonChangeTransaction">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Eintrag ändern</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonDeleteTransaction">
+            <property name="minimumSize">
+             <size>
+              <width>181</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Eintrag löschen</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>324</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonManageStandingOrders">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Daueraufträge verwalten</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonManageLabels">
+            <property name="minimumSize">
+             <size>
+              <width>181</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Kategorien verwalten</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonChangeProfile">
+            <property name="minimumSize">
+             <size>
+              <width>181</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Profil wechseln</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuDatei">
+    <property name="title">
+     <string>Datei</string>
+    </property>
+    <addaction name="actionBeenden"/>
+   </widget>
+   <widget class="QMenu" name="menuEinstellungen">
+    <property name="title">
+     <string>Optionen</string>
+    </property>
+    <addaction name="actionEinstellungen"/>
+   </widget>
+   <addaction name="menuDatei"/>
+   <addaction name="menuEinstellungen"/>
+  </widget>
+  <action name="actionBeenden">
+   <property name="text">
+    <string>Beenden</string>
+   </property>
+  </action>
+  <action name="actionEinstellungen">
+   <property name="text">
+    <string>Einstellungen</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../coinkeeper.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionBeenden</sender>
+   <signal>triggered()</signal>
+   <receiver>CoinKeeperClass</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>539</x>
+     <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'managestandingorders.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,9 +10,7 @@
 #define UI_MANAGESTANDINGORDERS_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
@@ -130,23 +128,23 @@ public:
 
     void retranslateUi(QDialog *ManageStandingOrders)
     {
-        ManageStandingOrders->setWindowTitle(QApplication::translate("ManageStandingOrders", "Dauerauftr\303\244ge verwalten", Q_NULLPTR));
+        ManageStandingOrders->setWindowTitle(QApplication::translate("ManageStandingOrders", "Dauerauftr\303\244ge verwalten", nullptr));
         QTableWidgetItem *___qtablewidgetitem = tableStandingOrders->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("ManageStandingOrders", "Konto", Q_NULLPTR));
+        ___qtablewidgetitem->setText(QApplication::translate("ManageStandingOrders", "Konto", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableStandingOrders->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("ManageStandingOrders", "Typ", Q_NULLPTR));
+        ___qtablewidgetitem1->setText(QApplication::translate("ManageStandingOrders", "Typ", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = tableStandingOrders->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("ManageStandingOrders", "Wert", Q_NULLPTR));
+        ___qtablewidgetitem2->setText(QApplication::translate("ManageStandingOrders", "Wert", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = tableStandingOrders->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QApplication::translate("ManageStandingOrders", "N\303\244chste Ausf\303\274hrung", Q_NULLPTR));
+        ___qtablewidgetitem3->setText(QApplication::translate("ManageStandingOrders", "N\303\244chste Ausf\303\274hrung", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = tableStandingOrders->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QApplication::translate("ManageStandingOrders", "Kategorie", Q_NULLPTR));
+        ___qtablewidgetitem4->setText(QApplication::translate("ManageStandingOrders", "Kategorie", nullptr));
         QTableWidgetItem *___qtablewidgetitem5 = tableStandingOrders->horizontalHeaderItem(5);
-        ___qtablewidgetitem5->setText(QApplication::translate("ManageStandingOrders", "Beschreibung", Q_NULLPTR));
-        buttonAddOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag hinzuf\303\274gen", Q_NULLPTR));
-        buttonChangeOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag \303\244ndern", Q_NULLPTR));
-        buttonDeleteOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag l\303\266schen", Q_NULLPTR));
-        buttonBack->setText(QApplication::translate("ManageStandingOrders", "Zur\303\274ck", Q_NULLPTR));
+        ___qtablewidgetitem5->setText(QApplication::translate("ManageStandingOrders", "Beschreibung", nullptr));
+        buttonAddOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag hinzuf\303\274gen", nullptr));
+        buttonChangeOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag \303\244ndern", nullptr));
+        buttonDeleteOrder->setText(QApplication::translate("ManageStandingOrders", "Dauerauftrag l\303\266schen", nullptr));
+        buttonBack->setText(QApplication::translate("ManageStandingOrders", "Zur\303\274ck", nullptr));
     } // retranslateUi
 
 };

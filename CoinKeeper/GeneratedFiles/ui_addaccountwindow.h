@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'addaccountwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,12 +10,9 @@
 #define UI_ADDACCOUNTWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
@@ -204,16 +201,16 @@ public:
 
     void retranslateUi(QDialog *AddAccountWindow)
     {
-        AddAccountWindow->setWindowTitle(QApplication::translate("AddAccountWindow", "Konto hinzuf\303\274gen", Q_NULLPTR));
-        labelNameOfAccount->setText(QApplication::translate("AddAccountWindow", "Name des Kontos:", Q_NULLPTR));
-        labelStartBalance->setText(QApplication::translate("AddAccountWindow", "Startwert:", Q_NULLPTR));
+        AddAccountWindow->setWindowTitle(QApplication::translate("AddAccountWindow", "Konto hinzuf\303\274gen", nullptr));
+        labelNameOfAccount->setText(QApplication::translate("AddAccountWindow", "Name des Kontos:", nullptr));
+        labelStartBalance->setText(QApplication::translate("AddAccountWindow", "Startwert:", nullptr));
         txtNameOfAccount->setText(QString());
-        radioButtonPositiv->setText(QApplication::translate("AddAccountWindow", "+", Q_NULLPTR));
-        radioButtonNegativ->setText(QApplication::translate("AddAccountWindow", "-", Q_NULLPTR));
-        labelComma->setText(QApplication::translate("AddAccountWindow", ",", Q_NULLPTR));
-        labelCurrency->setText(QApplication::translate("AddAccountWindow", "EUR", Q_NULLPTR));
-        buttonOk->setText(QApplication::translate("AddAccountWindow", "Konto hinzuf\303\274gen", Q_NULLPTR));
-        buttonCancel->setText(QApplication::translate("AddAccountWindow", "Abbrechen", Q_NULLPTR));
+        radioButtonPositiv->setText(QApplication::translate("AddAccountWindow", "+", nullptr));
+        radioButtonNegativ->setText(QApplication::translate("AddAccountWindow", "-", nullptr));
+        labelComma->setText(QApplication::translate("AddAccountWindow", ",", nullptr));
+        labelCurrency->setText(QApplication::translate("AddAccountWindow", "EUR", nullptr));
+        buttonOk->setText(QApplication::translate("AddAccountWindow", "Konto hinzuf\303\274gen", nullptr));
+        buttonCancel->setText(QApplication::translate("AddAccountWindow", "Abbrechen", nullptr));
     } // retranslateUi
 
 };

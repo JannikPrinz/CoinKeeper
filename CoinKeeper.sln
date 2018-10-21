@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoinKeeper", "CoinKeeper\CoinKeeper.vcxproj", "{B12702AD-ABFB-343A-A199-8E24837244A3}"
 EndProject
@@ -38,18 +38,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C3802C41-2356-43C5-A9B5-8E6196F5E5C1}
 		Qt5Version = msvc2015_64
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://jannik-prinz.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = CoinKeeper\\CoinKeeper.vcxproj
-		SccProjectName1 = CoinKeeper
-		SccLocalPath1 = CoinKeeper
-		SccProjectUniqueName2 = CoinKeeperTest\\CoinKeeperTest.vcxproj
-		SccProjectName2 = CoinKeeperTest
-		SccLocalPath2 = CoinKeeperTest
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'managelabels.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,9 +10,7 @@
 #define UI_MANAGELABELS_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
@@ -143,16 +141,16 @@ public:
 
     void retranslateUi(QDialog *ManageLabelsWindow)
     {
-        ManageLabelsWindow->setWindowTitle(QApplication::translate("ManageLabelsWindow", "Kategorien verwalten", Q_NULLPTR));
+        ManageLabelsWindow->setWindowTitle(QApplication::translate("ManageLabelsWindow", "Kategorien verwalten", nullptr));
         QTableWidgetItem *___qtablewidgetitem = tableLabels->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("ManageLabelsWindow", "Name", Q_NULLPTR));
+        ___qtablewidgetitem->setText(QApplication::translate("ManageLabelsWindow", "Name", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableLabels->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("ManageLabelsWindow", "Farbe", Q_NULLPTR));
-        buttonNewLabel->setText(QApplication::translate("ManageLabelsWindow", "Neue Kategorie", Q_NULLPTR));
-        buttonDeleteLabel->setText(QApplication::translate("ManageLabelsWindow", "Kategorie l\303\266schen", Q_NULLPTR));
-        buttonChangeName->setText(QApplication::translate("ManageLabelsWindow", "Name \303\244ndern", Q_NULLPTR));
-        buttonChangeColor->setText(QApplication::translate("ManageLabelsWindow", "Farbe \303\244ndern", Q_NULLPTR));
-        buttonBack->setText(QApplication::translate("ManageLabelsWindow", "Zur\303\274ck", Q_NULLPTR));
+        ___qtablewidgetitem1->setText(QApplication::translate("ManageLabelsWindow", "Farbe", nullptr));
+        buttonNewLabel->setText(QApplication::translate("ManageLabelsWindow", "Neue Kategorie", nullptr));
+        buttonDeleteLabel->setText(QApplication::translate("ManageLabelsWindow", "Kategorie l\303\266schen", nullptr));
+        buttonChangeName->setText(QApplication::translate("ManageLabelsWindow", "Name \303\244ndern", nullptr));
+        buttonChangeColor->setText(QApplication::translate("ManageLabelsWindow", "Farbe \303\244ndern", nullptr));
+        buttonBack->setText(QApplication::translate("ManageLabelsWindow", "Zur\303\274ck", nullptr));
     } // retranslateUi
 
 };

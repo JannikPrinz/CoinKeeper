@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'addtransactionwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,13 +10,10 @@
 #define UI_ADDTRANSACTIONWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCalendarWidget>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
@@ -93,6 +90,7 @@ public:
         horizontalLayout->addWidget(lblAccount);
 
         comboBoxChooseAccount = new QComboBox(widget);
+        comboBoxChooseAccount->addItem(QString());
         comboBoxChooseAccount->setObjectName(QStringLiteral("comboBoxChooseAccount"));
         comboBoxChooseAccount->setFont(font);
         comboBoxChooseAccount->setDuplicatesEnabled(true);
@@ -272,20 +270,18 @@ public:
 
     void retranslateUi(QWidget *AddTransactionWindow)
     {
-        AddTransactionWindow->setWindowTitle(QApplication::translate("AddTransactionWindow", "Transaktion hinzuf\303\274gen", Q_NULLPTR));
-        lblAccount->setText(QApplication::translate("AddTransactionWindow", "Konto:", Q_NULLPTR));
-        comboBoxChooseAccount->clear();
-        comboBoxChooseAccount->insertItems(0, QStringList()
-         << QApplication::translate("AddTransactionWindow", "Konto ausw\303\244hlen", Q_NULLPTR)
-        );
-        lblLabel->setText(QApplication::translate("AddTransactionWindow", "Kategorie:", Q_NULLPTR));
-        lblValue->setText(QApplication::translate("AddTransactionWindow", "Wert:", Q_NULLPTR));
-        radioButtonPositiv->setText(QApplication::translate("AddTransactionWindow", "+", Q_NULLPTR));
-        radioButtonNegativ->setText(QApplication::translate("AddTransactionWindow", "-", Q_NULLPTR));
-        label_3->setText(QApplication::translate("AddTransactionWindow", ",", Q_NULLPTR));
-        lblDescription->setText(QApplication::translate("AddTransactionWindow", "Beschreibung:", Q_NULLPTR));
-        buttonAddTransaction->setText(QApplication::translate("AddTransactionWindow", "Transaktion hinzuf\303\274gen", Q_NULLPTR));
-        buttonCancel->setText(QApplication::translate("AddTransactionWindow", "Abbrechen", Q_NULLPTR));
+        AddTransactionWindow->setWindowTitle(QApplication::translate("AddTransactionWindow", "Transaktion hinzuf\303\274gen", nullptr));
+        lblAccount->setText(QApplication::translate("AddTransactionWindow", "Konto:", nullptr));
+        comboBoxChooseAccount->setItemText(0, QApplication::translate("AddTransactionWindow", "Konto ausw\303\244hlen", nullptr));
+
+        lblLabel->setText(QApplication::translate("AddTransactionWindow", "Kategorie:", nullptr));
+        lblValue->setText(QApplication::translate("AddTransactionWindow", "Wert:", nullptr));
+        radioButtonPositiv->setText(QApplication::translate("AddTransactionWindow", "+", nullptr));
+        radioButtonNegativ->setText(QApplication::translate("AddTransactionWindow", "-", nullptr));
+        label_3->setText(QApplication::translate("AddTransactionWindow", ",", nullptr));
+        lblDescription->setText(QApplication::translate("AddTransactionWindow", "Beschreibung:", nullptr));
+        buttonAddTransaction->setText(QApplication::translate("AddTransactionWindow", "Transaktion hinzuf\303\274gen", nullptr));
+        buttonCancel->setText(QApplication::translate("AddTransactionWindow", "Abbrechen", nullptr));
     } // retranslateUi
 
 };

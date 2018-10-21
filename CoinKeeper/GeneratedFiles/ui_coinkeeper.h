@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'coinkeeper.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -12,7 +12,6 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
@@ -255,6 +254,19 @@ public:
         gridLayout->addWidget(txtBalance, 0, 6, 1, 1);
 
         comboBoxMonth = new QComboBox(widget_5);
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
+        comboBoxMonth->addItem(QString());
         comboBoxMonth->setObjectName(QStringLiteral("comboBoxMonth"));
         comboBoxMonth->setMinimumSize(QSize(120, 0));
         comboBoxMonth->setFont(font2);
@@ -262,6 +274,7 @@ public:
         gridLayout->addWidget(comboBoxMonth, 0, 0, 1, 1);
 
         comboBoxAccount = new QComboBox(widget_5);
+        comboBoxAccount->addItem(QString());
         comboBoxAccount->setObjectName(QStringLiteral("comboBoxAccount"));
         comboBoxAccount->setMinimumSize(QSize(200, 0));
         comboBoxAccount->setFont(font2);
@@ -400,57 +413,53 @@ public:
 
     void retranslateUi(QMainWindow *CoinKeeperClass)
     {
-        CoinKeeperClass->setWindowTitle(QApplication::translate("CoinKeeperClass", "CoinKeeper", Q_NULLPTR));
-        actionBeenden->setText(QApplication::translate("CoinKeeperClass", "Beenden", Q_NULLPTR));
-        actionEinstellungen->setText(QApplication::translate("CoinKeeperClass", "Einstellungen", Q_NULLPTR));
+        CoinKeeperClass->setWindowTitle(QApplication::translate("CoinKeeperClass", "CoinKeeper", nullptr));
+        actionBeenden->setText(QApplication::translate("CoinKeeperClass", "Beenden", nullptr));
+        actionEinstellungen->setText(QApplication::translate("CoinKeeperClass", "Einstellungen", nullptr));
         QTableWidgetItem *___qtablewidgetitem = tableAccounts->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("CoinKeeperClass", "Konto", Q_NULLPTR));
+        ___qtablewidgetitem->setText(QApplication::translate("CoinKeeperClass", "Konto", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableAccounts->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("CoinKeeperClass", "Wert", Q_NULLPTR));
-        buttonAddAccount->setText(QApplication::translate("CoinKeeperClass", "Konto hinzuf\303\274gen", Q_NULLPTR));
-        buttonModifyAccount->setText(QApplication::translate("CoinKeeperClass", "Konto \303\244ndern", Q_NULLPTR));
-        buttonDeleteAccount->setText(QApplication::translate("CoinKeeperClass", "Konto l\303\266schen", Q_NULLPTR));
-        labelDate->setText(QApplication::translate("CoinKeeperClass", "02.04.2015", Q_NULLPTR));
-        labelTime->setText(QApplication::translate("CoinKeeperClass", "15:22:33", Q_NULLPTR));
-        txtBalance->setText(QApplication::translate("CoinKeeperClass", "3.789.100,63\342\202\254", Q_NULLPTR));
-        comboBoxMonth->clear();
-        comboBoxMonth->insertItems(0, QStringList()
-         << QApplication::translate("CoinKeeperClass", "Alle Monate", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Januar", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Februar", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "M\303\244rz", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "April", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Mai", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Juni", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Juli", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "August", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "September", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Oktober", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "November", Q_NULLPTR)
-         << QApplication::translate("CoinKeeperClass", "Dezember", Q_NULLPTR)
-        );
-        comboBoxAccount->clear();
-        comboBoxAccount->insertItems(0, QStringList()
-         << QApplication::translate("CoinKeeperClass", "Alle Konten", Q_NULLPTR)
-        );
-        labelBalance->setText(QApplication::translate("CoinKeeperClass", "Bilanz:", Q_NULLPTR));
+        ___qtablewidgetitem1->setText(QApplication::translate("CoinKeeperClass", "Wert", nullptr));
+        buttonAddAccount->setText(QApplication::translate("CoinKeeperClass", "Konto hinzuf\303\274gen", nullptr));
+        buttonModifyAccount->setText(QApplication::translate("CoinKeeperClass", "Konto \303\244ndern", nullptr));
+        buttonDeleteAccount->setText(QApplication::translate("CoinKeeperClass", "Konto l\303\266schen", nullptr));
+        labelDate->setText(QApplication::translate("CoinKeeperClass", "02.04.2015", nullptr));
+        labelTime->setText(QApplication::translate("CoinKeeperClass", "15:22:33", nullptr));
+        txtBalance->setText(QApplication::translate("CoinKeeperClass", "3.789.100,63\342\202\254", nullptr));
+        comboBoxMonth->setItemText(0, QApplication::translate("CoinKeeperClass", "Alle Monate", nullptr));
+        comboBoxMonth->setItemText(1, QApplication::translate("CoinKeeperClass", "Januar", nullptr));
+        comboBoxMonth->setItemText(2, QApplication::translate("CoinKeeperClass", "Februar", nullptr));
+        comboBoxMonth->setItemText(3, QApplication::translate("CoinKeeperClass", "M\303\244rz", nullptr));
+        comboBoxMonth->setItemText(4, QApplication::translate("CoinKeeperClass", "April", nullptr));
+        comboBoxMonth->setItemText(5, QApplication::translate("CoinKeeperClass", "Mai", nullptr));
+        comboBoxMonth->setItemText(6, QApplication::translate("CoinKeeperClass", "Juni", nullptr));
+        comboBoxMonth->setItemText(7, QApplication::translate("CoinKeeperClass", "Juli", nullptr));
+        comboBoxMonth->setItemText(8, QApplication::translate("CoinKeeperClass", "August", nullptr));
+        comboBoxMonth->setItemText(9, QApplication::translate("CoinKeeperClass", "September", nullptr));
+        comboBoxMonth->setItemText(10, QApplication::translate("CoinKeeperClass", "Oktober", nullptr));
+        comboBoxMonth->setItemText(11, QApplication::translate("CoinKeeperClass", "November", nullptr));
+        comboBoxMonth->setItemText(12, QApplication::translate("CoinKeeperClass", "Dezember", nullptr));
+
+        comboBoxAccount->setItemText(0, QApplication::translate("CoinKeeperClass", "Alle Konten", nullptr));
+
+        labelBalance->setText(QApplication::translate("CoinKeeperClass", "Bilanz:", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = tableMonthOverview->horizontalHeaderItem(0);
-        ___qtablewidgetitem2->setText(QApplication::translate("CoinKeeperClass", "Datum", Q_NULLPTR));
+        ___qtablewidgetitem2->setText(QApplication::translate("CoinKeeperClass", "Datum", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = tableMonthOverview->horizontalHeaderItem(1);
-        ___qtablewidgetitem3->setText(QApplication::translate("CoinKeeperClass", "Kategorie", Q_NULLPTR));
+        ___qtablewidgetitem3->setText(QApplication::translate("CoinKeeperClass", "Kategorie", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = tableMonthOverview->horizontalHeaderItem(2);
-        ___qtablewidgetitem4->setText(QApplication::translate("CoinKeeperClass", "Beschreibung", Q_NULLPTR));
+        ___qtablewidgetitem4->setText(QApplication::translate("CoinKeeperClass", "Beschreibung", nullptr));
         QTableWidgetItem *___qtablewidgetitem5 = tableMonthOverview->horizontalHeaderItem(3);
-        ___qtablewidgetitem5->setText(QApplication::translate("CoinKeeperClass", "Wert", Q_NULLPTR));
-        label->setText(QApplication::translate("CoinKeeperClass", "Jahr:", Q_NULLPTR));
-        buttonAddTransaction->setText(QApplication::translate("CoinKeeperClass", "Transaktion hinzuf\303\274gen", Q_NULLPTR));
-        buttonChangeTransaction->setText(QApplication::translate("CoinKeeperClass", "Eintrag \303\244ndern", Q_NULLPTR));
-        buttonDeleteTransaction->setText(QApplication::translate("CoinKeeperClass", "Eintrag l\303\266schen", Q_NULLPTR));
-        buttonManageStandingOrders->setText(QApplication::translate("CoinKeeperClass", "Dauerauftr\303\244ge verwalten", Q_NULLPTR));
-        buttonManageLabels->setText(QApplication::translate("CoinKeeperClass", "Kategorien verwalten", Q_NULLPTR));
-        buttonChangeProfile->setText(QApplication::translate("CoinKeeperClass", "Profil wechseln", Q_NULLPTR));
-        menuDatei->setTitle(QApplication::translate("CoinKeeperClass", "Datei", Q_NULLPTR));
-        menuEinstellungen->setTitle(QApplication::translate("CoinKeeperClass", "Optionen", Q_NULLPTR));
+        ___qtablewidgetitem5->setText(QApplication::translate("CoinKeeperClass", "Wert", nullptr));
+        label->setText(QApplication::translate("CoinKeeperClass", "Jahr:", nullptr));
+        buttonAddTransaction->setText(QApplication::translate("CoinKeeperClass", "Transaktion hinzuf\303\274gen", nullptr));
+        buttonChangeTransaction->setText(QApplication::translate("CoinKeeperClass", "Eintrag \303\244ndern", nullptr));
+        buttonDeleteTransaction->setText(QApplication::translate("CoinKeeperClass", "Eintrag l\303\266schen", nullptr));
+        buttonManageStandingOrders->setText(QApplication::translate("CoinKeeperClass", "Dauerauftr\303\244ge verwalten", nullptr));
+        buttonManageLabels->setText(QApplication::translate("CoinKeeperClass", "Kategorien verwalten", nullptr));
+        buttonChangeProfile->setText(QApplication::translate("CoinKeeperClass", "Profil wechseln", nullptr));
+        menuDatei->setTitle(QApplication::translate("CoinKeeperClass", "Datei", nullptr));
+        menuEinstellungen->setTitle(QApplication::translate("CoinKeeperClass", "Optionen", nullptr));
     } // retranslateUi
 
 };

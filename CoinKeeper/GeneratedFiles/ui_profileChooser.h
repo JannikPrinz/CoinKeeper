@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'profileChooser.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,11 +10,8 @@
 #define UI_PROFILECHOOSER_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
@@ -173,13 +170,13 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CoinKeeper  -  Profilauswahl", Q_NULLPTR));
-        label->setText(QApplication::translate("MainWindow", "Profile", Q_NULLPTR));
-        buttonNewProfile->setText(QApplication::translate("MainWindow", "Neu", Q_NULLPTR));
-        buttonOpenProfile->setText(QApplication::translate("MainWindow", "\303\226ffnen", Q_NULLPTR));
-        buttonDeleteProfile->setText(QApplication::translate("MainWindow", "L\303\266schen", Q_NULLPTR));
-        buttonAddFolder->setText(QApplication::translate("MainWindow", "Ordner hinzuf\303\274gen", Q_NULLPTR));
-        buttonRefreshList->setText(QApplication::translate("MainWindow", "Liste aktualisieren", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "CoinKeeper  -  Profilauswahl", nullptr));
+        label->setText(QApplication::translate("MainWindow", "Profile", nullptr));
+        buttonNewProfile->setText(QApplication::translate("MainWindow", "Neu", nullptr));
+        buttonOpenProfile->setText(QApplication::translate("MainWindow", "\303\226ffnen", nullptr));
+        buttonDeleteProfile->setText(QApplication::translate("MainWindow", "L\303\266schen", nullptr));
+        buttonAddFolder->setText(QApplication::translate("MainWindow", "Ordner hinzuf\303\274gen", nullptr));
+        buttonRefreshList->setText(QApplication::translate("MainWindow", "Liste aktualisieren", nullptr));
     } // retranslateUi
 
 };

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'addstandingorder.ui'
 **
-** Created by: Qt User Interface Compiler version 5.8.0
+** Created by: Qt User Interface Compiler version 5.11.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,15 +10,12 @@
 #define UI_ADDSTANDINGORDER_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
@@ -106,6 +103,7 @@ public:
         horizontalLayout->addWidget(lblAccount);
 
         comboBoxChooseAccount = new QComboBox(widget);
+        comboBoxChooseAccount->addItem(QString());
         comboBoxChooseAccount->setObjectName(QStringLiteral("comboBoxChooseAccount"));
         comboBoxChooseAccount->setFont(font);
         comboBoxChooseAccount->setDuplicatesEnabled(true);
@@ -342,23 +340,21 @@ public:
 
     void retranslateUi(QDialog *AddStandingOrderWindow)
     {
-        AddStandingOrderWindow->setWindowTitle(QApplication::translate("AddStandingOrderWindow", "Dauerauftrag hinzuf\303\274gen", Q_NULLPTR));
-        lblAccount->setText(QApplication::translate("AddStandingOrderWindow", "Konto:", Q_NULLPTR));
-        comboBoxChooseAccount->clear();
-        comboBoxChooseAccount->insertItems(0, QStringList()
-         << QApplication::translate("AddStandingOrderWindow", "Konto ausw\303\244hlen", Q_NULLPTR)
-        );
-        lblLabel->setText(QApplication::translate("AddStandingOrderWindow", "Kategorie:", Q_NULLPTR));
-        lblValue->setText(QApplication::translate("AddStandingOrderWindow", "Wert:", Q_NULLPTR));
-        radioButtonPositiv->setText(QApplication::translate("AddStandingOrderWindow", "+", Q_NULLPTR));
-        radioButtonNegativ->setText(QApplication::translate("AddStandingOrderWindow", "-", Q_NULLPTR));
-        label_3->setText(QApplication::translate("AddStandingOrderWindow", ",", Q_NULLPTR));
-        lblDescription->setText(QApplication::translate("AddStandingOrderWindow", "Beschreibung:", Q_NULLPTR));
-        lblType->setText(QApplication::translate("AddStandingOrderWindow", "Typ:", Q_NULLPTR));
-        groupBoxNextDate->setTitle(QApplication::translate("AddStandingOrderWindow", "N\303\244chste Ausf\303\274hrung:", Q_NULLPTR));
-        dateEditNextDate->setDisplayFormat(QApplication::translate("AddStandingOrderWindow", "dd MMMM yyyy", Q_NULLPTR));
-        buttonAddOrder->setText(QApplication::translate("AddStandingOrderWindow", "Dauerauftrag hinzuf\303\274gen", Q_NULLPTR));
-        buttonCancel->setText(QApplication::translate("AddStandingOrderWindow", "Abbrechen", Q_NULLPTR));
+        AddStandingOrderWindow->setWindowTitle(QApplication::translate("AddStandingOrderWindow", "Dauerauftrag hinzuf\303\274gen", nullptr));
+        lblAccount->setText(QApplication::translate("AddStandingOrderWindow", "Konto:", nullptr));
+        comboBoxChooseAccount->setItemText(0, QApplication::translate("AddStandingOrderWindow", "Konto ausw\303\244hlen", nullptr));
+
+        lblLabel->setText(QApplication::translate("AddStandingOrderWindow", "Kategorie:", nullptr));
+        lblValue->setText(QApplication::translate("AddStandingOrderWindow", "Wert:", nullptr));
+        radioButtonPositiv->setText(QApplication::translate("AddStandingOrderWindow", "+", nullptr));
+        radioButtonNegativ->setText(QApplication::translate("AddStandingOrderWindow", "-", nullptr));
+        label_3->setText(QApplication::translate("AddStandingOrderWindow", ",", nullptr));
+        lblDescription->setText(QApplication::translate("AddStandingOrderWindow", "Beschreibung:", nullptr));
+        lblType->setText(QApplication::translate("AddStandingOrderWindow", "Typ:", nullptr));
+        groupBoxNextDate->setTitle(QApplication::translate("AddStandingOrderWindow", "N\303\244chste Ausf\303\274hrung:", nullptr));
+        dateEditNextDate->setDisplayFormat(QApplication::translate("AddStandingOrderWindow", "dd MMMM yyyy", nullptr));
+        buttonAddOrder->setText(QApplication::translate("AddStandingOrderWindow", "Dauerauftrag hinzuf\303\274gen", nullptr));
+        buttonCancel->setText(QApplication::translate("AddStandingOrderWindow", "Abbrechen", nullptr));
     } // retranslateUi
 
 };

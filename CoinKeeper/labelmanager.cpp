@@ -118,9 +118,9 @@ void LabelManager::RefreshWindow()
     if (manageLabelsWindow != nullptr)
     {
         currentLabels = database->GetLabels(currentProfile.c_str());
-        int x = currentLabels.size();
+        int x = static_cast<int>(currentLabels.size());
         manageLabelsWindow->tableLabels->setRowCount(x);
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < x; ++i)
         {
             int labelID;        // not used
             string labelName;

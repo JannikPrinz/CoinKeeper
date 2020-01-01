@@ -49,11 +49,12 @@ void CoinKeeperView::setComboboxAccountValues(QStringListModel* model)
     if (ui.comboBoxAccount->currentIndex() < 0) ui.comboBoxAccount->setCurrentIndex(0);        // to make sure that 1 element is always selected
 }
 
-void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> accounts)
+void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> const& accounts)
 {
-    int x = accounts.size();
+    int x = static_cast<int>(accounts.size());
     ui.tableAccounts->setRowCount(x);
-    for (int i = 0; i < x; i++)
+
+    for (int i = 0; i < x; ++i)
     {
         int accountID;        // not used
         string accountName;
@@ -64,12 +65,12 @@ void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> accounts)
     }
 }
 
-void CoinKeeperView::FillTransactionData(const vector<tuple<QDate, string, int, string, Value>>& transactions)
+void CoinKeeperView::FillTransactionData(vector<tuple<QDate, string, int, string, Value>> const& transactions)
 {
-    int x = transactions.size();
+    int x = static_cast<int>(transactions.size());
     ui.tableMonthOverview->setRowCount(x);
     Value sum(0);
-    for (int i = 0; i < x; i++)
+    for (int i = 0; i < x; ++i)
     {
         int color;
         string labelName, description;

@@ -28,9 +28,16 @@ void StandingOrderManager::ExecuteOrders()
     QDate currentDate = QDate::currentDate();
     int date = currentDate.year() * 10000 + currentDate.month() * 100 + currentDate.day();
     vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
-    if (executableOrders.empty()) return;
-    int addedTransactions = 0, lastItem = executableOrders.size() - 1;
-    int orderID, accountID, labelID;
+    if (executableOrders.empty())
+    {
+        return;
+    }
+
+    int addedTransactions = 0;
+    size_t lastItem = executableOrders.size() - 1;
+    int orderID;
+    int accountID;
+    int labelID;
     Value value;
     string description;
     StandingOrderType orderType;
@@ -43,8 +50,7 @@ void StandingOrderManager::ExecuteOrders()
             database->UpdateStandingOrderDate(currentProfile.c_str(), get<0>(executableOrders[lastItem]), date);
             executableOrders.pop_back();
             lastItem = executableOrders.size() - 1;
-        }
-        else
+        } else
         {
             tie(orderID, accountID, labelID, value, description, orderType, nextDate) = executableOrders[lastItem];
             database->CreateNewTransaction(currentProfile.c_str(), description, accountID, value, nextDate, labelID);
@@ -223,10 +229,10 @@ void StandingOrderManager::RefreshWindow()
     if (manageStandingOrders != nullptr)
     {
         currentOrders = database->GetAllStandingOrders(currentProfile.c_str());
-        int x = currentOrders.size();
+        int x = static_cast<int>(currentOrders.size());
         manageStandingOrders->tableStandingOrders->setRowCount(x);
         // insert existing values:
-        for (int i = 0; i < x; i++)
+        for (int i = 0; i < x; ++i)
         {
             int orderID, accountID, labelID;
             StandingOrderType type;

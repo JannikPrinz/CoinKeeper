@@ -17,19 +17,6 @@ public:
     ~CoinKeeperPresenter();
 
 private:
-    CoinKeeperView* view;
-    string currentProfile;
-    // all accounts of the open profile
-    vector<tuple<int, string, Value>> currentAccounts;
-    // transactions of the accounts of the open profile, which comply with the selection of the comboboxes represented as a
-    // vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    vector<tuple<int, string, Value, QDate, int, int>> currentTransactions;
-    // all labels of the current profile.
-    vector<tuple<int, string, int>> currentLabels;
-    // number of accounts
-    int numberOfAccounts = -1;
-    // this item represents the content of the combobox, where the user can choose a account (to display the transactions)
-    QStringListModel accountList;
     void CreateConnections();
     void RefreshWindow();
     // Switch to first window, to choose a profile.
@@ -50,4 +37,19 @@ private:
     void ManageLabels();
     // Opens a window, where the user can change a selected transaction.
     void UpdateTransaction();
+
+private:
+    CoinKeeperView* view;
+    string currentProfile;
+    // all accounts of the open profile
+    vector<tuple<int, string, Value>> currentAccounts;
+    // transactions of the accounts of the open profile, which comply with the selection of the comboboxes represented as a
+    // vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
+    vector<tuple<int, string, Value, QDate, int, int>> currentTransactions;
+    // all labels of the current profile.
+    vector<tuple<int, string, int>> currentLabels;
+    // number of accounts
+    int32_t numberOfAccounts = -1;
+    // this item represents the content of the combobox, where the user can choose a account (to display the transactions)
+    QStringListModel accountList;
 };

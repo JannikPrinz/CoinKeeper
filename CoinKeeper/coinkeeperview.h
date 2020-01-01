@@ -15,10 +15,12 @@ class CoinKeeperView : public QMainWindow {
 public:
     CoinKeeperView(QWidget * parent = Q_NULLPTR);
     /*
-        Fills the table which represents the existing accounts with the given accounts
-        vector<tuple<int, string, Value>> accounts : vector of accounts, which are represented as tuples with the AccountID, AccountName, AccountValue
-    */
-    void FillAccountData(vector<tuple<int, string, Value>> accounts);
+     * Fills the table which represents the existing accounts with the given accounts
+     *
+     * Parameters:
+     * vector<tuple<int, string, Value>> accounts : vector of accounts, which are represented as tuples with the AccountID, AccountName, AccountValue
+     */
+    void FillAccountData(vector<tuple<int, string, Value>> const& accounts);
     /* 
      * Fills the table which represents transactions with the given transactions. Also this method calculates the sum 
      * of the values of the given transactions and displays the result.
@@ -29,22 +31,25 @@ public:
      */
     void FillTransactionData(const vector<tuple<QDate, string, int, string, Value>>& transactions);
     /*
-        This method returns the indices of the comboboxes and the value of the spinBox (year), which set the content, which is displayed in the transaction table
-        Returns: tuple of indices of the comboboxes (month, year, account)
-    */
+     * This method returns the indices of the comboboxes and the value of the spinBox (year), which set the content, which is displayed in the transaction table
+     *
+     * Returns: tuple of indices of the comboboxes (month, year, account)
+     */
     tuple<int, int, int> GetComboboxContent();
     /*
-        Fills the combobox, which lists all accounts, with the given content
-        QStringListModel* model : contains the items, which are set to the combobox
-    */
+     * Fills the combobox, which lists all accounts, with the given content
+     *
+     * Parameters:
+     * QStringListModel* model : contains the items, which are set to the combobox
+     */
     void setComboboxAccountValues(QStringListModel* model);
     /*
-        Returns: The selected row of the table, which shows transactions
-    */
+     * Returns: The selected row of the table, which shows transactions
+     */
     int GetSelectedRowTableMonthOverview();
     /*
-        Returns: The selected row of the table, which shows accounts
-    */
+     * Returns: The selected row of the table, which shows accounts
+     */
     int GetSelectedRowTableAccounts();
     ~CoinKeeperView();
 

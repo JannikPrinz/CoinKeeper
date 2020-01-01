@@ -152,7 +152,7 @@ void CoinKeeperPresenter::RefreshWindow()
             items.insert(i, QString::fromStdString(std::get<1>(currentAccounts[i - 1])));
         }
         accountList.setStringList(items);
-        numberOfAccounts = currentAccounts.size();
+        numberOfAccounts = static_cast<int32_t>(currentAccounts.size());
         view->setComboboxAccountValues(&accountList);
     }
     // read current selected values:

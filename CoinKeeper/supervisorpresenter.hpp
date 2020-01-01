@@ -10,18 +10,18 @@
 #include "coinkeeperpresenter.hpp"
 
 class SupervisorPresenter : public QObject {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	SupervisorPresenter(QObject * parent = Q_NULLPTR);
-	~SupervisorPresenter();
+    SupervisorPresenter(QObject * parent = Q_NULLPTR);
+    ~SupervisorPresenter();
 
 public slots:
-	void ChangePresenter(Presenters p, string s = "");
+    void ChangePresenter(Presenters p, string s = "");
 
 private:
-	Presenter* presenter;
-	Database* database;
+    Presenter* presenter;
+    Database* database;
 };
 
 #endif // !SUPERVISORPRESENTER_H

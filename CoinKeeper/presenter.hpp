@@ -7,17 +7,17 @@
 
 
 class Presenter : public QObject {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	Presenter(Database*, QObject * parent = Q_NULLPTR);
-	~Presenter();
+    Presenter(Database*, QObject * parent = Q_NULLPTR);
+    ~Presenter();
 
 signals:
-	void ChangePresenter(Presenters p, string s = "");
+    void ChangePresenter(Presenters p, string s = "");
 
 protected:
-	Database* database;
+    Database* database;
 };
 
 #endif // !PRESENTER_HPP

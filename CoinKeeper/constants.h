@@ -6,15 +6,15 @@
 #include <qcolor.h>
 #include <tuple>
 
-/*		german characters, UTF-8 octal coded:
+/*        german characters, UTF-8 octal coded:
 -----------------------------------------------------------------------------
-	ä : \303\244
-	ö : \303\266
-	ü : \303\274
-	Ä : \303\204
-	Ö : \303\226
-	Ü : \303\234
-	ß : \303\237
+    ä : \303\244
+    ö : \303\266
+    ü : \303\274
+    Ä : \303\204
+    Ö : \303\226
+    Ü : \303\234
+    ß : \303\237
 -----------------------------------------------------------------------------
 */
 
@@ -148,235 +148,234 @@
 #define TEXT_STANDING_ORDER_EVERY_QUARTER "Jedes Quartal"
 #define TEXT_STANDING_ORDER_EVERY_4_MONTHS "Alle 4 Monate"
 #define TEXT_STANDING_ORDER_EVERY_YEAR "Jedes Jahr"
-#define RED_BIT_MASK	0b11111111000000000000000000000000
-#define GREEN_BIT_MASK	0b00000000111111110000000000000000
-#define BLUE_BIT_MASK	0b00000000000000001111111100000000
-#define ALPHA_BIT_MASK	0b00000000000000000000000011111111
+#define RED_BIT_MASK    0b11111111000000000000000000000000
+#define GREEN_BIT_MASK    0b00000000111111110000000000000000
+#define BLUE_BIT_MASK    0b00000000000000001111111100000000
+#define ALPHA_BIT_MASK    0b00000000000000000000000011111111
 
 enum Presenters
 {
-	ProfileChooser, CoinKeeper
+    ProfileChooser, CoinKeeper
 };
 
 const int NUMBER_OF_STANDING_ORDER_TYPES = 6;
 enum StandingOrderType
 {
-	EveryDay = 0, EveryWeek = 1, EveryMonth = 2, EveryQuarter = 3, Every4Months = 4, EveryYear = 5
+    EveryDay = 0, EveryWeek = 1, EveryMonth = 2, EveryQuarter = 3, Every4Months = 4, EveryYear = 5
 };
 
 static std::string GetStringFromStandingOrderType(StandingOrderType type)
 {
-	switch (type)
-	{
-	case EveryDay:
-		return TEXT_STANDING_ORDER_EVERY_DAY;
-		break;
-	case EveryWeek:
-		return TEXT_STANDING_ORDER_EVERY_WEEK;
-		break;
-	case EveryMonth:
-		return TEXT_STANDING_ORDER_EVERY_MONTH;
-		break;
-	case EveryQuarter:
-		return TEXT_STANDING_ORDER_EVERY_QUARTER;
-		break;
-	case Every4Months:
-		return TEXT_STANDING_ORDER_EVERY_4_MONTHS;
-		break;
-	case EveryYear:
-		return TEXT_STANDING_ORDER_EVERY_YEAR;
-		break;
-	default:
-		return "";
-		break;
-	}
+    switch (type)
+    {
+    case EveryDay:
+        return TEXT_STANDING_ORDER_EVERY_DAY;
+        break;
+    case EveryWeek:
+        return TEXT_STANDING_ORDER_EVERY_WEEK;
+        break;
+    case EveryMonth:
+        return TEXT_STANDING_ORDER_EVERY_MONTH;
+        break;
+    case EveryQuarter:
+        return TEXT_STANDING_ORDER_EVERY_QUARTER;
+        break;
+    case Every4Months:
+        return TEXT_STANDING_ORDER_EVERY_4_MONTHS;
+        break;
+    case EveryYear:
+        return TEXT_STANDING_ORDER_EVERY_YEAR;
+        break;
+    default:
+        return "";
+        break;
+    }
 }
 
 struct Value
 {
-	int VK;
-	int NK;
+    int VK;
+    int NK;
 
-	/*
-		Creates a new instance with the given parameters.
-		int vk0 : value before the comma (default = 0)
-		int nk0 : value after the comma. Should be >= 0 and < 100 (default = 0)
-	*/
-	Value(int vk0 = 0, int nk0 = 0) : VK(vk0), NK(nk0) {}
+    /*
+        Creates a new instance with the given parameters.
+        int vk0 : value before the comma (default = 0)
+        int nk0 : value after the comma. Should be >= 0 and < 100 (default = 0)
+    */
+    Value(int vk0 = 0, int nk0 = 0) : VK(vk0), NK(nk0) {}
 
-	std::string ToString()
-	{
-		std::string s = "";
-		if (VK < 0 || (VK == 0 && NK < 0)) s.append("-");
-		int v = (VK < 0) ? -VK : VK;
-		std::string d = "";
-		d = std::to_string(v % 10).append(d);
-		v /= 10;
-		int x = 0;
-		while (v > 0)
-		{
-			if (x == 2) d = std::string(".").append(d);
-			d = std::to_string(v % 10).append(d);
-			v /= 10;
-			x++;
-			x %= 3;
-		}
-		s.append(d);
-		s.append(",");
-		if (NK < 0)
-		{
-			if (NK > -10) s.append("0");
-			s.append(std::to_string(-NK));
-		}
-		else
-		{
-			if (NK < 10) s.append("0");
-			s.append(std::to_string(NK));
-		}
-		return s;
-	}
+    std::string ToString()
+    {
+        std::string s = "";
+        if (VK < 0 || (VK == 0 && NK < 0)) s.append("-");
+        int v = (VK < 0) ? -VK : VK;
+        std::string d = "";
+        d = std::to_string(v % 10).append(d);
+        v /= 10;
+        int x = 0;
+        while (v > 0)
+        {
+            if (x == 2) d = std::string(".").append(d);
+            d = std::to_string(v % 10).append(d);
+            v /= 10;
+            x++;
+            x %= 3;
+        }
+        s.append(d);
+        s.append(",");
+        if (NK < 0)
+        {
+            if (NK > -10) s.append("0");
+            s.append(std::to_string(-NK));
+        }
+        else
+        {
+            if (NK < 10) s.append("0");
+            s.append(std::to_string(NK));
+        }
+        return s;
+    }
 
-	Value operator +(const Value& a) const
-	{
-		int v1 = VK;
-		int v2 = a.VK;
-		int n1 = (VK < 0) ? -NK : NK;
-		int n2 = (a.VK < 0) ? -a.NK : a.NK;
-		int v = v1 + v2;
-		int n = n1 + n2;
-		if (n >= 100)
-		{
-			n -= 100;
-			v += 1;
-		}
-		if (n <= -100)
-		{
-			n += 100;
-			v -= 1;
-		}
-		if (v >= 0 && n >= 0) return Value(v, n);
-		if (v < 0 && n <= 0) return Value(v, -n);
-		if (v == 0 && n < 0) return Value(v, n);
-		if (v > 0 && n < 0) return Value(v - 1, n + 100);
-		if (v < 0 && n > 0)
-		{
-			v += 1;
-			n = 100 - n;
-			if (v == 0) n *= -1;
-			return Value(v, n);
-		}
-	}
+    Value operator +(const Value& a) const
+    {
+        int v1 = VK;
+        int v2 = a.VK;
+        int n1 = (VK < 0) ? -NK : NK;
+        int n2 = (a.VK < 0) ? -a.NK : a.NK;
+        int v = v1 + v2;
+        int n = n1 + n2;
+        if (n >= 100)
+        {
+            n -= 100;
+            v += 1;
+        }
+        if (n <= -100)
+        {
+            n += 100;
+            v -= 1;
+        }
+        if (v >= 0 && n >= 0) return Value(v, n);
+        if (v < 0 && n <= 0) return Value(v, -n);
+        if (v == 0 && n < 0) return Value(v, n);
+        if (v > 0 && n < 0) return Value(v - 1, n + 100);
 
-	//Value operator +(const Value& a) const
-	//{
-	//	int v1 = VK;
-	//	int v2 = a.VK;
-	//	int n1 = (VK < 0) ? -NK : NK;
-	//	int n2 = (a.VK < 0) ? -a.NK : a.NK;
-	//	int v = v1 + v2;
-	//	int n = n1 + n2;
-	//	if (v == 0)
-	//	{
-	//		if (n <= -100) return Value(-1, -(n + 100));
-	//		if (n >= 100) return Value(1, n - 100);
-	//		return Value(0, n);
-	//	}
-	//	else
-	//	{
-	//		if (n < 0)
-	//		{
-	//			if (n <= -100)
-	//			{
-	//				if (v == 1) return Value(0, n + 100);
-	//				if (v < 0) return Value(v - 1, -(n + 100));
-	//				return Value(v - 2, 200 + n);
-	//			}
-	//			else
-	//			{
-	//				if (v < 0) return Value(v, -n);
-	//				return Value(v - 1, 100 + n);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (n >= 100)
-	//			{
-	//				if (v == -2) return Value(0, n - 200);
-	//				if (v < -2) return Value(v + 1, 200 - n);
-	//				return Value(v + 1, n - 100);
-	//			}
-	//			else
-	//			{
-	//				if (v == -1) return Value(0, n - 100);
-	//				if (v < -1) return Value(v + 1, 100 - n);
-	//				return Value(v, n);
-	//			}
-	//		}
-	//	}
-	//}
+        // v < 0 && n > 0
+        v += 1;
+        n = 100 - n;
+        if (v == 0) n *= -1;
+        return Value(v, n);
+    }
 
-	Value operator *(const int& x) const
-	{
-		if (x >= 0)
-		{
-			int y = NK * x;
-			return Value(VK * x + (y / 100), y % 100);
-		}
-		else
-		{
-			int y = (VK != 0) ? NK * x * (-1) : NK * x;
-			return Value(-(VK * (-x) + (y / 100)), y % 100);
-		}
-	}
+    //Value operator +(const Value& a) const
+    //{
+    //    int v1 = VK;
+    //    int v2 = a.VK;
+    //    int n1 = (VK < 0) ? -NK : NK;
+    //    int n2 = (a.VK < 0) ? -a.NK : a.NK;
+    //    int v = v1 + v2;
+    //    int n = n1 + n2;
+    //    if (v == 0)
+    //    {
+    //        if (n <= -100) return Value(-1, -(n + 100));
+    //        if (n >= 100) return Value(1, n - 100);
+    //        return Value(0, n);
+    //    }
+    //    else
+    //    {
+    //        if (n < 0)
+    //        {
+    //            if (n <= -100)
+    //            {
+    //                if (v == 1) return Value(0, n + 100);
+    //                if (v < 0) return Value(v - 1, -(n + 100));
+    //                return Value(v - 2, 200 + n);
+    //            }
+    //            else
+    //            {
+    //                if (v < 0) return Value(v, -n);
+    //                return Value(v - 1, 100 + n);
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (n >= 100)
+    //            {
+    //                if (v == -2) return Value(0, n - 200);
+    //                if (v < -2) return Value(v + 1, 200 - n);
+    //                return Value(v + 1, n - 100);
+    //            }
+    //            else
+    //            {
+    //                if (v == -1) return Value(0, n - 100);
+    //                if (v < -1) return Value(v + 1, 100 - n);
+    //                return Value(v, n);
+    //            }
+    //        }
+    //    }
+    //}
 
-	Value operator *=(const int& x)
-	{
-		*this = *this * x;
-		return *this;
-	}
+    Value operator *(const int& x) const
+    {
+        if (x >= 0)
+        {
+            int y = NK * x;
+            return Value(VK * x + (y / 100), y % 100);
+        }
+        else
+        {
+            int y = (VK != 0) ? NK * x * (-1) : NK * x;
+            return Value(-(VK * (-x) + (y / 100)), y % 100);
+        }
+    }
 
-	Value operator +=(const Value& x)
-	{
-		*this = *this + x;
-		return *this;
-	}
+    Value operator *=(const int& x)
+    {
+        *this = *this * x;
+        return *this;
+    }
 
-	Value operator -(const Value& a) const
-	{
-		return *this + (a * (-1));
-	}
+    Value operator +=(const Value& x)
+    {
+        *this = *this + x;
+        return *this;
+    }
 
-	bool operator ==(const Value& a) const
-	{
-		return VK == a.VK && NK == a.NK;
-	}
+    Value operator -(const Value& a) const
+    {
+        return *this + (a * (-1));
+    }
 
-	bool operator !=(const Value& a) const
-	{
-		return !(*this == a);
-	}
+    bool operator ==(const Value& a) const
+    {
+        return VK == a.VK && NK == a.NK;
+    }
 
-	bool operator <(const Value& a) const
-	{
-		if (VK < a.VK) return true;
-		if (VK == a.VK && NK < a.NK) return true;
-		return false;
-	}
+    bool operator !=(const Value& a) const
+    {
+        return !(*this == a);
+    }
 
-	bool operator <=(const Value& a) const
-	{
-		return (*this < a) || (*this == a);
-	}
+    bool operator <(const Value& a) const
+    {
+        if (VK < a.VK) return true;
+        if (VK == a.VK && NK < a.NK) return true;
+        return false;
+    }
 
-	bool operator >(const Value& a) const
-	{
-		return !(*this <= a);
-	}
+    bool operator <=(const Value& a) const
+    {
+        return (*this < a) || (*this == a);
+    }
 
-	bool operator >=(const Value& a) const
-	{
-		return !(*this < a);
-	}
+    bool operator >(const Value& a) const
+    {
+        return !(*this <= a);
+    }
+
+    bool operator >=(const Value& a) const
+    {
+        return !(*this < a);
+    }
 };
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -396,7 +395,7 @@ struct Value
  */
 static int ConvertRGBAToInt(const int& red, const int& green, const int& blue, const int& alpha)
 {
-	return alpha | (blue << 8) | (green << 16) | (red << 24);
+    return alpha | (blue << 8) | (green << 16) | (red << 24);
 }
 
 /*
@@ -411,13 +410,13 @@ static int ConvertRGBAToInt(const int& red, const int& green, const int& blue, c
 */
 static std::tuple<int, int, int, int> ConvertIntToRGBA(const int& color)
 {
-	unsigned int uColor = color;
-	int r, g, b, a;
-	r = (uColor & RED_BIT_MASK) >> 24;
-	g = (uColor & GREEN_BIT_MASK) >> 16;
-	b = (uColor & BLUE_BIT_MASK) >> 8;
-	a = uColor & ALPHA_BIT_MASK;
-	return std::make_tuple(r, g, b, a);
+    unsigned int uColor = color;
+    int r, g, b, a;
+    r = (uColor & RED_BIT_MASK) >> 24;
+    g = (uColor & GREEN_BIT_MASK) >> 16;
+    b = (uColor & BLUE_BIT_MASK) >> 8;
+    a = uColor & ALPHA_BIT_MASK;
+    return std::make_tuple(r, g, b, a);
 }
 
 /*
@@ -431,9 +430,9 @@ static std::tuple<int, int, int, int> ConvertIntToRGBA(const int& color)
  */
 static QColor ConvertIntToQColor(const int& color)
 {
-	int r, g, b, a;
-	std::tie(r, g, b, a) = ConvertIntToRGBA(color);
-	return QColor(r, g, b, a);
+    int r, g, b, a;
+    std::tie(r, g, b, a) = ConvertIntToRGBA(color);
+    return QColor(r, g, b, a);
 }
 
 #endif // !CONSTANTS_H

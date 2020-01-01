@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-	QApplication a(argc, argv);
-	SupervisorPresenter supervisor;
-	return a.exec();
+    QApplication a(argc, argv);
+    SupervisorPresenter supervisor;
+    return a.exec();
 }

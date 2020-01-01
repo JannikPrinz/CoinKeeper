@@ -7,22 +7,22 @@
 #include "qinputdialog.h"
 
 class ProfileChooserPresenter : public Presenter {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	ProfileChooserPresenter(Database*, QObject * parent = Q_NULLPTR);
-	~ProfileChooserPresenter();
+    ProfileChooserPresenter(Database*, QObject * parent = Q_NULLPTR);
+    ~ProfileChooserPresenter();
 
 public slots:
-	void CreateNewProfile();
-	void RefreshProfilesList();
-	void OpenProfile();
-	void DeleteProfile();
+    void CreateNewProfile();
+    void RefreshProfilesList();
+    void OpenProfile();
+    void DeleteProfile();
 
 private:
-	ProfileChooserView* view;
-	list<string> currentProfiles;
-	void CreateConnections();
+    ProfileChooserView* view;
+    list<string> currentProfiles;
+    void CreateConnections();
 
 };
 

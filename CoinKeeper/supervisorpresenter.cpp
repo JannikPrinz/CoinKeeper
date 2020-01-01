@@ -1,4 +1,4 @@
-﻿#include "supervisorpresenter.hpp"
+﻿#include "supervisorpresenter.h"
 
 SupervisorPresenter::SupervisorPresenter(QObject * parent) : QObject(parent) {
     database = new Database;

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
 
 #include <string>
 #include <qcolor.h>
@@ -266,54 +264,6 @@ struct Value
         return Value(v, n);
     }
 
-    //Value operator +(const Value& a) const
-    //{
-    //    int v1 = VK;
-    //    int v2 = a.VK;
-    //    int n1 = (VK < 0) ? -NK : NK;
-    //    int n2 = (a.VK < 0) ? -a.NK : a.NK;
-    //    int v = v1 + v2;
-    //    int n = n1 + n2;
-    //    if (v == 0)
-    //    {
-    //        if (n <= -100) return Value(-1, -(n + 100));
-    //        if (n >= 100) return Value(1, n - 100);
-    //        return Value(0, n);
-    //    }
-    //    else
-    //    {
-    //        if (n < 0)
-    //        {
-    //            if (n <= -100)
-    //            {
-    //                if (v == 1) return Value(0, n + 100);
-    //                if (v < 0) return Value(v - 1, -(n + 100));
-    //                return Value(v - 2, 200 + n);
-    //            }
-    //            else
-    //            {
-    //                if (v < 0) return Value(v, -n);
-    //                return Value(v - 1, 100 + n);
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (n >= 100)
-    //            {
-    //                if (v == -2) return Value(0, n - 200);
-    //                if (v < -2) return Value(v + 1, 200 - n);
-    //                return Value(v + 1, n - 100);
-    //            }
-    //            else
-    //            {
-    //                if (v == -1) return Value(0, n - 100);
-    //                if (v < -1) return Value(v + 1, 100 - n);
-    //                return Value(v, n);
-    //            }
-    //        }
-    //    }
-    //}
-
     Value operator *(const int& x) const
     {
         if (x >= 0)
@@ -434,5 +384,3 @@ static QColor ConvertIntToQColor(const int& color)
     std::tie(r, g, b, a) = ConvertIntToRGBA(color);
     return QColor(r, g, b, a);
 }
-
-#endif // !CONSTANTS_H

@@ -1,6 +1,4 @@
 ﻿#pragma once
-#ifndef COINKEEPERVIEW_HPP
-#define COINKEEPERVIEW_HPP
 
 #include <QWidget>
 #include "ui_coinkeeper.h"
@@ -72,5 +70,3 @@ private:
     void UpdateEnableButtonsTableMonthOverview();
     void UpdateEnableButtonsTableAccounts();
 };
-
-#endif // !COINKEEPERVIEW_HPP

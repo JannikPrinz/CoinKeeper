@@ -1,13 +1,11 @@
 ﻿#pragma once
-#ifndef COINKEEPERPRESENTER_HPP
-#define COINKEEPERPRESENTER_HPP
 
-#include "presenter.hpp"
-#include "coinkeeperview.hpp"
-#include "labelmanager.hpp"
-#include "transactionmanager.hpp"
-#include "accountmanager.hpp"
-#include "standingordermanager.hpp"
+#include "presenter.h"
+#include "coinkeeperview.h"
+#include "labelmanager.h"
+#include "transactionmanager.h"
+#include "accountmanager.h"
+#include "standingordermanager.h"
 #include <qstringlistmodel.h>
 #include "qdebug.h"
 
@@ -53,5 +51,3 @@ private:
     // Opens a window, where the user can change a selected transaction.
     void UpdateTransaction();
 };
-
-#endif // !COINKEEPERPRESENTER_HPP

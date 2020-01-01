@@ -1,4 +1,4 @@
-#include "accountmanager.hpp"
+#include "accountmanager.h"
 
 AccountManager::AccountManager(const string& profile, Database* data)
 {

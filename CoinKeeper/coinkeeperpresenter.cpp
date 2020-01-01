@@ -1,4 +1,4 @@
-﻿#include "coinkeeperpresenter.hpp"
+﻿#include "coinkeeperpresenter.h"
 
 CoinKeeperPresenter::CoinKeeperPresenter(Database* base, string profilePath, QObject * parent) : Presenter(base, parent) {
     currentProfile = profilePath;

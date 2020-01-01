@@ -1,4 +1,4 @@
-#include "standingordermanager.hpp"
+#include "standingordermanager.h"
 
 StandingOrderManager::StandingOrderManager(const string& profile, Database* data)
 {

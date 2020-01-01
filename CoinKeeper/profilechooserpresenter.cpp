@@ -1,4 +1,4 @@
-﻿#include "profilechooserpresenter.hpp"
+﻿#include "profilechooserpresenter.h"
 
 ProfileChooserPresenter::ProfileChooserPresenter(Database* base, QObject * parent) : Presenter(base, parent) {
     ProfileChooserView* v = new ProfileChooserView();

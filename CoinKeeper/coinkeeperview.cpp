@@ -1,4 +1,4 @@
-﻿#include "coinkeeperview.hpp"
+﻿#include "coinkeeperview.h"
 
 CoinKeeperView::CoinKeeperView(QWidget * parent) : QMainWindow(parent) {
     ui.setupUi(this);

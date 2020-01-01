@@ -1,4 +1,4 @@
-﻿#include "profilechooserview.hpp"
+﻿#include "profilechooserview.h"
 
 ProfileChooserView::ProfileChooserView(QWidget * parent) : QMainWindow(parent) {
     ui.setupUi(this);

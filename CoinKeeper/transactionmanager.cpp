@@ -1,4 +1,4 @@
-#include "transactionmanager.hpp"
+#include "transactionmanager.h"
 
 TransactionManager::TransactionManager(string profile, Database* data)
 {

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef TRANSACTIONMANAGER_HPP
-#define TRANSACTIONMANAGER_HPP
 
 #include "ui_addtransactionwindow.h"
 #include "database.h"
@@ -48,5 +46,3 @@ private:
     void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const Value& oldValue);
 
 };
-
-#endif // !TRANSACTIONMANAGER_HPP

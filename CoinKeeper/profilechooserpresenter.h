@@ -1,9 +1,7 @@
 ﻿#pragma once
-#ifndef PROFILECHOOSERPRESENTER_HPP
-#define PROFILECHOOSERPRESENTER_HPP
 
-#include "presenter.hpp"
-#include "profilechooserview.hpp"
+#include "presenter.h"
+#include "profilechooserview.h"
 #include "qinputdialog.h"
 
 class ProfileChooserPresenter : public Presenter {
@@ -25,5 +23,3 @@ private:
     void CreateConnections();
 
 };
-
-#endif // !PROFILECHOOSERPRESENTER_HPP

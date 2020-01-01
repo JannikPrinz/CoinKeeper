@@ -1,6 +1,4 @@
 #pragma once
-#ifndef ACCOUNTMANAGER_HPP
-#define ACCOUNTMANAGER_HPP
 
 #include "database.h"
 #include "ui_addaccountwindow.h"
@@ -41,5 +39,3 @@ private:
     void CreateNewAccount();
     void ChangeExistingAccount(const int& accountID);
 };
-
-#endif // !ACCOUNTMANAGER_HPP

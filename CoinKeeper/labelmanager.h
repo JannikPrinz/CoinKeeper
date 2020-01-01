@@ -1,6 +1,4 @@
 #pragma once
-#ifndef LABELMANAGER_HPP
-#define LABELMANAGER_HPP
 
 #include "ui_managelabels.h"
 #include "database.h"
@@ -46,5 +44,3 @@ private:
     // Refreshs the window, which shows all labels.
     void RefreshWindow();
 };
-
-#endif // !LABELMANAGER_HPP

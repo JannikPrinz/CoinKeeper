@@ -1,6 +1,4 @@
 ﻿#pragma once
-#ifndef PRESENTER_HPP
-#define PRESENTER_HPP
 
 #include <QObject>
 #include "database.h"
@@ -19,5 +17,3 @@ signals:
 protected:
     Database* database;
 };
-
-#endif // !PRESENTER_HPP

@@ -1,4 +1,4 @@
-#include "labelmanager.hpp"
+#include "labelmanager.h"
 
 LabelManager::LabelManager(string profilePath, Database* base)
 {

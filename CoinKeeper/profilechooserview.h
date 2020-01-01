@@ -1,6 +1,4 @@
 ﻿#pragma once
-#ifndef PROFILECHOOSERVIEW_HPP
-#define PROFILECHOOSERVIEW_HPP
 
 #include <QWidget>
 #include "ui_profilechooser.h"
@@ -30,5 +28,3 @@ signals:
 private:
     Ui_MainWindow ui;
 };
-
-#endif // !PROFILECHOOSERVIEW_HPP

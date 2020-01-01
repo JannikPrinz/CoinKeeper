@@ -1,6 +1,4 @@
 #pragma once
-#ifndef STANDINGORDERMANAGER_HPP
-#define STANDINGORDERMANAGER_HPP
 
 #include "ui_managestandingorders.h"
 #include "ui_addstandingorder.h"
@@ -50,5 +48,3 @@ private:
     void RefreshWindow();
 
 };
-
-#endif // !STANDINGORDERMANAGER_HPP

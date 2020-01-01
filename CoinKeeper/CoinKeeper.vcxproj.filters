@@ -154,44 +154,44 @@
     <CustomBuild Include="Form Files\profileChooser.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="supervisorpresenter.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="presenter.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="profilechooserpresenter.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="profilechooserview.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="coinkeeperpresenter.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="coinkeeperview.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Form Files\managelabels.ui">
       <Filter>Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="labelmanager.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="transactionmanager.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="accountmanager.hpp">
-      <Filter>Header Files</Filter>
     </CustomBuild>
     <CustomBuild Include="managestandingorders.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="standingordermanager.hpp">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="addstandingorder.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="accountmanager.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="coinkeeperpresenter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="coinkeeperview.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="labelmanager.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="presenter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="profilechooserpresenter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="profilechooserview.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="standingordermanager.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="supervisorpresenter.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="transactionmanager.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

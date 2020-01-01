@@ -1,13 +1,10 @@
 ﻿#pragma once
-#ifndef SUPERVISORPRESENTER_H
-#define SUPERVISORPRESENTER_H
-
 
 #include <QObject>
-#include "presenter.hpp"
+#include "presenter.h"
 #include "database.h"
-#include "profilechooserpresenter.hpp"
-#include "coinkeeperpresenter.hpp"
+#include "profilechooserpresenter.h"
+#include "coinkeeperpresenter.h"
 
 class SupervisorPresenter : public QObject {
     Q_OBJECT
@@ -23,5 +20,3 @@ private:
     Presenter* presenter;
     Database* database;
 };
-
-#endif // !SUPERVISORPRESENTER_H

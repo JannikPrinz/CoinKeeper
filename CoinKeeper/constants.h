@@ -122,7 +122,7 @@
 #define STANDING_ORDER_DESCRIPTION "Description"
 #define STANDING_ORDER_TYPE "OrderType"
 #define STANDING_ORDER_DATE "NextDate"
-#define TEXT_ACCOUNT_NAME_NEEDED "Bitte geben Sie einen Namen f\303\274r das neue Konto an."
+#define TEXT_ACCOUNT_NAME_NEEDED "Bitte geben Sie einen Namen f\303\274r das Konto an."
 #define TEXT_ADDED_TRANSACTIONS_PART_1 "Es wurden "
 #define TEXT_ADDED_TRANSACTIONS_PART_2 " Transaktionen durch Dauerauftr\303\244ge hinzugef\303\274gt."
 #define TEXT_ALL_ACCOUNTS "Alle Konten"

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "database.h"
-#include "ui_addaccountwindow.h"
-#include "qmessagebox.h"
 
 class AccountManager : QObject
 {
@@ -10,14 +8,14 @@ class AccountManager : QObject
 
 public:
     /*
-    * This method gives the user the ability, to change an existing account.
-    *
-    * Parameters:
-    * const string& profile    : path of the current profile
-    * Database* data        : Database-object to change the stored data of the given profile
-    */
-    AccountManager(const string& profile, Database* data);
-    ~AccountManager();
+     * Constructor of the class which manages the accounts of a profile.
+     *
+     * Parameters:
+     * string const& profile : path of the current profile
+     * Database* data        : Database-object to change the stored data of the given profile
+     */
+    AccountManager(string const& profile, Database* data);
+    ~AccountManager() = default;
     /*
      * This method starts a new account creation.
      */
@@ -26,16 +24,19 @@ public:
      * This method gives the user the ability, to change an existing account.
      *
      * Parameters:
-     * const int& accountID        : id of the account, which will be changed
-     * const string& oldName    : old name of the account
-     * const Value& oldValue    : old value of the account
+     * int accountID  : id of the account, which will be changed
+     * string const& oldName : old name of the account
+     * Value const& oldValue : old value of the account
      */
-    void ChangeAccount(const int& accountID, const string& oldName, const Value& oldValue);
+    void ChangeAccount(int accountID, string const& oldName, Value const& oldValue);
+
+private:
+    [[nodiscard]]
+    bool CreateNewAccount(QString const& accountName, int vk, int nk, bool negative);
+    [[nodiscard]]
+    bool ChangeExistingAccount(int accountID, QString const& accountName, int vk, int nk, bool negative);
 
 private:
     string currentProfile;
     Database* database;
-    Ui::AddAccountWindow* addAccountWindow;
-    void CreateNewAccount();
-    void ChangeExistingAccount(const int& accountID);
 };

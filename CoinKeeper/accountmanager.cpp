@@ -1,5 +1,8 @@
 #include "accountmanager.h"
 
+#include "ui_addaccountwindow.h"
+#include "qmessagebox.h"
+
 AccountManager::AccountManager(const string& profile, Database* data)
 {
     currentProfile = profile;
@@ -8,69 +11,88 @@ AccountManager::AccountManager(const string& profile, Database* data)
 
 void AccountManager::CreateAccount()
 {
-    addAccountWindow = new Ui::AddAccountWindow;
+    auto addAccountWindow = std::make_unique<Ui::AddAccountWindow>();
     QDialog dialog;
     addAccountWindow->setupUi(&dialog);
-    connect(addAccountWindow->buttonOk, &QPushButton::clicked, this, [=] { CreateNewAccount(); });
+    connect(addAccountWindow->buttonOk, &QPushButton::clicked, this, [this, &addAccountWindow] {
+        auto accountCreationWasSuccessful = CreateNewAccount(
+            addAccountWindow->txtNameOfAccount->text(),
+            addAccountWindow->spinBoxVK->value(),
+            addAccountWindow->spinBoxNK->value(),
+            addAccountWindow->radioButtonNegativ->isChecked()
+        );
+
+        if (accountCreationWasSuccessful) {
+            addAccountWindow->buttonCancel->click();
+        }
+    });
     dialog.exec();
-    delete addAccountWindow;
 }
 
-void AccountManager::CreateNewAccount()
+void AccountManager::ChangeAccount(int const accountID, string const& oldName, Value const& oldValue)
 {
-    if (addAccountWindow->txtNameOfAccount->text() == QString(""))
-    {
-        QMessageBox msg;
-        msg.setText(TEXT_ACCOUNT_NAME_NEEDED);
-        msg.exec();
-        return;
-    }
-    Value value = Value(addAccountWindow->spinBoxVK->value(), addAccountWindow->spinBoxNK->value());
-    if (addAccountWindow->radioButtonNegativ->isChecked()) value *= -1;
-    database->CreateNewAccount(currentProfile.c_str(), addAccountWindow->txtNameOfAccount->text().toStdString(), value);
-    addAccountWindow->buttonCancel->click();
-}
-
-void AccountManager::ChangeAccount(const int& accountID, const string& oldName, const Value& oldValue)
-{
-    addAccountWindow = new Ui::AddAccountWindow;
+    auto addAccountWindow = std::make_unique<Ui::AddAccountWindow>();
     QDialog dialog;
     addAccountWindow->setupUi(&dialog);
-    connect(addAccountWindow->buttonOk, &QPushButton::clicked, this, [=] { ChangeExistingAccount(accountID); });
+    connect(addAccountWindow->buttonOk, &QPushButton::clicked, this, [this, accountID, &addAccountWindow] {
+        auto changeWasSuccessful = ChangeExistingAccount(
+            accountID,
+            addAccountWindow->txtNameOfAccount->text(),
+            addAccountWindow->spinBoxVK->value(),
+            addAccountWindow->spinBoxNK->value(),
+            addAccountWindow->radioButtonNegativ->isChecked()
+        );
+
+        if (changeWasSuccessful) {
+            addAccountWindow->buttonCancel->click();
+        }
+    });
+
     addAccountWindow->txtNameOfAccount->setText(QString::fromStdString(oldName));
     addAccountWindow->buttonOk->setText(TEXT_CHANGE_ACCOUNT);
-    if (oldValue < 0)
-    {
+    if (oldValue < 0) {
         Value v = oldValue * -1;
         addAccountWindow->spinBoxVK->setValue(v.VK);
         addAccountWindow->spinBoxNK->setValue(v.NK);
         addAccountWindow->radioButtonNegativ->setChecked(true);
-    }
-    else
-    {
+    } else {
         addAccountWindow->spinBoxVK->setValue(oldValue.VK);
         addAccountWindow->spinBoxNK->setValue(oldValue.NK);
         addAccountWindow->radioButtonPositiv->setChecked(true);
     }
     dialog.exec();
-    delete addAccountWindow;
 }
 
-void AccountManager::ChangeExistingAccount(const int& accountID)
+bool AccountManager::CreateNewAccount(QString const& accountName, int const vk, int const nk, bool const negative)
 {
-    if (addAccountWindow->txtNameOfAccount->text() == QString(""))
-    {
+    if (accountName == QString("")) {
         QMessageBox msg;
         msg.setText(TEXT_ACCOUNT_NAME_NEEDED);
         msg.exec();
-        return;
+        return false;
     }
-    Value value = Value(addAccountWindow->spinBoxVK->value(), addAccountWindow->spinBoxNK->value());
-    if (addAccountWindow->radioButtonNegativ->isChecked()) value *= -1;
-    database->UpdateAccount(currentProfile.c_str(), accountID, addAccountWindow->txtNameOfAccount->text().toStdString(), value);
-    addAccountWindow->buttonCancel->click();
+    Value value = Value(vk, nk);
+    if (negative) {
+        value *= -1;
+    }
+    database->CreateNewAccount(currentProfile.c_str(), accountName.toStdString(), value);
+
+    return true;
 }
 
-AccountManager::~AccountManager()
+bool AccountManager::ChangeExistingAccount(int const accountID, QString const& accountName, int const vk, int const nk, bool const negative)
 {
+    if (accountName == QString("")) {
+        QMessageBox msg;
+        msg.setText(TEXT_ACCOUNT_NAME_NEEDED);
+        msg.exec();
+        return false;
+    }
+    Value value = Value(vk, nk);
+    if (negative) {
+        value *= -1;
+    }
+    database->UpdateAccount(currentProfile.c_str(), accountID, accountName.toStdString(), value);
+
+    return true;
 }

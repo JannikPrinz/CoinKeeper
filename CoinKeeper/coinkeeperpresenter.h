@@ -1,20 +1,15 @@
 ﻿#pragma once
-
 #include "presenter.h"
 #include "coinkeeperview.h"
-#include "labelmanager.h"
-#include "transactionmanager.h"
-#include "accountmanager.h"
-#include "standingordermanager.h"
+
 #include <qstringlistmodel.h>
-#include "qdebug.h"
 
 class CoinKeeperPresenter : public Presenter {
     Q_OBJECT
 
 public:
     CoinKeeperPresenter(Database* base, string profilePath, QObject * parent = Q_NULLPTR);
-    ~CoinKeeperPresenter();
+    ~CoinKeeperPresenter() = default;
 
 private:
     void CreateConnections();
@@ -39,7 +34,7 @@ private:
     void UpdateTransaction();
 
 private:
-    CoinKeeperView* view;
+    std::unique_ptr<CoinKeeperView> view;
     string currentProfile;
     // all accounts of the open profile
     vector<tuple<int, string, Value>> currentAccounts;

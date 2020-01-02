@@ -1,6 +1,6 @@
 ﻿#include "coinkeeperview.h"
 
-CoinKeeperView::CoinKeeperView(QWidget * parent) : QMainWindow(parent) {
+CoinKeeperView::CoinKeeperView(QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
     ui.tableMonthOverview->setColumnWidth(2, 400);
     date = QDateTime::currentDateTime();
@@ -9,44 +9,15 @@ CoinKeeperView::CoinKeeperView(QWidget * parent) : QMainWindow(parent) {
     UpdateTime();
     UpdateEnableButtonsTableMonthOverview();
     UpdateEnableButtonsTableAccounts();
-    timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &CoinKeeperView::UpdateTime);
+    timer = std::make_unique<QTimer>(this);
+    connect(timer.get(), &QTimer::timeout, this, &CoinKeeperView::UpdateTime);
     timer->start(1000);
-    connect(ui.buttonChangeProfile, &QPushButton::clicked, this, [=] { emit ButtonChangeProfileClicked(); });
-    connect(ui.buttonModifyAccount, &QPushButton::clicked, this, [=] { emit ButtonChangeAccountClicked(); });
-    connect(ui.buttonAddAccount, &QPushButton::clicked, this, [=] { emit ButtonCreateNewAccountClicked(); });
-    connect(ui.buttonAddTransaction, &QPushButton::clicked, this, [=] { emit ButtonAddTransactionClicked(); });
-    connect(ui.buttonDeleteTransaction, &QPushButton::clicked, this, [=] { emit ButtonDeleteTransactionClicked(); });
-    connect(ui.buttonDeleteAccount, &QPushButton::clicked, this, [=] { emit ButtonDeleteAccountClicked(); });
-    connect(ui.buttonManageStandingOrders, &QPushButton::clicked, this, [=] { emit ButtonManageStandingOrdersClicked(); });
-    connect(ui.buttonManageLabels, &QPushButton::clicked, this, [=] { emit ButtonManageLabelsClicked(); });
-    connect(ui.buttonChangeTransaction, &QPushButton::clicked, this, [=] { emit ButtonUpdateTransactionClicked(); });
-    connect(ui.comboBoxAccount, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=] { emit SelectionMonthYearAccountChanged(); });
-    connect(ui.comboBoxMonth, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [=] { emit SelectionMonthYearAccountChanged(); });
-    connect(ui.spinBoxYear, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=] { emit SelectionMonthYearAccountChanged(); });
-    connect(ui.tableMonthOverview, static_cast<void(QTableWidget::*)(void)>(&QTableWidget::itemSelectionChanged), this, [=] { UpdateEnableButtonsTableMonthOverview(); });
-    connect(ui.tableAccounts, static_cast<void(QTableWidget::*)(void)>(&QTableWidget::itemSelectionChanged), this, [=] { UpdateEnableButtonsTableAccounts(); });
+    CreateConnections();
 }
 
-tuple<int, int, int> CoinKeeperView::GetComboboxContent()
-{
-    return make_tuple(ui.comboBoxMonth->currentIndex(), ui.spinBoxYear->value(), ui.comboBoxAccount->currentIndex());
-}
-
-int CoinKeeperView::GetSelectedRowTableMonthOverview()
-{
-    return ui.tableMonthOverview->currentRow();
-}
-
-int CoinKeeperView::GetSelectedRowTableAccounts()
-{
-    return ui.tableAccounts->currentRow();
-}
-
-void CoinKeeperView::setComboboxAccountValues(QStringListModel* model)
-{
-    ui.comboBoxAccount->setModel(model);
-    if (ui.comboBoxAccount->currentIndex() < 0) ui.comboBoxAccount->setCurrentIndex(0);        // to make sure that 1 element is always selected
+CoinKeeperView::~CoinKeeperView() {
+    timer->stop();
+    this->close();
 }
 
 void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> const& accounts)
@@ -54,8 +25,7 @@ void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> const& ac
     int x = static_cast<int>(accounts.size());
     ui.tableAccounts->setRowCount(x);
 
-    for (int i = 0; i < x; ++i)
-    {
+    for (int i = 0; i < x; ++i) {
         int accountID;        // not used
         string accountName;
         Value accountValue;
@@ -70,8 +40,7 @@ void CoinKeeperView::FillTransactionData(vector<tuple<QDate, string, int, string
     int x = static_cast<int>(transactions.size());
     ui.tableMonthOverview->setRowCount(x);
     Value sum(0);
-    for (int i = 0; i < x; ++i)
-    {
+    for (int i = 0; i < x; ++i) {
         int color;
         string labelName, description;
         Value value;
@@ -90,22 +59,64 @@ void CoinKeeperView::FillTransactionData(vector<tuple<QDate, string, int, string
     ui.tableMonthOverview->resizeRowsToContents();
 }
 
-void CoinKeeperView::UpdateTime()
+int CoinKeeperView::GetSelectedMonth()
 {
-    date = QDateTime::currentDateTime();
-    ui.labelDate->setText(date.toString("dd.MM.yyyy"));
-    ui.labelTime->setText(date.toString("HH:mm:ss"));
+    return ui.comboBoxMonth->currentIndex();
+}
+
+int CoinKeeperView::GetSelectedYear()
+{
+    return ui.spinBoxYear->value();
+}
+
+int CoinKeeperView::GetSelectedAccount()
+{
+    return ui.comboBoxAccount->currentIndex();
+}
+
+void CoinKeeperView::setComboboxAccountValues(QStringListModel* model)
+{
+    ui.comboBoxAccount->setModel(model);
+    if (ui.comboBoxAccount->currentIndex() < 0) {   // to make sure that 1 element is always selected
+        ui.comboBoxAccount->setCurrentIndex(0);
+    }
+}
+
+int CoinKeeperView::GetSelectedRowTableMonthOverview()
+{
+    return ui.tableMonthOverview->currentRow();
+}
+
+int CoinKeeperView::GetSelectedRowTableAccounts()
+{
+    return ui.tableAccounts->currentRow();
+}
+
+void CoinKeeperView::CreateConnections()
+{
+    connect(ui.buttonChangeProfile, &QPushButton::clicked, this, [this] { emit ButtonChangeProfileClicked(); });
+    connect(ui.buttonModifyAccount, &QPushButton::clicked, this, [this] { emit ButtonChangeAccountClicked(); });
+    connect(ui.buttonAddAccount, &QPushButton::clicked, this, [this] { emit ButtonCreateNewAccountClicked(); });
+    connect(ui.buttonAddTransaction, &QPushButton::clicked, this, [this] { emit ButtonAddTransactionClicked(); });
+    connect(ui.buttonDeleteTransaction, &QPushButton::clicked, this, [this] { emit ButtonDeleteTransactionClicked(); });
+    connect(ui.buttonDeleteAccount, &QPushButton::clicked, this, [this] { emit ButtonDeleteAccountClicked(); });
+    connect(ui.buttonManageStandingOrders, &QPushButton::clicked, this, [this] { emit ButtonManageStandingOrdersClicked(); });
+    connect(ui.buttonManageLabels, &QPushButton::clicked, this, [this] { emit ButtonManageLabelsClicked(); });
+    connect(ui.buttonChangeTransaction, &QPushButton::clicked, this, [this] { emit ButtonUpdateTransactionClicked(); });
+    connect(ui.comboBoxAccount, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this] { emit SelectionMonthYearAccountChanged(); });
+    connect(ui.comboBoxMonth, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this] { emit SelectionMonthYearAccountChanged(); });
+    connect(ui.spinBoxYear, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [this] { emit SelectionMonthYearAccountChanged(); });
+    connect(ui.tableMonthOverview, static_cast<void(QTableWidget::*)(void)>(&QTableWidget::itemSelectionChanged), this, [this] { UpdateEnableButtonsTableMonthOverview(); });
+    connect(ui.tableAccounts, static_cast<void(QTableWidget::*)(void)>(&QTableWidget::itemSelectionChanged), this, [this] { UpdateEnableButtonsTableAccounts(); });
 }
 
 void CoinKeeperView::UpdateEnableButtonsTableMonthOverview()
 {
-    if (ui.tableMonthOverview->currentRow() < 0)
-    {
+    if (ui.tableMonthOverview->currentRow() < 0) {
         ui.buttonChangeTransaction->setEnabled(false);
         ui.buttonDeleteTransaction->setEnabled(false);
     }
-    else
-    {
+    else {
         ui.buttonChangeTransaction->setEnabled(true);
         ui.buttonDeleteTransaction->setEnabled(true);
     }
@@ -113,20 +124,19 @@ void CoinKeeperView::UpdateEnableButtonsTableMonthOverview()
 
 void CoinKeeperView::UpdateEnableButtonsTableAccounts()
 {
-    if (ui.tableAccounts->currentRow() < 0)
-    {
+    if (ui.tableAccounts->currentRow() < 0) {
         ui.buttonDeleteAccount->setEnabled(false);
         ui.buttonModifyAccount->setEnabled(false);
     }
-    else
-    {
+    else {
         ui.buttonDeleteAccount->setEnabled(true);
         ui.buttonModifyAccount->setEnabled(true);
     }
 }
 
-CoinKeeperView::~CoinKeeperView() {
-    timer->stop();
-    timer->~QTimer();
-    this->close();
+void CoinKeeperView::UpdateTime()
+{
+    date = QDateTime::currentDateTime();
+    ui.labelDate->setText(date.toString("dd.MM.yyyy"));
+    ui.labelTime->setText(date.toString("HH:mm:ss"));
 }

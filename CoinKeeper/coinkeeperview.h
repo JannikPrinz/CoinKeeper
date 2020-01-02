@@ -1,11 +1,10 @@
 ﻿#pragma once
-
-#include <QWidget>
-#include "ui_coinkeeper.h"
-#include "qtimer.h"
-#include "qdatetime.h"
-#include "constants.h"
+#include <qtimer.h>
+#include <qdatetime.h>
 #include <qstringlistmodel.h>
+
+#include "constants.h"
+#include "ui_coinkeeper.h"
 
 using namespace std;
 
@@ -13,7 +12,8 @@ class CoinKeeperView : public QMainWindow {
     Q_OBJECT
 
 public:
-    CoinKeeperView(QWidget * parent = Q_NULLPTR);
+    CoinKeeperView(QWidget* parent = Q_NULLPTR);
+    ~CoinKeeperView();
     /*
      * Fills the table which represents the existing accounts with the given accounts
      *
@@ -29,13 +29,28 @@ public:
      * const vector<tuple<int, string, Value, QDate, int, int>>& transactions : vector of transactions, which are represented as tuples with the date,
      * name of the label, color of the label, TransactionDescription, value of the transaction
      */
-    void FillTransactionData(const vector<tuple<QDate, string, int, string, Value>>& transactions);
+    void FillTransactionData(vector<tuple<QDate, string, int, string, Value>> const& transactions);
     /*
-     * This method returns the indices of the comboboxes and the value of the spinBox (year), which set the content, which is displayed in the transaction table
+     * This method returns the index of the combobox of the selected month
      *
-     * Returns: tuple of indices of the comboboxes (month, year, account)
+     * Returns: the index of the combobox of the selected month
      */
-    tuple<int, int, int> GetComboboxContent();
+    [[nodiscard]]
+    int GetSelectedMonth();
+    /*
+     * This method returns the selected year in the spinBox
+     *
+     * Returns: the selected year in the spinBox
+     */
+    [[nodiscard]]
+    int GetSelectedYear();
+    /*
+     * This method returns the index of the combobox of the selected account
+     *
+     * Returns: the index of the combobox of the selected account
+     */
+    [[nodiscard]]
+    int GetSelectedAccount();
     /*
      * Fills the combobox, which lists all accounts, with the given content
      *
@@ -46,12 +61,18 @@ public:
     /*
      * Returns: The selected row of the table, which shows transactions
      */
+    [[nodiscard]]
     int GetSelectedRowTableMonthOverview();
     /*
      * Returns: The selected row of the table, which shows accounts
      */
+    [[nodiscard]]
     int GetSelectedRowTableAccounts();
-    ~CoinKeeperView();
+
+private:
+    void CreateConnections();
+    void UpdateEnableButtonsTableMonthOverview();
+    void UpdateEnableButtonsTableAccounts();
 
 signals:
     void ButtonChangeProfileClicked();
@@ -70,8 +91,6 @@ public slots:
 
 private:
     Ui::CoinKeeperClass ui;
-    QTimer* timer;
+    std::unique_ptr<QTimer> timer;
     QDateTime date;
-    void UpdateEnableButtonsTableMonthOverview();
-    void UpdateEnableButtonsTableAccounts();
 };

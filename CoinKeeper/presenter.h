@@ -3,7 +3,6 @@
 #include <QObject>
 #include "database.h"
 
-
 class Presenter : public QObject {
     Q_OBJECT
 

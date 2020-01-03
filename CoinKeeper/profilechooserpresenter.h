@@ -19,7 +19,7 @@ public slots:
 
 private:
     ProfileChooserView* view;
-    list<string> currentProfiles;
+    std::list<string> currentProfiles;
     void CreateConnections();
 
 };

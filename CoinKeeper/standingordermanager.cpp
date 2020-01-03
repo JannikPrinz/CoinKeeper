@@ -6,7 +6,7 @@ StandingOrderManager::StandingOrderManager(const string& profile, Database* data
     database = data;
 }
 
-void StandingOrderManager::ManageStandingOrders(vector<tuple<int, string, Value>>* accounts, vector<tuple<int, string, int>>* labels)
+void StandingOrderManager::ManageStandingOrders(std::vector<std::tuple<int, string, Value>>* accounts, std::vector<std::tuple<int, string, int>>* labels)
 {
     currentAccounts = accounts;
     currentLabels = labels;
@@ -27,7 +27,7 @@ void StandingOrderManager::ExecuteOrders()
 {
     QDate currentDate = QDate::currentDate();
     int date = currentDate.year() * 10000 + currentDate.month() * 100 + currentDate.day();
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
     if (executableOrders.empty())
     {
         return;
@@ -44,10 +44,10 @@ void StandingOrderManager::ExecuteOrders()
     QDate nextDate;
     while (executableOrders.size() != 0)
     {
-        if (get<6>(executableOrders[lastItem]) > currentDate)
+        if (std::get<6>(executableOrders[lastItem]) > currentDate)
         {
-            date = get<6>(executableOrders[lastItem]).year() * 10000 + get<6>(executableOrders[lastItem]).month() * 100 + get<6>(executableOrders[lastItem]).day();
-            database->UpdateStandingOrderDate(currentProfile.c_str(), get<0>(executableOrders[lastItem]), date);
+            date = std::get<6>(executableOrders[lastItem]).year() * 10000 + std::get<6>(executableOrders[lastItem]).month() * 100 + std::get<6>(executableOrders[lastItem]).day();
+            database->UpdateStandingOrderDate(currentProfile.c_str(), std::get<0>(executableOrders[lastItem]), date);
             executableOrders.pop_back();
             lastItem = executableOrders.size() - 1;
         } else
@@ -58,22 +58,22 @@ void StandingOrderManager::ExecuteOrders()
             switch (orderType)
             {
             case EveryDay:
-                get<6>(executableOrders[lastItem]) = nextDate.addDays(1);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addDays(1);
                 break;
             case EveryWeek:
-                get<6>(executableOrders[lastItem]) = nextDate.addDays(7);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addDays(7);
                 break;
             case EveryMonth:
-                get<6>(executableOrders[lastItem]) = nextDate.addMonths(1);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(1);
                 break;
             case EveryQuarter:
-                get<6>(executableOrders[lastItem]) = nextDate.addMonths(3);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(3);
                 break;
             case Every4Months:
-                get<6>(executableOrders[lastItem]) = nextDate.addMonths(4);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(4);
                 break;
             case EveryYear:
-                get<6>(executableOrders[lastItem]) = nextDate.addYears(1);
+                std::get<6>(executableOrders[lastItem]) = nextDate.addYears(1);
                 break;
             default:
                 return;
@@ -133,13 +133,13 @@ void StandingOrderManager::ChangeStandingOrder()
     for (int i = 0; i < (*currentAccounts).size(); i++)
     {
         addStandingOrderWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>((*currentAccounts)[i])));
-        if (get<0>((*currentAccounts)[i]) == accountID) selectedRow = i;
+        if (std::get<0>((*currentAccounts)[i]) == accountID) selectedRow = i;
     }
     addStandingOrderWindow->comboBoxChooseAccount->setCurrentIndex(selectedRow);
     for (int i = 0; i < (*currentLabels).size(); i++)
     {
         addStandingOrderWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>((*currentLabels)[i])));
-        if (get<0>((*currentLabels)[i]) == labelID) selectedRow = i;
+        if (std::get<0>((*currentLabels)[i]) == labelID) selectedRow = i;
     }
     addStandingOrderWindow->comboBoxChooseLabel->setCurrentIndex(selectedRow);
     for (int i = 0; i < NUMBER_OF_STANDING_ORDER_TYPES; i++)
@@ -178,8 +178,8 @@ void StandingOrderManager::UpdateStandingOrder(const int& orderID)
     int selectedLabel = addStandingOrderWindow->comboBoxChooseLabel->currentIndex();
     Value value = Value(addStandingOrderWindow->spinBoxVK->value(), addStandingOrderWindow->spinBoxNK->value());
     if (addStandingOrderWindow->radioButtonNegativ->isChecked()) value *= -1;
-    database->UpdateStandingOrder(currentProfile.c_str(), orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), get<0>((*currentAccounts)[selectedAccount]),
-        value, addStandingOrderWindow->dateEditNextDate->date(), get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
+    database->UpdateStandingOrder(currentProfile.c_str(), orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), std::get<0>((*currentAccounts)[selectedAccount]),
+        value, addStandingOrderWindow->dateEditNextDate->date(), std::get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
     addStandingOrderWindow->buttonCancel->click();
 }
 
@@ -194,7 +194,7 @@ void StandingOrderManager::DeleteStandingOrder()
         switch (msg.exec())
         {
         case QMessageBox::Yes:
-            database->DeleteStandingOrder(currentProfile.c_str(), get<0>(currentOrders[selectedRow]));
+            database->DeleteStandingOrder(currentProfile.c_str(), std::get<0>(currentOrders[selectedRow]));
             break;
         case QMessageBox::No:
             break;
@@ -240,15 +240,15 @@ void StandingOrderManager::RefreshWindow()
             Value value;
             QDate date;
             tie(orderID, accountID, labelID, value, description, type, date) = currentOrders[i];
-            std::vector<tuple<int, string, int>>::iterator labelIterator = find_if((*currentLabels).begin(), (*currentLabels).end(), [labelID](tuple<int, string, int> label) { return get<0>(label) == labelID; });
-            std::vector<tuple<int, string, Value>>::iterator accountIterator = find_if((*currentAccounts).begin(), (*currentAccounts).end(), [accountID](tuple<int, string, Value> acc) { return get<0>(acc) == accountID; });
+            std::vector<std::tuple<int, string, int>>::iterator labelIterator = std::find_if((*currentLabels).begin(), (*currentLabels).end(), [labelID](std::tuple<int, string, int> label) { return std::get<0>(label) == labelID; });
+            std::vector<std::tuple<int, string, Value>>::iterator accountIterator = std::find_if((*currentAccounts).begin(), (*currentAccounts).end(), [accountID](std::tuple<int, string, Value> acc) { return std::get<0>(acc) == accountID; });
             if (labelIterator == (*currentLabels).end() || accountIterator == (*currentAccounts).end()) return;        //should not happen
-            QColor qColor = ConvertIntToQColor(get<2>(*labelIterator));
-            manageStandingOrders->tableStandingOrders->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(get<1>(*accountIterator))));
+            QColor qColor = ConvertIntToQColor(std::get<2>(*labelIterator));
+            manageStandingOrders->tableStandingOrders->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(std::get<1>(*accountIterator))));
             manageStandingOrders->tableStandingOrders->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(GetStringFromStandingOrderType(type))));
             manageStandingOrders->tableStandingOrders->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(value.ToString())));
             manageStandingOrders->tableStandingOrders->setItem(i, 3, new QTableWidgetItem(date.toString("dd.MM.yy")));
-            manageStandingOrders->tableStandingOrders->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(get<1>(*labelIterator))));
+            manageStandingOrders->tableStandingOrders->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(std::get<1>(*labelIterator))));
             manageStandingOrders->tableStandingOrders->item(i, 4)->setBackgroundColor(qColor);
             manageStandingOrders->tableStandingOrders->item(i, 4)->setTextColor((qColor.value() + (255 - qColor.alpha()) < 128) ? Qt::white : Qt::black);
             manageStandingOrders->tableStandingOrders->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(description)));

@@ -39,8 +39,8 @@ public:
 private:
     string currentProfile;
     Database* database;
-    vector<tuple<int, string, Value>> currentAccounts;
-    vector<tuple<int, string, int>> currentLabels;
+    std::vector<std::tuple<int, string, Value>> currentAccounts;
+    std::vector<std::tuple<int, string, int>> currentLabels;
     Ui::AddTransactionWindow* addTransactionWindow;
     void CreateTransaction();
     void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const Value& oldValue);

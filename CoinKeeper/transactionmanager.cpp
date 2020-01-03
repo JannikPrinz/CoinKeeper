@@ -38,13 +38,13 @@ void TransactionManager::UpdateTransaction(const int& transactionID, const strin
     for (int i = 0; i < currentAccounts.size(); i++)
     {
         addTransactionWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
-        if (get<0>(currentAccounts[i]) == accountID) preSelectRow = i;
+        if (std::get<0>(currentAccounts[i]) == accountID) preSelectRow = i;
     }
     addTransactionWindow->comboBoxChooseAccount->setCurrentIndex(preSelectRow);
     for (int i = 0; i < currentLabels.size(); i++)
     {
         addTransactionWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>(currentLabels[i])));
-        if (get<0>(currentLabels[i]) == labelID) preSelectRow = i;
+        if (std::get<0>(currentLabels[i]) == labelID) preSelectRow = i;
     }
     addTransactionWindow->comboBoxChooseLabel->setCurrentIndex(preSelectRow);
     addTransactionWindow->calendarWidget->setSelectedDate(date);
@@ -76,17 +76,17 @@ void TransactionManager::UpdateTransactionInDatabase(const int& transactionID, c
     Value value = Value(addTransactionWindow->spinBoxVK->value(), addTransactionWindow->spinBoxNK->value());
     if (addTransactionWindow->radioButtonNegativ->isChecked()) value *= -1;
     // check if the selected account changed:
-    if (oldAccountID != get<0>(currentAccounts[selectedAccount]))
+    if (oldAccountID != std::get<0>(currentAccounts[selectedAccount]))
     {
         database->UpdateAccountValue(currentProfile.c_str(), oldAccountID, oldValue * -1);
-        database->UpdateAccountValue(currentProfile.c_str(), get<0>(currentAccounts[selectedAccount]), value);
+        database->UpdateAccountValue(currentProfile.c_str(), std::get<0>(currentAccounts[selectedAccount]), value);
     }
     else if (oldValue != value)
     {
         database->UpdateAccountValue(currentProfile.c_str(), oldAccountID, value - oldValue);
     }
     database->UpdateTransaction(currentProfile.c_str(), transactionID, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
-        get<0>(currentAccounts[selectedAccount]), value, addTransactionWindow->calendarWidget->selectedDate(), get<0>(currentLabels[selectedLabel]));
+        std::get<0>(currentAccounts[selectedAccount]), value, addTransactionWindow->calendarWidget->selectedDate(), std::get<0>(currentLabels[selectedLabel]));
     addTransactionWindow->buttonCancel->click();
 }
 

@@ -28,7 +28,7 @@ private:
     string currentProfile;
     Database* database;
     // all labels, which are display in the manage labels window (if open)
-    vector<tuple<int, string, int>> currentLabels;
+    std::vector<std::tuple<int, string, int>> currentLabels;
     // Creates a new label using inputs of the user.
     void CreateNewLabel();
     /*

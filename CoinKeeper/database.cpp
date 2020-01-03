@@ -74,11 +74,11 @@ void Database::CreateNewProfile(const char* fileName)
 //    sqlite3_close(db);
 //}
 
-list<string> Database::GetDatabaseList()
+std::list<string> Database::GetDatabaseList()
 {
     WIN32_FIND_DATA winFD;
     HANDLE hFind;
-    list<string> names;
+    std::list<string> names;
     LPWSTR executionPath = ExePath();
 
     hFind = FindFirstFile(executionPath, &winFD);
@@ -105,9 +105,9 @@ void Database::CreateNewAccount(const char* profile, string name, Value balance)
     string ex = INSERT_NEW_ACCOUNT_PART_1;
     ex.append(name);
     ex.append(INSERT_NEW_ACCOUNT_PART_2);
-    ex.append(to_string(balance.VK));
+    ex.append(std::to_string(balance.VK));
     ex.append(INSERT_NEW_ACCOUNT_PART_3);
-    ex.append(to_string(balance.NK));
+    ex.append(std::to_string(balance.NK));
     ex.append(INSERT_NEW_ACCOUNT_PART_4);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -121,19 +121,19 @@ void Database::CreateNewTransaction(const char* profile, const string& descripti
     string ex = INSERT_NEW_TRANSACTION_PART_1;
     ex.append(description);
     ex.append(INSERT_NEW_TRANSACTION_PART_2);
-    ex.append(to_string(value.VK));
+    ex.append(std::to_string(value.VK));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(value.NK));
+    ex.append(std::to_string(value.NK));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(date.day()));
+    ex.append(std::to_string(date.day()));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(date.month()));
+    ex.append(std::to_string(date.month()));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(date.year()));
+    ex.append(std::to_string(date.year()));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(account));
+    ex.append(std::to_string(account));
     ex.append(INSERT_NEW_TRANSACTION_PART_3_TO_8);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(INSERT_NEW_TRANSACTION_PART_9);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -147,7 +147,7 @@ void Database::CreateNewLabel(const char* profile, string name, int color)
     string ex = INSERT_NEW_LABEL_PART_1;
     ex.append(name);
     ex.append(INSERT_NEW_LABEL_PART_2);
-    ex.append(to_string(color));
+    ex.append(std::to_string(color));
     ex.append(INSERT_NEW_LABEL_PART_3);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -158,19 +158,19 @@ void Database::CreateNewStandingOrder(const char* profile, const string& descrip
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = INSERT_NEW_STANDING_ORDER_PART_1;
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_2_TO_4);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_2_TO_4);
-    ex.append(to_string(value.VK));
+    ex.append(std::to_string(value.VK));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_2_TO_4);
-    ex.append(to_string(value.NK));
+    ex.append(std::to_string(value.NK));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_5);
     ex.append(description);
     ex.append(INSERT_NEW_STANDING_ORDER_PART_6);
-    ex.append(to_string(orderType));
+    ex.append(std::to_string(orderType));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_7);
-    ex.append(to_string(date.year() * 10000 + date.month() * 100 + date.day()));
+    ex.append(std::to_string(date.year() * 10000 + date.month() * 100 + date.day()));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_8);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -183,9 +183,9 @@ void Database::UpdateLabel(const char* profile, int labelID, string name, int co
     string ex = UPDATE_LABEL_PART_1;
     ex.append(name);
     ex.append(UPDATE_LABEL_PART_2);
-    ex.append(to_string(color));
+    ex.append(std::to_string(color));
     ex.append(UPDATE_LABEL_PART_3);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(UPDATE_LABEL_PART_4);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -198,11 +198,11 @@ void Database::UpdateAccount(const char* profile, const int& accountID, const st
     string ex = UPDATE_ACCOUNT_PART_1;
     ex.append(accountName);
     ex.append(UPDATE_ACCOUNT_PART_2);
-    ex.append(to_string(accountValue.VK));
+    ex.append(std::to_string(accountValue.VK));
     ex.append(UPDATE_ACCOUNT_PART_3);
-    ex.append(to_string(accountValue.NK));
+    ex.append(std::to_string(accountValue.NK));
     ex.append(UPDATE_ACCOUNT_PART_4);
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(UPDATE_ACCOUNT_PART_5);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -214,7 +214,7 @@ void Database::UpdateAccountValue(const char* profilePath, const int& accountID,
     sqlite3_open(profilePath, &db);
     // get value of account:
     string ex = GET_ACCOUNT_VALUE_PART_1;
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(GET_ACCOUNT_VALUE_PART_2);
     Value v;
     tempAccountValue = v;
@@ -222,11 +222,11 @@ void Database::UpdateAccountValue(const char* profilePath, const int& accountID,
     // update value of account:
     v = tempAccountValue + value;
     ex = UPDATE_ACCOUNT_VALUE_PART_1;
-    ex.append(to_string(v.VK));
+    ex.append(std::to_string(v.VK));
     ex.append(UPDATE_ACCOUNT_VALUE_PART_2);
-    ex.append(to_string(v.NK));
+    ex.append(std::to_string(v.NK));
     ex.append(UPDATE_ACCOUNT_VALUE_PART_3);
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(UPDATE_ACCOUNT_VALUE_PART_4);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -237,9 +237,9 @@ void Database::UpdateStandingOrderDate(const char* profile, const int& orderID, 
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = UPDATE_STANDING_ORDER_DATE_PART_1;
-    ex.append(to_string(date));
+    ex.append(std::to_string(date));
     ex.append(UPDATE_STANDING_ORDER_DATE_PART_2);
-    ex.append(to_string(orderID));
+    ex.append(std::to_string(orderID));
     ex.append(UPDATE_STANDING_ORDER_DATE_PART_3);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -250,21 +250,21 @@ void Database::UpdateStandingOrder(const char* profile, const int& orderID, cons
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = UPDATE_STANDING_ORDER_PART_1;
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(UPDATE_STANDING_ORDER_PART_2);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(UPDATE_STANDING_ORDER_PART_3);
-    ex.append(to_string(value.VK));
+    ex.append(std::to_string(value.VK));
     ex.append(UPDATE_STANDING_ORDER_PART_4);
-    ex.append(to_string(value.NK));
+    ex.append(std::to_string(value.NK));
     ex.append(UPDATE_STANDING_ORDER_PART_5);
     ex.append(description);
     ex.append(UPDATE_STANDING_ORDER_PART_6);
-    ex.append(to_string(orderType));
+    ex.append(std::to_string(orderType));
     ex.append(UPDATE_STANDING_ORDER_PART_7);
-    ex.append(to_string(nextDate.year() * 10000 + nextDate.month() * 100 + nextDate.day()));
+    ex.append(std::to_string(nextDate.year() * 10000 + nextDate.month() * 100 + nextDate.day()));
     ex.append(UPDATE_STANDING_ORDER_PART_8);
-    ex.append(to_string(orderID));
+    ex.append(std::to_string(orderID));
     ex.append(UPDATE_STANDING_ORDER_PART_9);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -277,21 +277,21 @@ void Database::UpdateTransaction(const char* profile, const int& transactionID, 
     string ex = UPDATE_TRANSACTION_PART_1;
     ex.append(description);
     ex.append(UPDATE_TRANSACTION_PART_2);
-    ex.append(to_string(value.VK));
+    ex.append(std::to_string(value.VK));
     ex.append(UPDATE_TRANSACTION_PART_3);
-    ex.append(to_string(value.NK));
+    ex.append(std::to_string(value.NK));
     ex.append(UPDATE_TRANSACTION_PART_4);
-    ex.append(to_string(date.day()));
+    ex.append(std::to_string(date.day()));
     ex.append(UPDATE_TRANSACTION_PART_5);
-    ex.append(to_string(date.month()));
+    ex.append(std::to_string(date.month()));
     ex.append(UPDATE_TRANSACTION_PART_6);
-    ex.append(to_string(date.year()));
+    ex.append(std::to_string(date.year()));
     ex.append(UPDATE_TRANSACTION_PART_7);
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(UPDATE_TRANSACTION_PART_8);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(UPDATE_TRANSACTION_PART_9);
-    ex.append(to_string(transactionID));
+    ex.append(std::to_string(transactionID));
     ex.append(UPDATE_TRANSACTION_PART_10);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -303,7 +303,7 @@ void Database::DeleteTransaction(const char* profile, const int& transactionID, 
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = DELETE_TRANSACTION_PART_1;
-    ex.append(to_string(transactionID));
+    ex.append(std::to_string(transactionID));
     ex.append(DELETE_TRANSACTION_PART_2);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -314,7 +314,7 @@ void Database::DeleteStandingOrder(const char* profile, const int& orderID)
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = DELETE_STANDING_ORDER_PART_1;
-    ex.append(to_string(orderID));
+    ex.append(std::to_string(orderID));
     ex.append(DELETE_STANDING_ORDER_PART_2);
     sqlite3_exec(db, ex.c_str(), callback, 0, 0);
     sqlite3_close(db);
@@ -325,11 +325,11 @@ void Database::DeleteAccount(const char* profile, const int& accountID)
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = DELETE_ACCOUNT_PART_1;
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(DELETE_ACCOUNT_PART_2);
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(DELETE_ACCOUNT_PART_3);
-    ex.append(to_string(accountID));
+    ex.append(std::to_string(accountID));
     ex.append(DELETE_ACCOUNT_PART_4);
     sqlite3_exec(db, ex.c_str(), callback, 0, ERRORMESSAGE);
     sqlite3_close(db);
@@ -341,36 +341,36 @@ void Database::DeleteLabel(const char* profile, const int& labelID)
     sqlite3* db;
     sqlite3_open(profile, &db);
     string ex = DELETE_LABEL_PART_1;
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(DELETE_LABEL_PART_2);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(DELETE_LABEL_PART_3);
-    ex.append(to_string(labelID));
+    ex.append(std::to_string(labelID));
     ex.append(DELETE_LABEL_PART_4);
     sqlite3_exec(db, ex.c_str(), callback, 0, ERRORMESSAGE);
     sqlite3_close(db);
     printErrMsg();
 }
 
-vector<tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(const char* profilePath, int month, int year)
+std::vector<std::tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(const char* profilePath, int month, int year)
 {
     sqlite3* db;
     sqlite3_open(profilePath, &db);
-    vector<tuple<int, string, Value, QDate, int, int>> trans;
+    std::vector<std::tuple<int, string, Value, QDate, int, int>> trans;
     tempTransactions = trans;
     string ex;
     if (month == 0)        // show all transactions of the selected year
     {
         ex = GET_TRANSACTIONS_Y_PART_1;
-        ex.append(to_string(year));
+        ex.append(std::to_string(year));
         ex.append(GET_TRANSACTIONS_Y_PART_2);
     }
     else
     {
         ex = GET_TRANSACTIONS_M_Y_PART_1;
-        ex.append(to_string(month));
+        ex.append(std::to_string(month));
         ex.append(GET_TRANSACTIONS_M_Y_PART_2);
-        ex.append(to_string(year));
+        ex.append(std::to_string(year));
         ex.append(GET_TRANSACTIONS_M_Y_PART_3);
     }
     sqlite3_exec(db, ex.c_str(), ProcessTransactionsInformation, 0, 0);
@@ -378,29 +378,29 @@ vector<tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(con
     return tempTransactions;
 }
 
-vector<tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(const char* profilePath, int month, int year, int accountID)
+std::vector<std::tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(const char* profilePath, int month, int year, int accountID)
 {
     sqlite3* db;
     sqlite3_open(profilePath, &db);
-    vector<tuple<int, string, Value, QDate, int, int>> trans;
+    std::vector<std::tuple<int, string, Value, QDate, int, int>> trans;
     tempTransactions = trans;
     string ex;
     if (month == 0)        // show all transactions of the selected year
     {
         ex = GET_TRANSACTIONS_Y_A_PART_1;
-        ex.append(to_string(year));
+        ex.append(std::to_string(year));
         ex.append(GET_TRANSACTIONS_Y_A_PART_2);
-        ex.append(to_string(accountID));
+        ex.append(std::to_string(accountID));
         ex.append(GET_TRANSACTIONS_Y_A_PART_3);
     }
     else
     {
         ex = GET_TRANSACTIONS_M_Y_A_PART_1;
-        ex.append(to_string(month));
+        ex.append(std::to_string(month));
         ex.append(GET_TRANSACTIONS_M_Y_A_PART_2);
-        ex.append(to_string(year));
+        ex.append(std::to_string(year));
         ex.append(GET_TRANSACTIONS_M_Y_A_PART_3);
-        ex.append(to_string(accountID));
+        ex.append(std::to_string(accountID));
         ex.append(GET_TRANSACTIONS_M_Y_A_PART_4);
     }
     sqlite3_exec(db, ex.c_str(), ProcessTransactionsInformation, 0, 0);
@@ -408,47 +408,47 @@ vector<tuple<int, string, Value, QDate, int, int>> Database::GetTransactions(con
     return tempTransactions;
 }
 
-vector<tuple<int, string, Value>> Database::GetAccounts(const char* profilePath)
+std::vector<std::tuple<int, string, Value>> Database::GetAccounts(const char* profilePath)
 {
     sqlite3* db;
     sqlite3_open(profilePath, &db);
-    vector<tuple<int, string, Value>> acc;
+    std::vector<std::tuple<int, string, Value>> acc;
     tempAccounts = acc;
     sqlite3_exec(db, GET_ALL_ACCOUNTS.c_str(), ProcessAccountInformation, 0, 0);
     sqlite3_close(db);
     return tempAccounts;
 }
 
-vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> Database::GetAllStandingOrders(const char* profile)
+std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> Database::GetAllStandingOrders(const char* profile)
 {
     sqlite3* db;
     sqlite3_open(profile, &db);
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> orders;
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> orders;
     tempOrders = orders;
     sqlite3_exec(db, GET_ALL_STANDING_ORDERS.c_str(), ProcessOrderInformation, 0, 0);
     sqlite3_close(db);
     return tempOrders;
 }
 
-vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> Database::GetExecutableStandingOrders(const char* profile, const int& date)
+std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> Database::GetExecutableStandingOrders(const char* profile, const int& date)
 {
     sqlite3* db;
     sqlite3_open(profile, &db);
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> orders;
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> orders;
     tempOrders = orders;
     string ex = GET_EXECUTABLE_STANDING_ORDERS_PART_1;
-    ex.append(to_string(date));
+    ex.append(std::to_string(date));
     ex.append(GET_EXECUTABLE_STANDING_ORDERS_PART_2);
     sqlite3_exec(db, ex.c_str(), ProcessOrderInformation, 0, 0);
     sqlite3_close(db);
     return tempOrders;
 }
 
-vector<tuple<int, string, int>> Database::GetLabels(const char* profile)
+std::vector<std::tuple<int, string, int>> Database::GetLabels(const char* profile)
 {
     sqlite3* db;
     sqlite3_open(profile, &db);
-    vector<tuple<int, string, int>> labels;
+    std::vector<std::tuple<int, string, int>> labels;
     tempLabels = labels;
     sqlite3_exec(db, GET_ALL_LABELS.c_str(), ProcessLabels, 0, 0);
     sqlite3_close(db);
@@ -541,9 +541,9 @@ string Database::LPWSTRToString(LPWSTR lString)
     return string(ch);
 }
 
-list<string> Database::GetFilenames(list<string> rawList, string path, string type)
+std::list<string> Database::GetFilenames(std::list<string> rawList, string path, string type)
 {
-    list<string> returnList;
+    std::list<string> returnList;
     string typeW = string(".").append(type);
     for each (string s in rawList)
     {

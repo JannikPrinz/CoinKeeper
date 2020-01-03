@@ -25,7 +25,7 @@ public:
      * vector<tuple<int, string, Value>>* accounts    : all accounts of the open profile
      * vector<tuple<int, string, int>>* labels        : all labels of the open profile
      */
-    void ManageStandingOrders(vector<tuple<int, string, Value>>* accounts, vector<tuple<int, string, int>>* labels);
+    void ManageStandingOrders(std::vector<std::tuple<int, string, Value>>* accounts, std::vector<std::tuple<int, string, int>>* labels);
     /*
      * Executes all standing orders, which have set the date of the next execution less then or equal the current date.
      */
@@ -35,9 +35,9 @@ public:
 private:
     string currentProfile;
     Database* database;
-    vector<tuple<int, string, Value>>* currentAccounts;
-    vector<tuple<int, string, int>>* currentLabels;
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> currentOrders;
+    std::vector<std::tuple<int, string, Value>>* currentAccounts;
+    std::vector<std::tuple<int, string, int>>* currentLabels;
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> currentOrders;
     Ui::ManageStandingOrders* manageStandingOrders = nullptr;
     Ui::AddStandingOrderWindow* addStandingOrderWindow;
     void AddStandingOrder();

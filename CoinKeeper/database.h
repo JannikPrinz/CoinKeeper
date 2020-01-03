@@ -1,11 +1,13 @@
 #pragma once
 
-#include "sqlite-amalgamation-3120100\sqlite3.h"
 #include <Windows.h>
+
+#include "sqlite-amalgamation-3120100\sqlite3.h"
 #include "constants.h"
 #include "qdebug.h"
 #include "qdatetime.h"
-using namespace std;
+
+using string = std::string;
 
 // ToDo: Delete this:
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
@@ -28,24 +30,24 @@ public:
     void CreateNewProfile(const char* fileName);
     // This method searches for database-files (profiles) in the given folders.
     // Returns: list of profiles (filenames without '.ckdb' alternating with whole path)
-    list<string> GetDatabaseList();
+    std::list<string> GetDatabaseList();
     // This method returns all accounts of the given profile
     // const char* profile : path of the profile
     // Returns: vector of tuples with an integer of the unique identifier of the account and the name and value of the account
-    vector<tuple<int, string, Value>> GetAccounts(const char* profile);
+    std::vector<std::tuple<int, string, Value>> GetAccounts(const char* profile);
     // This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
     // const char* profile : path of the profile
     // int month : month of the wanted transactions
     // int year : year of the wanted transactions
     // Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    vector<tuple<int, string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year);
+    std::vector<std::tuple<int, string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year);
     // This method returns transactions of the given profile with the given restrictions.
     // const char* profile : path of the profile
     // int month : month of the wanted transactions
     // int year : year of the wanted transactions
     // int accountID : id of an account. Only transactions of that account will be returned
     // Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    vector<tuple<int, string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year, int accountID);
+    std::vector<std::tuple<int, string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year, int accountID);
     /*
      * This method returns all standing orders, which are saved in the given profile.
      *
@@ -55,7 +57,7 @@ public:
      * Returns:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all standing orders.
      */
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> GetAllStandingOrders(const char* profile);
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> GetAllStandingOrders(const char* profile);
     /*
      * This method returns all standing orders, which are saved in the given profile and are ready for execution.
      * An standing order is ready for execution, if set date of the next execution is less then or equal the given date.
@@ -67,14 +69,14 @@ public:
      * Returns:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all matching standing orders.
      */
-    vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> GetExecutableStandingOrders(const char* profile, const int& date);
+    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> GetExecutableStandingOrders(const char* profile, const int& date);
     /*
      * This method returns all labels, which are saved in the given profile.
      *
      * Parameters:
      * const char* profile : path of the profile
      */
-    vector<tuple<int, string, int>> GetLabels(const char* profile);
+    std::vector<std::tuple<int, string, int>> GetLabels(const char* profile);
     // This method creates a new account at the given profile with the given name and balance.
     // const char* profile : path of the profile
     // string name : name of the new account
@@ -230,10 +232,10 @@ private:
     // list<string> rawList : list of strings
     // path : path of the files
     // string type : type of files, which filenames get returned. Default: "ckdb" (DATABASE_FILETYPE)
-    list<string> GetFilenames(list<string> rawList, string path, string type = DATABASE_FILETYPE);
+    std::list<string> GetFilenames(std::list<string> rawList, string path, string type = DATABASE_FILETYPE);
 };
 
-static vector<tuple<int, string, Value>> tempAccounts;
+static std::vector<std::tuple<int, string, Value>> tempAccounts;
 static int ProcessAccountInformation(void *NotUsed, int argc, char **argv, char **azColName)
 {
     int x = 0;
@@ -248,7 +250,7 @@ static int ProcessAccountInformation(void *NotUsed, int argc, char **argv, char 
     return 0;
 }
 
-static vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> tempOrders;
+static std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> tempOrders;
 static int ProcessOrderInformation(void *NotUsed, int argc, char **argv, char **azColName)
 {
     int x = 0;
@@ -269,7 +271,7 @@ static int ProcessOrderInformation(void *NotUsed, int argc, char **argv, char **
     return 0;
 }
 
-static vector<tuple<int, string, Value, QDate, int, int>> tempTransactions;
+static std::vector<std::tuple<int, string, Value, QDate, int, int>> tempTransactions;
 static int ProcessTransactionsInformation(void *NotUsed, int argc, char **argv, char **azColName)
 {
     int x = 0;
@@ -286,7 +288,7 @@ static int ProcessTransactionsInformation(void *NotUsed, int argc, char **argv, 
     return 0;
 }
 
-static vector<tuple<int, string, int>> tempLabels;
+static std::vector<std::tuple<int, string, int>> tempLabels;
 static int ProcessLabels(void *NotUsed, int argc, char **argv, char **azColName)
 {
     int x = 0;

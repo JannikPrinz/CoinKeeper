@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <qtimer.h>
+#include <QTimer>
 #include <qdatetime.h>
 #include <qstringlistmodel.h>
 

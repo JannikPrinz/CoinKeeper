@@ -67,7 +67,7 @@ void CoinKeeperPresenter::DeleteTransaction()
         std::tuple<int, std::string, Value, QDate, int, int> transaction = currentTransactions[row];
         QMessageBox msg;
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
-        msg.setText(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION);
+        msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
         switch (msg.exec()) {
         case QMessageBox::Yes:
             database->DeleteTransaction(currentProfile.c_str(), std::get<0>(transaction), true, std::get<4>(transaction), std::get<2>(transaction) * -1);
@@ -91,7 +91,7 @@ void CoinKeeperPresenter::DeleteAccount()
         std::tuple<int, std::string, Value> account = currentAccounts[row];
         QMessageBox msg;
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
-        msg.setText(TEXT_QUESTION_DELETE_ACCOUNT_AND_ALL_CORRESPONDING_TRANSACTIONS_AND_STANDING_ORDERS);
+        msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_ACCOUNT_AND_ALL_CORRESPONDING_TRANSACTIONS_AND_STANDING_ORDERS));
         switch (msg.exec()) {
         case QMessageBox::Yes:
             database->DeleteAccount(currentProfile.c_str(), std::get<0>(account));
@@ -144,7 +144,7 @@ void CoinKeeperPresenter::RefreshWindow()
     // update list of accounts in the combobox if needed:
     if (numberOfAccounts != static_cast<int32_t>(currentAccounts.size())) {
         QStringList items;
-        items.insert(0, QString(TEXT_ALL_ACCOUNTS));
+        items.insert(0, QString::fromStdString(TEXT_ALL_ACCOUNTS));
         //acc.setRowCount(currentAccounts.size() + 1);
         //acc.setItem(0, &QStandardItem(TEXT_ALL_ACCOUNTS));
         for (size_t i = 1; i <= currentAccounts.size(); i++)

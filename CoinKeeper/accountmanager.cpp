@@ -49,7 +49,7 @@ void AccountManager::ChangeAccount(int const accountID, string const& oldName, V
     });
 
     addAccountWindow->txtNameOfAccount->setText(QString::fromStdString(oldName));
-    addAccountWindow->buttonOk->setText(TEXT_CHANGE_ACCOUNT);
+    addAccountWindow->buttonOk->setText(QString::fromStdString(TEXT_CHANGE_ACCOUNT));
     if (oldValue < 0) {
         Value v = oldValue * -1;
         addAccountWindow->spinBoxVK->setValue(v.VK);
@@ -67,7 +67,7 @@ bool AccountManager::CreateNewAccount(QString const& accountName, int const vk, 
 {
     if (accountName == QString("")) {
         QMessageBox msg;
-        msg.setText(TEXT_ACCOUNT_NAME_NEEDED);
+        msg.setText(QString::fromStdString(TEXT_ACCOUNT_NAME_NEEDED));
         msg.exec();
         return false;
     }
@@ -84,7 +84,7 @@ bool AccountManager::ChangeExistingAccount(int const accountID, QString const& a
 {
     if (accountName == QString("")) {
         QMessageBox msg;
-        msg.setText(TEXT_ACCOUNT_NAME_NEEDED);
+        msg.setText(QString::fromStdString(TEXT_ACCOUNT_NAME_NEEDED));
         msg.exec();
         return false;
     }

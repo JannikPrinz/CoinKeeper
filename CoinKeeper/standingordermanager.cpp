@@ -81,9 +81,9 @@ void StandingOrderManager::ExecuteOrders()
         }
     }
     QMessageBox msg;
-    QString m = TEXT_ADDED_TRANSACTIONS_PART_1;
+    QString m = QString::fromStdString(TEXT_ADDED_TRANSACTIONS_PART_1);
     m.append(QString::number(addedTransactions));
-    m.append(TEXT_ADDED_TRANSACTIONS_PART_2);
+    m.append(QString::fromStdString(TEXT_ADDED_TRANSACTIONS_PART_2));
     msg.setText(m);
     msg.exec();
 }
@@ -164,7 +164,7 @@ void StandingOrderManager::ChangeStandingOrder()
         addStandingOrderWindow->spinBoxNK->setValue(value.NK);
         addStandingOrderWindow->radioButtonPositiv->setChecked(true);
     }
-    addStandingOrderWindow->buttonAddOrder->setText(TEXT_CHANGE_STANDING_ORDER);
+    addStandingOrderWindow->buttonAddOrder->setText(QString::fromStdString(TEXT_CHANGE_STANDING_ORDER));
     connect(addStandingOrderWindow->buttonAddOrder, &QPushButton::clicked, this, [=] { UpdateStandingOrder(orderID); });
     dialog.exec();
     delete addStandingOrderWindow;
@@ -190,7 +190,7 @@ void StandingOrderManager::DeleteStandingOrder()
     {
         QMessageBox msg;
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        msg.setText(TEXT_QUESTION_DELETE_STANDING_ORDER);
+        msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_STANDING_ORDER));
         switch (msg.exec())
         {
         case QMessageBox::Yes:
@@ -211,7 +211,7 @@ void StandingOrderManager::CreateNewStandingOrder()
     if (selectedAccount == 0)
     {
         QMessageBox msg;
-        msg.setText(TEXT_CHOOSE_ACCOUNT_FOR_STANDING_ORDER);
+        msg.setText(QString::fromStdString(TEXT_CHOOSE_ACCOUNT_FOR_STANDING_ORDER));
         msg.exec();
         return;
     }

@@ -34,8 +34,8 @@ void Database::CreateNewProfile(const char* fileName)
     exPath.append(".");
     exPath.append(DATABASE_FILETYPE);
     sqlite3_open(exPath.c_str(), &db);
-    sqlite3_exec(db, CREATE_TABLES_OF_A_PROFILE, callback, 0, 0);
-    sqlite3_exec(db, INSERT_DEFAULT_VALUES, callback, 0, 0);
+    sqlite3_exec(db, CREATE_TABLES_OF_A_PROFILE.c_str(), callback, 0, 0);
+    sqlite3_exec(db, INSERT_DEFAULT_VALUES.c_str(), callback, 0, 0);
     //if (rc != SQLITE_OK)
     //{
     //    qDebug("Fehler beim erstellen der Datanbank!");
@@ -414,7 +414,7 @@ vector<tuple<int, string, Value>> Database::GetAccounts(const char* profilePath)
     sqlite3_open(profilePath, &db);
     vector<tuple<int, string, Value>> acc;
     tempAccounts = acc;
-    sqlite3_exec(db, GET_ALL_ACCOUNTS, ProcessAccountInformation, 0, 0);
+    sqlite3_exec(db, GET_ALL_ACCOUNTS.c_str(), ProcessAccountInformation, 0, 0);
     sqlite3_close(db);
     return tempAccounts;
 }
@@ -425,7 +425,7 @@ vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> Database::
     sqlite3_open(profile, &db);
     vector<tuple<int, int, int, Value, string, StandingOrderType, QDate>> orders;
     tempOrders = orders;
-    sqlite3_exec(db, GET_ALL_STANDING_ORDERS, ProcessOrderInformation, 0, 0);
+    sqlite3_exec(db, GET_ALL_STANDING_ORDERS.c_str(), ProcessOrderInformation, 0, 0);
     sqlite3_close(db);
     return tempOrders;
 }
@@ -450,7 +450,7 @@ vector<tuple<int, string, int>> Database::GetLabels(const char* profile)
     sqlite3_open(profile, &db);
     vector<tuple<int, string, int>> labels;
     tempLabels = labels;
-    sqlite3_exec(db, GET_ALL_LABELS, ProcessLabels, 0, 0);
+    sqlite3_exec(db, GET_ALL_LABELS.c_str(), ProcessLabels, 0, 0);
     sqlite3_close(db);
     return tempLabels;
 }

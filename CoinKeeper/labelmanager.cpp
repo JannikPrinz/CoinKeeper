@@ -92,12 +92,12 @@ void LabelManager::DeleteLabel()
         QMessageBox msg;
         if (labelID == 1)    // default label selected
         {
-            msg.setText(TEXT_DEFAULT_LABEL_NOT_DELETABLE);
+            msg.setText(QString::fromStdString(TEXT_DEFAULT_LABEL_NOT_DELETABLE));
             msg.exec();
             return;
         }
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        msg.setText(TEXT_QUESTION_DELETE_LABEL);
+        msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_LABEL));
         switch (msg.exec())
         {
         case QMessageBox::Yes:

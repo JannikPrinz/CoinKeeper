@@ -63,7 +63,7 @@ void TransactionManager::UpdateTransaction(const int& transactionID, const strin
         addTransactionWindow->spinBoxNK->setValue(value.NK);
         addTransactionWindow->radioButtonPositiv->setChecked(true);
     }
-    addTransactionWindow->buttonAddTransaction->setText(TEXT_CHANGE_TRANSACTION);
+    addTransactionWindow->buttonAddTransaction->setText(QString::fromStdString(TEXT_CHANGE_TRANSACTION));
     connect(addTransactionWindow->buttonAddTransaction, &QPushButton::clicked, this, [=] { UpdateTransactionInDatabase(transactionID, accountID, value); });
     dialog.exec();
     delete addTransactionWindow;
@@ -96,7 +96,7 @@ void TransactionManager::CreateTransaction()
     if (selectedAccount == 0)
     {
         QMessageBox msg;
-        msg.setText(TEXT_CHOOSE_ACCOUNT_FOR_TRANSACTION);
+        msg.setText(QString::fromStdString(TEXT_CHOOSE_ACCOUNT_FOR_TRANSACTION));
         msg.exec();
         return;
     }

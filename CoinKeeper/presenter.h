@@ -11,7 +11,7 @@ public:
     ~Presenter();
 
 signals:
-    void ChangePresenter(Presenters p, string s = "");
+    void ChangePresenter(Presenters p, std::string s = "");
 
 protected:
     Database* database;

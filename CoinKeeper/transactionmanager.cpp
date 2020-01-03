@@ -1,6 +1,6 @@
 #include "transactionmanager.h"
 
-TransactionManager::TransactionManager(string profile, Database* data)
+TransactionManager::TransactionManager(std::string profile, Database* data)
 {
     currentProfile = profile;
     database = data;
@@ -26,7 +26,7 @@ void TransactionManager::CreateNewTransaction()
     delete addTransactionWindow;
 }
 
-void TransactionManager::UpdateTransaction(const int& transactionID, const string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID)
+void TransactionManager::UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID)
 {
     currentAccounts = database->GetAccounts(currentProfile.c_str());
     currentLabels = database->GetLabels(currentProfile.c_str());

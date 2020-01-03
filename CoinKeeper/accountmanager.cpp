@@ -3,7 +3,7 @@
 #include "ui_addaccountwindow.h"
 #include "qmessagebox.h"
 
-AccountManager::AccountManager(const string& profile, Database* data)
+AccountManager::AccountManager(std::string const& profile, Database* data)
 {
     currentProfile = profile;
     database = data;
@@ -29,7 +29,7 @@ void AccountManager::CreateAccount()
     dialog.exec();
 }
 
-void AccountManager::ChangeAccount(int const accountID, string const& oldName, Value const& oldValue)
+void AccountManager::ChangeAccount(int const accountID, std::string const& oldName, Value const& oldValue)
 {
     auto addAccountWindow = std::make_unique<Ui::AddAccountWindow>();
     QDialog dialog;

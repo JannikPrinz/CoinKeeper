@@ -1,6 +1,6 @@
 #include "labelmanager.h"
 
-LabelManager::LabelManager(string profilePath, Database* base)
+LabelManager::LabelManager(std::string profilePath, Database* base)
 {
     currentProfile = profilePath;
     database = base;
@@ -53,7 +53,7 @@ void LabelManager::ChangeLabelName()
     int selectedRow = manageLabelsWindow->tableLabels->currentRow();
     if (selectedRow >= 0)
     {
-        string oldText;
+        std::string oldText;
         int labelID, color;
         tie(labelID, oldText, color) = currentLabels[selectedRow];
         bool userClickedOk;
@@ -71,7 +71,7 @@ void LabelManager::ChangeLabelColor()
     int selectedRow = manageLabelsWindow->tableLabels->currentRow();
     if (selectedRow >= 0)
     {
-        string text;
+        std::string text;
         int labelID, oldColor;
         tie(labelID, text, oldColor) = currentLabels[selectedRow];
         QColor color = QColorDialog::getColor(ConvertIntToQColor(oldColor), Q_NULLPTR, QString::fromStdString(TEXT_CHOOSE_COLOR), QColorDialog::ShowAlphaChannel);
@@ -123,7 +123,7 @@ void LabelManager::RefreshWindow()
         for (int i = 0; i < x; ++i)
         {
             int labelID;        // not used
-            string labelName;
+            std::string labelName;
             int color;
             tie(labelID, labelName, color) = currentLabels[i];
             QColor qColor = ConvertIntToQColor(color);

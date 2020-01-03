@@ -1,12 +1,12 @@
 #include "standingordermanager.h"
 
-StandingOrderManager::StandingOrderManager(const string& profile, Database* data)
+StandingOrderManager::StandingOrderManager(const std::string& profile, Database* data)
 {
     currentProfile = profile;
     database = data;
 }
 
-void StandingOrderManager::ManageStandingOrders(std::vector<std::tuple<int, string, Value>>* accounts, std::vector<std::tuple<int, string, int>>* labels)
+void StandingOrderManager::ManageStandingOrders(std::vector<std::tuple<int, std::string, Value>>* accounts, std::vector<std::tuple<int, std::string, int>>* labels)
 {
     currentAccounts = accounts;
     currentLabels = labels;
@@ -27,7 +27,7 @@ void StandingOrderManager::ExecuteOrders()
 {
     QDate currentDate = QDate::currentDate();
     int date = currentDate.year() * 10000 + currentDate.month() * 100 + currentDate.day();
-    std::vector<std::tuple<int, int, int, Value, string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
+    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
     if (executableOrders.empty())
     {
         return;
@@ -39,7 +39,7 @@ void StandingOrderManager::ExecuteOrders()
     int accountID;
     int labelID;
     Value value;
-    string description;
+    std::string description;
     StandingOrderType orderType;
     QDate nextDate;
     while (executableOrders.size() != 0)
@@ -121,7 +121,7 @@ void StandingOrderManager::ChangeStandingOrder()
     if (selectedRow < 0) return;
     int orderID, accountID, labelID;
     Value value;
-    string description;
+    std::string description;
     StandingOrderType orderType;
     QDate nextDate;
     tie(orderID, accountID, labelID, value, description, orderType, nextDate) = currentOrders[selectedRow];
@@ -236,12 +236,12 @@ void StandingOrderManager::RefreshWindow()
         {
             int orderID, accountID, labelID;
             StandingOrderType type;
-            string description;
+            std::string description;
             Value value;
             QDate date;
             tie(orderID, accountID, labelID, value, description, type, date) = currentOrders[i];
-            std::vector<std::tuple<int, string, int>>::iterator labelIterator = std::find_if((*currentLabels).begin(), (*currentLabels).end(), [labelID](std::tuple<int, string, int> label) { return std::get<0>(label) == labelID; });
-            std::vector<std::tuple<int, string, Value>>::iterator accountIterator = std::find_if((*currentAccounts).begin(), (*currentAccounts).end(), [accountID](std::tuple<int, string, Value> acc) { return std::get<0>(acc) == accountID; });
+            std::vector<std::tuple<int, std::string, int>>::iterator labelIterator = std::find_if((*currentLabels).begin(), (*currentLabels).end(), [labelID](std::tuple<int, std::string, int> label) { return std::get<0>(label) == labelID; });
+            std::vector<std::tuple<int, std::string, Value>>::iterator accountIterator = std::find_if((*currentAccounts).begin(), (*currentAccounts).end(), [accountID](std::tuple<int, std::string, Value> acc) { return std::get<0>(acc) == accountID; });
             if (labelIterator == (*currentLabels).end() || accountIterator == (*currentAccounts).end()) return;        //should not happen
             QColor qColor = ConvertIntToQColor(std::get<2>(*labelIterator));
             manageStandingOrders->tableStandingOrders->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(std::get<1>(*accountIterator))));

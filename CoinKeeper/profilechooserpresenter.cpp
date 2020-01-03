@@ -16,7 +16,7 @@ void ProfileChooserPresenter::CreateNewProfile()
     QString text = QInputDialog::getText(view, tr("Neues Profil erstellen"), tr("Profilname:"), QLineEdit::Normal, "", &userClickedOk);
     if (userClickedOk && !text.isEmpty())
     {
-        database->CreateNewProfile(text.toStdString().c_str());
+        database->CreateNewProfile(text.toStdString());
         RefreshProfilesList();
     }
 }
@@ -26,7 +26,7 @@ void ProfileChooserPresenter::RefreshProfilesList()
     view->ClearList();
     currentProfiles = database->GetDatabaseList();
     bool mod2 = true;
-    for each (string s in currentProfiles)
+    for each (std::string s in currentProfiles)
     {
         if (mod2) view->AddProfile(QString::fromStdString(s));
         mod2 = !mod2;

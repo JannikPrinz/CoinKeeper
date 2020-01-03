@@ -8,8 +8,8 @@ TransactionManager::TransactionManager(std::string profile, Database* data)
 
 void TransactionManager::CreateNewTransaction()
 {
-    currentAccounts = database->GetAccounts(currentProfile.c_str());
-    currentLabels = database->GetLabels(currentProfile.c_str());
+    currentAccounts = database->GetAccounts(currentProfile);
+    currentLabels = database->GetLabels(currentProfile);
     addTransactionWindow = new Ui::AddTransactionWindow;
     QDialog dialog;
     addTransactionWindow->setupUi(&dialog);
@@ -28,8 +28,8 @@ void TransactionManager::CreateNewTransaction()
 
 void TransactionManager::UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID)
 {
-    currentAccounts = database->GetAccounts(currentProfile.c_str());
-    currentLabels = database->GetLabels(currentProfile.c_str());
+    currentAccounts = database->GetAccounts(currentProfile);
+    currentLabels = database->GetLabels(currentProfile);
     addTransactionWindow = new Ui::AddTransactionWindow;
     QDialog dialog;
     addTransactionWindow->setupUi(&dialog);
@@ -78,14 +78,14 @@ void TransactionManager::UpdateTransactionInDatabase(const int& transactionID, c
     // check if the selected account changed:
     if (oldAccountID != std::get<0>(currentAccounts[selectedAccount]))
     {
-        database->UpdateAccountValue(currentProfile.c_str(), oldAccountID, oldValue * -1);
-        database->UpdateAccountValue(currentProfile.c_str(), std::get<0>(currentAccounts[selectedAccount]), value);
+        database->UpdateAccountValue(currentProfile, oldAccountID, oldValue * -1);
+        database->UpdateAccountValue(currentProfile, std::get<0>(currentAccounts[selectedAccount]), value);
     }
     else if (oldValue != value)
     {
-        database->UpdateAccountValue(currentProfile.c_str(), oldAccountID, value - oldValue);
+        database->UpdateAccountValue(currentProfile, oldAccountID, value - oldValue);
     }
-    database->UpdateTransaction(currentProfile.c_str(), transactionID, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
+    database->UpdateTransaction(currentProfile, transactionID, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
         std::get<0>(currentAccounts[selectedAccount]), value, addTransactionWindow->calendarWidget->selectedDate(), std::get<0>(currentLabels[selectedLabel]));
     addTransactionWindow->buttonCancel->click();
 }
@@ -104,7 +104,7 @@ void TransactionManager::CreateTransaction()
     Value value = Value(addTransactionWindow->spinBoxVK->value(), addTransactionWindow->spinBoxNK->value());
     if (addTransactionWindow->radioButtonNegativ->isChecked()) value *= -1;
     QDate date = addTransactionWindow->calendarWidget->selectedDate();
-    database->CreateNewTransaction(currentProfile.c_str(), addTransactionWindow->textEditDescription->toPlainText().toStdString(),
+    database->CreateNewTransaction(currentProfile, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
         std::get<0>(currentAccounts[selectedAccount - 1]), value, date, std::get<0>(currentLabels[selectedLabel]));
     addTransactionWindow->buttonCancel->click();
 }

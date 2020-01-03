@@ -30,7 +30,7 @@ void LabelManager::CreateNewLabel()
         QColor color = QColorDialog::getColor(Qt::white, Q_NULLPTR, QString::fromStdString(TEXT_CHOOSE_COLOR), QColorDialog::ShowAlphaChannel);
         if (color.isValid())
         {
-            database->CreateNewLabel(currentProfile.c_str(), text.toStdString(), ConvertRGBAToInt(color.red(), color.green(), color.blue(), color.alpha()));
+            database->CreateNewLabel(currentProfile, text.toStdString(), ConvertRGBAToInt(color.red(), color.green(), color.blue(), color.alpha()));
             RefreshWindow();
             //qDebug(std::to_string(color.value()).c_str());    // Helligkeit
             //int dr, dg, db, da;
@@ -60,7 +60,7 @@ void LabelManager::ChangeLabelName()
         QString text = QInputDialog::getText(Q_NULLPTR, QString::fromStdString(TEXT_CHANGE_LABEL), QString::fromStdString(TEXT_NAME_COLON), QLineEdit::Normal, QString::fromStdString(oldText), &userClickedOk);
         if (userClickedOk && !text.isEmpty())
         {
-            database->UpdateLabel(currentProfile.c_str(), labelID, text.toStdString(), color);
+            database->UpdateLabel(currentProfile, labelID, text.toStdString(), color);
             RefreshWindow();
         }
     }
@@ -77,7 +77,7 @@ void LabelManager::ChangeLabelColor()
         QColor color = QColorDialog::getColor(ConvertIntToQColor(oldColor), Q_NULLPTR, QString::fromStdString(TEXT_CHOOSE_COLOR), QColorDialog::ShowAlphaChannel);
         if (color.isValid())
         {
-            database->UpdateLabel(currentProfile.c_str(), labelID, text, ConvertRGBAToInt(color.red(), color.green(), color.blue(), color.alpha()));
+            database->UpdateLabel(currentProfile, labelID, text, ConvertRGBAToInt(color.red(), color.green(), color.blue(), color.alpha()));
             RefreshWindow();
         }
     }
@@ -101,7 +101,7 @@ void LabelManager::DeleteLabel()
         switch (msg.exec())
         {
         case QMessageBox::Yes:
-            database->DeleteLabel(currentProfile.c_str(), labelID);
+            database->DeleteLabel(currentProfile, labelID);
             break;
         case QMessageBox::No:
             break;
@@ -117,7 +117,7 @@ void LabelManager::RefreshWindow()
     // if the manage labels window is open, refresh the label list:
     if (manageLabelsWindow != nullptr)
     {
-        currentLabels = database->GetLabels(currentProfile.c_str());
+        currentLabels = database->GetLabels(currentProfile);
         int x = static_cast<int>(currentLabels.size());
         manageLabelsWindow->tableLabels->setRowCount(x);
         for (int i = 0; i < x; ++i)

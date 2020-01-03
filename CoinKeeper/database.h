@@ -29,209 +29,220 @@ public:
     void CreateNewProfile(std::string const& fileName);
     // This method searches for database-files (profiles) in the given folders.
     // Returns: list of profiles (filenames without '.ckdb' alternating with whole path)
+    [[nodiscard]]
     std::list<std::string> GetDatabaseList();
     // This method returns all accounts of the given profile
-    // const char* profile : path of the profile
+    // std::string const& profile : path of the profile
     // Returns: vector of tuples with an integer of the unique identifier of the account and the name and value of the account
-    std::vector<std::tuple<int, std::string, Value>> GetAccounts(const char* profile);
+    [[nodiscard]]
+    std::vector<std::tuple<int, std::string, Value>> GetAccounts(std::string const& profile);
     // This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
-    // const char* profile : path of the profile
+    // std::string const& profile : path of the profile
     // int month : month of the wanted transactions
     // int year : year of the wanted transactions
     // Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year);
+    [[nodiscard]]
+    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(std::string const& profile, int month, int year);
     // This method returns transactions of the given profile with the given restrictions.
-    // const char* profile : path of the profile
+    // std::string const& profile : path of the profile
     // int month : month of the wanted transactions
     // int year : year of the wanted transactions
     // int accountID : id of an account. Only transactions of that account will be returned
     // Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(const char* profile, int month, int year, int accountID);
+    [[nodiscard]]
+    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(std::string const& profile, int month, int year, int accountID);
     /*
      * This method returns all standing orders, which are saved in the given profile.
      *
      * Parameters:
-     * const char* profile : path of the profile
+     * std::string const& profile : path of the profile
      *
      * Returns:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all standing orders.
      */
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetAllStandingOrders(const char* profile);
+    [[nodiscard]]
+    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetAllStandingOrders(std::string const& profile);
     /*
      * This method returns all standing orders, which are saved in the given profile and are ready for execution.
      * An standing order is ready for execution, if set date of the next execution is less then or equal the given date.
      *
      * Parameters:
-     * const char* profile    : path of the profile
-     * const int& date        : maximum date, which is set as next execution date of the standing order
+     * std::string const& profile    : path of the profile
+     * int date        : maximum date, which is set as next execution date of the standing order
      *
      * Returns:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all matching standing orders.
      */
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetExecutableStandingOrders(const char* profile, const int& date);
+    [[nodiscard]]
+    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetExecutableStandingOrders(std::string const& profile, int date);
     /*
      * This method returns all labels, which are saved in the given profile.
      *
      * Parameters:
-     * const char* profile : path of the profile
+     * std::string const& profile : path of the profile
      */
-    std::vector<std::tuple<int, std::string, int>> GetLabels(const char* profile);
+    [[nodiscard]]
+    std::vector<std::tuple<int, std::string, int>> GetLabels(std::string const& profile);
     // This method creates a new account at the given profile with the given name and balance.
-    // const char* profile : path of the profile
-    // string name : name of the new account
-    // double balance : start-balance of the new account
-    void CreateNewAccount(const char* profile, std::string name, Value balance);
+    // std::string const& profile : path of the profile
+    // std::string const& name : name of the new account
+    // Value const& balance : start-balance of the new account
+    void CreateNewAccount(std::string const& profile, std::string const& name, Value const& balance);
     /*
      * This method creates a new transaction at the given profile / account with the given description, value, labelID and date of the transaction.
      * Also the value of the account gets updated.
      *
      * Parameters:
-     * const char* profile            : path of the profile
-     * const std::string& description    : description of the transaction
-     * const int& account            : ID of the account
-     * const Value& value            : value of the transaction
-     * const QDate& date            : date of the transaction
-     * const int& labelID            : id of the label
+     * std::string const& profile            : path of the profile
+     * std::string const& description    : description of the transaction
+     * int account            : ID of the account
+     * Value const& value            : value of the transaction
+     * QDate const& date            : date of the transaction
+     * int labelID            : id of the label
      */
-    void CreateNewTransaction(const char* profile, const std::string& description, const int& account, const Value& value, const QDate& date, const int& labelID);
+    void CreateNewTransaction(std::string const& profile, std::string const& description, int account, Value const& value, QDate const& date, int labelID);
     /*
      * This method creates a new standing order at the given profile with the given parameters.
      *
      * Parameters:
-     * const char* profile            : path of the profile
-     * const std::string& description        : description of the transactions
-     * const int& accountID            : ID of the account
-     * const Value& value            : value of the inserted transactions
-     * const QDate& date                : date of the next execution of the order
-     * const int& labelID            : id of the label, which all inserted transactions will get
-     * const int& orderType            : indentifier of the type of the standing order
+     * std::string const& profile            : path of the profile
+     * std::string& description        : description of the transactions
+     * int accountID            : ID of the account
+     * Value const& value            : value of the inserted transactions
+     * QDate const& date                : date of the next execution of the order
+     * int labelID            : id of the label, which all inserted transactions will get
+     * int orderType            : indentifier of the type of the standing order
      */
-    void CreateNewStandingOrder(const char* profile, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID, const int& orderType);
+    void CreateNewStandingOrder(std::string const& profile, std::string const& description, int accountID, Value const& value, QDate const& date, int labelID, int orderType);
     /*
      * This method creates a new label in the given profile with the given name and color.
      *
      * Parameters:
-     * const char* profile    : path of the profile
-     * std::string name            : name of the new label
+     * std::string const& profile    : path of the profile
+     * std::string const& name            : name of the new label
      * int color            : color of the new label
      */
-    void CreateNewLabel(const char* profile, std::string name, int color);
+    void CreateNewLabel(std::string const& profile, std::string const& name, int color);
     /*
      * This method changes the name and the color of the specified label with given parameters
      *
      * Parameters:
-     * const char* profile    : path of the profile
+     * std::string const& profile    : path of the profile
      * int labelID            : id of the label, which gets changed
-     * std::string name            : new name of the label
+     * std::string const& name            : new name of the label
      * int color            : new color of the label
      */
-    void UpdateLabel(const char* profile, int labelID, std::string name, int color);
+    void UpdateLabel(std::string const& profile, int labelID, std::string const& name, int color);
     /*
      * This method changes the specified account with the given parameters.
      *
      * Parameters:
-     * const char* profile : path of the profile
-     * const int& accountID : id of the account, which will be changed
-     * const std::string& accountName : new name of the account
-     * const Value value& : new value of the account
+     * std::string const& profile : path of the profile
+     * int accountID : id of the account, which will be changed
+     * std::string const& accountName : new name of the account
+     * Value const& value : new value of the account
      */
-    void UpdateAccount(const char* profile, const int& accountID, const std::string& accountName, const Value& value);
+    void UpdateAccount(std::string const& profile, int accountID, std::string const& accountName, Value const& value);
     /*
      * This method adds the given value to the given account.
      *
      * Parameters:
-     * const char* profile : path of the profile
-     * const int& accountID : id of the account on which the value-change is applied
-     * const Value& value : value, which gets added to the current value of the selected account
+     * std::string const& profile : path of the profile
+     * int accountID : id of the account on which the value-change is applied
+     * Value const& value : value, which gets added to the current value of the selected account
      */
-    void UpdateAccountValue(const char* profile, const int& accountID, const Value& value);
+    void UpdateAccountValue(std::string const& profile, int accountID, Value const& value);
     /*
      * This method sets the next execution date of the specified standing order to the given date.
      *
      * Parameters:
-     * const char* profile    : path of the profile
-     * const int& orderID    : id of the standing order, which next date will be changed
-     * const int& date        : date, which will be the new 'next date' of the standing order
+     * std::string const&  profile    : path of the profile
+     * int orderID    : id of the standing order, which next date will be changed
+     * int date        : date, which will be the new 'next date' of the standing order
      */
-    void UpdateStandingOrderDate(const char* profile, const int& orderID, const int& date);
+    void UpdateStandingOrderDate(std::string const& profile, int orderID, int date);
     /*
      * This method updates an existing standing order at the given profile with the given parameters.
      *
      * Parameters:
-     * const char* profile            : path of the profile
-     * const int& orderID            : id of the standing order
-     * const std::string& description    : description of the transactions of the standing order
-     * const int& accountID            : ID of the account
-     * const Value& value            : value of the transactions
-     * const QDate& nextDate        : date of the next inserted transaction
-     * const int& labelID            : id of the label
-     * const int& orderType            : type of the standing order
+     * std::string const& profile            : path of the profile
+     * int orderID            : id of the standing order
+     * std::string const& description    : description of the transactions of the standing order
+     * int accountID            : ID of the account
+     * Value const& value            : value of the transactions
+     * QDate const& nextDate        : date of the next inserted transaction
+     * int labelID            : id of the label
+     * int orderType            : type of the standing order
      */
-    void UpdateStandingOrder(const char* profile, const int& orderID, const std::string& description, const int& accountID, const Value& value, const QDate& nextDate, const int& labelID, const int& orderType);
+    void UpdateStandingOrder(std::string const& profile, int orderID, std::string const& description, int accountID, Value const& value, QDate const& nextDate, int labelID, int orderType);
     /*
      * This method updates an existing transaction at the given profile with the given parameters.
      * Tthe value of the account will not be changed within this method!
      *
      * Parameters:
-     * const char* profile            : path of the profile
-     * const int& transactionID        : id of the transaction
-     * const std::string& description        : description of the transaction
-     * const int& accountID            : ID of the account
-     * const Value& value            : value of the transaction
-     * const QDate& date                : date of the transaction
-     * const int& labelID            : id of the label
+     * std::string const& profile            : path of the profile
+     * int transactionID        : id of the transaction
+     * std::string const& description        : description of the transaction
+     * int accountID            : ID of the account
+     * Value const& value            : value of the transaction
+     * QDate const& date                : date of the transaction
+     * int const& labelID            : id of the label
      */
-    void UpdateTransaction(const char* profile, const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID);
+    void UpdateTransaction(std::string const& profile, int transactionID, std::string const& description, int accountID, Value const& value, QDate const& date, int labelID);
     /*
      * This method deletes the given transaction. The value of the account gets changed if wanted.
      *
      * Parameters:
-     * const char* profile                : path of the profile
-     * const int& transactionID            : id of the transaction, which gets deleted
-     * const bool& changeAccountValue    : if true, the value of the given account gets changed by the given value
-     * const int& accountID                : id of the account, where the given value gets added if wanted (default = 0)
-     * const Value& value                : value which gets added to the given account if wanted (default = 0)
+     * std::string const& profile                : path of the profile
+     * int transactionID            : id of the transaction, which gets deleted
+     * bool changeAccountValue    : if true, the value of the given account gets changed by the given value
+     * int accountID                : id of the account, where the given value gets added if wanted (default = 0)
+     * Value const& value                : value which gets added to the given account if wanted (default = 0)
      */
-    void DeleteTransaction(const char* profile, const int& transactionID, const bool& changeAccountValue, const int& accountID = 0, const Value& value = Value(0));
+    void DeleteTransaction(std::string const& profile, int transactionID, bool changeAccountValue, int accountID = 0, Value const& value = Value(0));
     /*
      * This method deletes the specified standing order.
      *
      * Parameters:
-     * const char* profile    : path of the profile
-     * const int& orderID    : id of the standing order, which gets deleted
+     * std::string const& profile    : path of the profile
+     * int orderID    : id of the standing order, which gets deleted
      */
-    void DeleteStandingOrder(const char* profile, const int& orderID);
+    void DeleteStandingOrder(std::string const& profile, int orderID);
     /*
      * This method deletes the specified label. All references to this label are changed to the standard label (labelID = 1).
      *
      * Parameters:
-     * const char* profile    : path of the profile
-     * const int& labelID    : id of the label, which gets deleted
+     * std::string const& profile    : path of the profile
+     * int labelID    : id of the label, which gets deleted
      */
-    void DeleteLabel(const char* profile, const int& labelID);
+    void DeleteLabel(std::string const& profile, int labelID);
     /*
      * This method deletes the given account and all corresponding transactions.
      *
      * Parameters:
-     * const char* profile : path of the profile
+     * std::string const& profile : path of the profile
      * int accountID : id of the account, which gets deleted
      */
-    void DeleteAccount(const char* profile, const int& accountID);
+    void DeleteAccount(std::string const& profile, int accountID);
     ~Database();
 
 private:
     // Return the path of the executable with '\*' at the end
+    [[nodiscard]]
     LPWSTR ExePath();
     // Converts a string to a LPWSTR
-    LPWSTR StringToLPWSTR(const std::string& s);
+    [[nodiscard]]
+    LPWSTR StringToLPWSTR(std::string const& s);
     // Converts a LPWSTR to a string
+    [[nodiscard]]
     std::string LPWSTRToString(LPWSTR l);
     // extracts filenames of the files from a given list and a given file-type. This strings and original strings (incl. path)
     // get returned. Example: <abc, ..\abc.ckdb, xyz, ..\xyz.ckdb>
     // list<std::string> rawList : list of strings
     // path : path of the files
     // std::string type : type of files, which filenames get returned. Default: "ckdb" (DATABASE_FILETYPE)
-    std::list<std::string> GetFilenames(std::list<std::string> rawList, std::string path, std::string type = DATABASE_FILETYPE);
+    [[nodiscard]]
+    std::list<std::string> GetFilenames(std::list<std::string> const& rawList, std::string const& path, std::string const& type = DATABASE_FILETYPE);
 };
 
 static std::vector<std::tuple<int, std::string, Value>> tempAccounts;

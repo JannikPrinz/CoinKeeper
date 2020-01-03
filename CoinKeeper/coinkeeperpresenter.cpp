@@ -13,7 +13,7 @@ CoinKeeperPresenter::CoinKeeperPresenter(Database* base, string profilePath, QOb
     CreateConnections();
 
     // check for executable standing orders:
-    StandingOrderManager standingOrderManager(currentProfile.c_str(), database);
+    StandingOrderManager standingOrderManager(currentProfile, database);
     standingOrderManager.ExecuteOrders();
     RefreshWindow();
 }
@@ -70,10 +70,10 @@ void CoinKeeperPresenter::DeleteTransaction()
         msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
         switch (msg.exec()) {
         case QMessageBox::Yes:
-            database->DeleteTransaction(currentProfile.c_str(), std::get<0>(transaction), true, std::get<4>(transaction), std::get<2>(transaction) * -1);
+            database->DeleteTransaction(currentProfile, std::get<0>(transaction), true, std::get<4>(transaction), std::get<2>(transaction) * -1);
             break;
         case QMessageBox::No:
-            database->DeleteTransaction(currentProfile.c_str(), std::get<0>(transaction), false);
+            database->DeleteTransaction(currentProfile, std::get<0>(transaction), false);
             break;
         case QMessageBox::Abort:
             break;
@@ -94,7 +94,7 @@ void CoinKeeperPresenter::DeleteAccount()
         msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_ACCOUNT_AND_ALL_CORRESPONDING_TRANSACTIONS_AND_STANDING_ORDERS));
         switch (msg.exec()) {
         case QMessageBox::Yes:
-            database->DeleteAccount(currentProfile.c_str(), std::get<0>(account));
+            database->DeleteAccount(currentProfile, std::get<0>(account));
             break;
         case QMessageBox::No:
             break;
@@ -139,7 +139,7 @@ void CoinKeeperPresenter::UpdateTransaction()
 void CoinKeeperPresenter::RefreshWindow()
 {
     // get all accounts:
-    currentAccounts = database->GetAccounts(currentProfile.c_str());
+    currentAccounts = database->GetAccounts(currentProfile);
 
     // update list of accounts in the combobox if needed:
     if (numberOfAccounts != static_cast<int32_t>(currentAccounts.size())) {
@@ -163,13 +163,13 @@ void CoinKeeperPresenter::RefreshWindow()
 
     // get and set all wanted transactions:
     if (account == 0) {       // all accounts
-        currentTransactions = database->GetTransactions(currentProfile.c_str(), month, year);
+        currentTransactions = database->GetTransactions(currentProfile, month, year);
     } else {
-        currentTransactions = database->GetTransactions(currentProfile.c_str(), month, year, std::get<0>(currentAccounts[account - 1]));
+        currentTransactions = database->GetTransactions(currentProfile, month, year, std::get<0>(currentAccounts[account - 1]));
     }
 
     // combine transaction and label information for 'nice' representation:
-    currentLabels = database->GetLabels(currentProfile.c_str());
+    currentLabels = database->GetLabels(currentProfile);
     vector<tuple<QDate, string, int, string, Value>> transactions;    // date, name of label, color of label, description of transaction, value of transaction
     int transactionID, accountID, labelID;
     string description;

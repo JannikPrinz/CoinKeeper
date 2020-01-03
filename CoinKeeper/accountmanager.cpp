@@ -75,7 +75,7 @@ bool AccountManager::CreateNewAccount(QString const& accountName, int const vk, 
     if (negative) {
         value *= -1;
     }
-    database->CreateNewAccount(currentProfile.c_str(), accountName.toStdString(), value);
+    database->CreateNewAccount(currentProfile, accountName.toStdString(), value);
 
     return true;
 }
@@ -92,7 +92,7 @@ bool AccountManager::ChangeExistingAccount(int const accountID, QString const& a
     if (negative) {
         value *= -1;
     }
-    database->UpdateAccount(currentProfile.c_str(), accountID, accountName.toStdString(), value);
+    database->UpdateAccount(currentProfile, accountID, accountName.toStdString(), value);
 
     return true;
 }

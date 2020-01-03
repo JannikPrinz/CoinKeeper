@@ -42,7 +42,7 @@ void ProfileChooserPresenter::DeleteProfile()
 void ProfileChooserPresenter::OpenProfile()
 {
     if (currentProfiles.empty()) return;
-    const char* s = (*next(currentProfiles.begin(), view->GetSelectedRow() * 2 + 1)).c_str();
+    std::string s = *next(currentProfiles.begin(), view->GetSelectedRow() * 2 + 1);
     //qDebug("Selected row: %d. Selected profile: %s", view->GetSelectedRow(), s);
     emit ChangePresenter(Presenters::CoinKeeper, s);
 }

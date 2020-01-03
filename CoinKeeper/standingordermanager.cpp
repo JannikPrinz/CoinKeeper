@@ -27,7 +27,7 @@ void StandingOrderManager::ExecuteOrders()
 {
     QDate currentDate = QDate::currentDate();
     int date = currentDate.year() * 10000 + currentDate.month() * 100 + currentDate.day();
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile.c_str(), date);
+    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(currentProfile, date);
     if (executableOrders.empty())
     {
         return;
@@ -47,13 +47,13 @@ void StandingOrderManager::ExecuteOrders()
         if (std::get<6>(executableOrders[lastItem]) > currentDate)
         {
             date = std::get<6>(executableOrders[lastItem]).year() * 10000 + std::get<6>(executableOrders[lastItem]).month() * 100 + std::get<6>(executableOrders[lastItem]).day();
-            database->UpdateStandingOrderDate(currentProfile.c_str(), std::get<0>(executableOrders[lastItem]), date);
+            database->UpdateStandingOrderDate(currentProfile, std::get<0>(executableOrders[lastItem]), date);
             executableOrders.pop_back();
             lastItem = executableOrders.size() - 1;
         } else
         {
             tie(orderID, accountID, labelID, value, description, orderType, nextDate) = executableOrders[lastItem];
-            database->CreateNewTransaction(currentProfile.c_str(), description, accountID, value, nextDate, labelID);
+            database->CreateNewTransaction(currentProfile, description, accountID, value, nextDate, labelID);
             addedTransactions++;
             switch (orderType)
             {
@@ -178,7 +178,7 @@ void StandingOrderManager::UpdateStandingOrder(const int& orderID)
     int selectedLabel = addStandingOrderWindow->comboBoxChooseLabel->currentIndex();
     Value value = Value(addStandingOrderWindow->spinBoxVK->value(), addStandingOrderWindow->spinBoxNK->value());
     if (addStandingOrderWindow->radioButtonNegativ->isChecked()) value *= -1;
-    database->UpdateStandingOrder(currentProfile.c_str(), orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), std::get<0>((*currentAccounts)[selectedAccount]),
+    database->UpdateStandingOrder(currentProfile, orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), std::get<0>((*currentAccounts)[selectedAccount]),
         value, addStandingOrderWindow->dateEditNextDate->date(), std::get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
     addStandingOrderWindow->buttonCancel->click();
 }
@@ -194,7 +194,7 @@ void StandingOrderManager::DeleteStandingOrder()
         switch (msg.exec())
         {
         case QMessageBox::Yes:
-            database->DeleteStandingOrder(currentProfile.c_str(), std::get<0>(currentOrders[selectedRow]));
+            database->DeleteStandingOrder(currentProfile, std::get<0>(currentOrders[selectedRow]));
             break;
         case QMessageBox::No:
             break;
@@ -219,7 +219,7 @@ void StandingOrderManager::CreateNewStandingOrder()
     Value value = Value(addStandingOrderWindow->spinBoxVK->value(), addStandingOrderWindow->spinBoxNK->value());
     if (addStandingOrderWindow->radioButtonNegativ->isChecked()) value *= -1;
     QDate date = addStandingOrderWindow->dateEditNextDate->date();
-    database->CreateNewStandingOrder(currentProfile.c_str(), addStandingOrderWindow->textEditDescription->toPlainText().toStdString(),
+    database->CreateNewStandingOrder(currentProfile, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(),
         std::get<0>((*currentAccounts)[selectedAccount - 1]), value, date, std::get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
     addStandingOrderWindow->buttonCancel->click();
 }
@@ -228,7 +228,7 @@ void StandingOrderManager::RefreshWindow()
 {
     if (manageStandingOrders != nullptr)
     {
-        currentOrders = database->GetAllStandingOrders(currentProfile.c_str());
+        currentOrders = database->GetAllStandingOrders(currentProfile);
         int x = static_cast<int>(currentOrders.size());
         manageStandingOrders->tableStandingOrders->setRowCount(x);
         // insert existing values:

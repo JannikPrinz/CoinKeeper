@@ -190,6 +190,7 @@ static std::string GetStringFromStandingOrderType(StandingOrderType type)
     }
 }
 
+// TODO remove code from this file
 struct Value
 {
     int VK;

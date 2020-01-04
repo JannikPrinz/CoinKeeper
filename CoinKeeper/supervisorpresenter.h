@@ -17,6 +17,5 @@ public slots:
     void ChangePresenter(Presenters p, string s = "");
 
 private:
-    Presenter* presenter;
-    Database* database;
+    std::unique_ptr<Presenter> presenter;
 };

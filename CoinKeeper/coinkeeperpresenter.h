@@ -8,7 +8,7 @@ class CoinKeeperPresenter : public Presenter {
     Q_OBJECT
 
 public:
-    CoinKeeperPresenter(Database* base, string profilePath, QObject * parent = Q_NULLPTR);
+    CoinKeeperPresenter(string const& profilePath, QObject * parent = Q_NULLPTR);
     ~CoinKeeperPresenter() = default;
 
 private:
@@ -34,6 +34,7 @@ private:
     void UpdateTransaction();
 
 private:
+    std::shared_ptr<Database> database;
     std::unique_ptr<CoinKeeperView> view;
     string currentProfile;
     // all accounts of the open profile

@@ -16,7 +16,7 @@ public:
      * std::string profile : path of the profile
      * Database* data : adress of a database object
      */
-    TransactionManager(std::string profile, Database* data);
+    TransactionManager(std::shared_ptr<Database> data);
     /*
      * Starts a new transaction-creation-process. If the user inputs valid data, a new transaction
      * will be inserted into the current profile.
@@ -37,8 +37,7 @@ public:
     ~TransactionManager();
 
 private:
-    std::string currentProfile;
-    Database* database;
+    std::shared_ptr<Database> database;
     std::vector<std::tuple<int, std::string, Value>> currentAccounts;
     std::vector<std::tuple<int, std::string, int>> currentLabels;
     Ui::AddTransactionWindow* addTransactionWindow;

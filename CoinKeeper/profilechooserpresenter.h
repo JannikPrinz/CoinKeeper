@@ -8,7 +8,7 @@ class ProfileChooserPresenter : public Presenter {
     Q_OBJECT
 
 public:
-    ProfileChooserPresenter(Database*, QObject * parent = Q_NULLPTR);
+    ProfileChooserPresenter(QObject * parent = Q_NULLPTR);
     ~ProfileChooserPresenter();
 
 public slots:

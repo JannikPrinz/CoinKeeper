@@ -5,15 +5,16 @@
 #include "standingordermanager.h"
 #include "transactionmanager.h"
 
-CoinKeeperPresenter::CoinKeeperPresenter(Database* base, string profilePath, QObject * parent) : Presenter(base, parent) {
+CoinKeeperPresenter::CoinKeeperPresenter(string const& profilePath, QObject * parent) : Presenter(parent) {
     currentProfile = profilePath;
+    database = std::make_shared<Database>(currentProfile);
     //qDebug("Übergebener string: %s", profilePath.c_str());
     view = std::make_unique<CoinKeeperView>();
     view->show();
     CreateConnections();
 
     // check for executable standing orders:
-    StandingOrderManager standingOrderManager(currentProfile, database);
+    StandingOrderManager standingOrderManager(database);
     standingOrderManager.ExecuteOrders();
     RefreshWindow();
 }
@@ -34,7 +35,7 @@ void CoinKeeperPresenter::CreateConnections()
 
 void CoinKeeperPresenter::CreateNewAccount()
 {
-    AccountManager accountManager(currentProfile, database);
+    AccountManager accountManager(database);
     accountManager.CreateAccount();
     RefreshWindow();
 }
@@ -47,7 +48,7 @@ void CoinKeeperPresenter::ChangeAccount()
         string accountName;
         Value accountValue;
         tie(accountID, accountName, accountValue) = currentAccounts[row];
-        AccountManager accountManager(currentProfile, database);
+        AccountManager accountManager(database);
         accountManager.ChangeAccount(accountID, accountName, accountValue);
         RefreshWindow();
     }
@@ -55,7 +56,7 @@ void CoinKeeperPresenter::ChangeAccount()
 
 void CoinKeeperPresenter::CreateNewTransaction()
 {
-    TransactionManager transactionCreator(currentProfile, database);
+    TransactionManager transactionCreator(database);
     transactionCreator.CreateNewTransaction();
     RefreshWindow();
 }
@@ -109,14 +110,14 @@ void CoinKeeperPresenter::DeleteAccount()
 
 void CoinKeeperPresenter::ManageStandingOrders()
 {
-    StandingOrderManager standingOrderManager(currentProfile, database);
+    StandingOrderManager standingOrderManager(database);
     standingOrderManager.ManageStandingOrders(&currentAccounts, &currentLabels);
     RefreshWindow();
 }
 
 void CoinKeeperPresenter::ManageLabels()
 {
-    LabelManager labelManager(currentProfile, database);
+    LabelManager labelManager(database);
     labelManager.ManageLabels();
     RefreshWindow();
 }

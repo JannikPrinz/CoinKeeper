@@ -4,29 +4,9 @@
 
 #include "sqlite-amalgamation-3120100\sqlite3.h"
 
-/*
-    Start delete from here:
-    ----------------------------------
-*/
-static char* errmsg;
-#define ERRORMESSAGE &errmsg
-
-static void printErrMsg()
+Database::Database(std::string const& profile) :
+    openProfile(profile.c_str())
 {
-    if (errmsg != nullptr)
-    {
-        qDebug(errmsg);
-    }
-}
-
-/*
-    ----------------------------------
-    Until here!
-*/
-
-Database::Database()
-{
-    //qDebug(CREATE_TABLES_OF_A_PROFILE);
 }
 
 void Database::CreateNewProfile(std::string const& fileName)
@@ -38,45 +18,10 @@ void Database::CreateNewProfile(std::string const& fileName)
     exPath.append(".");
     exPath.append(DATABASE_FILETYPE);
     sqlite3_open(exPath.c_str(), &db);
-    sqlite3_exec(db, CREATE_TABLES_OF_A_PROFILE.c_str(), callback, 0, 0);
-    sqlite3_exec(db, INSERT_DEFAULT_VALUES.c_str(), callback, 0, 0);
-    //if (rc != SQLITE_OK)
-    //{
-    //    qDebug("Fehler beim erstellen der Datanbank!");
-    //}
-    //else
-    //{
-    //    qDebug("Erstellen der Datenbank erfolgreich!");
-    //}
-    // Tests:
-    //char* msg;
-    //rc = sqlite3_exec(db, "INSERT INTO Accounts (Name, Balance) VALUES (\"Bargeld\", 100);", callback, 0, &msg);
-    //rc = sqlite3_exec(db, "INSERT INTO Transactions (Description, Value, AccountID, LabelID) VALUES (\"Erste Einzahlung\", 100, 1, 1);", callback, 0, &msg);
-    //rc = sqlite3_exec(db, "SELECT * FROM Transactions;", callback, 0, &msg);
-    //if (rc != SQLITE_OK)
-    //{
-    //    qDebug("Fehler beim ausführen der SQL_Befehle! Fehlermeldung:");
-    //    qDebug(msg);
-    //}
-    //else
-    //{
-    //    qDebug("Befehlsdurchführung erfolgreich!");
-    //}
+    sqlite3_exec(db, CREATE_TABLES_OF_A_PROFILE.c_str(), nullptr, 0, 0);
+    sqlite3_exec(db, INSERT_DEFAULT_VALUES.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
-
-//
-//void Database::TestForeignKeys()
-//{
-//    sqlite3* db;
-//    std::string exPath = LPWSTRToString(ExePath());
-//    exPath.pop_back();
-//    exPath.append(std::string("Test.ckdb"));
-//    sqlite3_open(exPath.c_str(), &db);
-//    char* zerrormsg = 0;
-//    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", callback, 0, &zerrormsg);
-//    sqlite3_close(db);
-//}
 
 std::list<std::string> Database::GetDatabaseList()
 {
@@ -102,22 +47,21 @@ std::list<std::string> Database::GetDatabaseList()
     return GetFilenames(names, path);
 }
 
-void Database::CreateNewAccount(std::string const& profile, std::string const& name, Value const& balance)
+void Database::CreateNewAccount(std::string const& name, Value const& balance)
 {
-    sqlite3* db;
-    sqlite3_open(profile.c_str(), &db);
-    std::string ex = INSERT_NEW_ACCOUNT_PART_1;
-    ex.append(name);
-    ex.append(INSERT_NEW_ACCOUNT_PART_2);
-    ex.append(std::to_string(balance.VK));
-    ex.append(INSERT_NEW_ACCOUNT_PART_3);
-    ex.append(std::to_string(balance.NK));
-    ex.append(INSERT_NEW_ACCOUNT_PART_4);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
-    sqlite3_close(db);
+    std::stringstream ss;
+    ss << INSERT_NEW_ACCOUNT_PART_1;
+    ss << name;
+    ss << INSERT_NEW_ACCOUNT_PART_2;
+    ss << balance.VK;
+    ss << INSERT_NEW_ACCOUNT_PART_3;
+    ss << balance.NK;
+    ss << INSERT_NEW_ACCOUNT_PART_4;
+
+    ExecuteSQLStatementWithoutReturnValue(ss);
 }
 
-void Database::CreateNewTransaction(std::string const& profile, std::string const& description, int const account, Value const& value, QDate const& date, int const labelID)
+void Database::CreateNewTransaction(std::string const& description, int const account, Value const& value, QDate const& date, int const labelID)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -142,12 +86,12 @@ void Database::CreateNewTransaction(std::string const& profile, std::string cons
     ss << std::to_string(labelID);
     ss << INSERT_NEW_TRANSACTION_PART_9;
 
-    sqlite3_exec(db, ss.str().c_str(), callback, 0, 0);
+    sqlite3_exec(db, ss.str().c_str(), nullptr, 0, 0);
     sqlite3_close(db);
     UpdateAccountValue(profile, account, value);
 }
 
-void Database::CreateNewLabel(std::string const& profile, std::string const& name, int const color)
+void Database::CreateNewLabel(std::string const& name, int const color)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -156,11 +100,11 @@ void Database::CreateNewLabel(std::string const& profile, std::string const& nam
     ex.append(INSERT_NEW_LABEL_PART_2);
     ex.append(std::to_string(color));
     ex.append(INSERT_NEW_LABEL_PART_3);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::CreateNewStandingOrder(std::string const& profile, std::string const& description, int const accountID, Value const& value, QDate const& date, int const labelID, int const orderType)
+void Database::CreateNewStandingOrder(std::string const& description, int const accountID, Value const& value, QDate const& date, int const labelID, int const orderType)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -179,11 +123,11 @@ void Database::CreateNewStandingOrder(std::string const& profile, std::string co
     ex.append(INSERT_NEW_STANDING_ORDER_PART_7);
     ex.append(std::to_string(date.year() * 10000 + date.month() * 100 + date.day()));
     ex.append(INSERT_NEW_STANDING_ORDER_PART_8);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateLabel(std::string const& profile, int const labelID, std::string const& name, int const color)
+void Database::UpdateLabel(int const labelID, std::string const& name, int const color)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -194,11 +138,11 @@ void Database::UpdateLabel(std::string const& profile, int const labelID, std::s
     ex.append(UPDATE_LABEL_PART_3);
     ex.append(std::to_string(labelID));
     ex.append(UPDATE_LABEL_PART_4);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateAccount(std::string const& profile, int const accountID, std::string const& accountName, Value const& accountValue)
+void Database::UpdateAccount(int const accountID, std::string const& accountName, Value const& accountValue)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -211,11 +155,11 @@ void Database::UpdateAccount(std::string const& profile, int const accountID, st
     ex.append(UPDATE_ACCOUNT_PART_4);
     ex.append(std::to_string(accountID));
     ex.append(UPDATE_ACCOUNT_PART_5);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateAccountValue(std::string const& profilePath, int const accountID, Value const& value)
+void Database::UpdateAccountValue(int const accountID, Value const& value)
 {
     sqlite3* db;
     sqlite3_open(profilePath.c_str(), &db);
@@ -235,11 +179,11 @@ void Database::UpdateAccountValue(std::string const& profilePath, int const acco
     ex.append(UPDATE_ACCOUNT_VALUE_PART_3);
     ex.append(std::to_string(accountID));
     ex.append(UPDATE_ACCOUNT_VALUE_PART_4);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateStandingOrderDate(std::string const& profile, int const orderID, int const date)
+void Database::UpdateStandingOrderDate(int const orderID, int const date)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -248,11 +192,11 @@ void Database::UpdateStandingOrderDate(std::string const& profile, int const ord
     ex.append(UPDATE_STANDING_ORDER_DATE_PART_2);
     ex.append(std::to_string(orderID));
     ex.append(UPDATE_STANDING_ORDER_DATE_PART_3);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateStandingOrder(std::string const& profile, int const orderID, std::string const& description, int const accountID,
+void Database::UpdateStandingOrder(int const orderID, std::string const& description, int const accountID,
     Value const& value, QDate const& nextDate, int const labelID, int const orderType)
 {
     sqlite3* db;
@@ -274,11 +218,11 @@ void Database::UpdateStandingOrder(std::string const& profile, int const orderID
     ex.append(UPDATE_STANDING_ORDER_PART_8);
     ex.append(std::to_string(orderID));
     ex.append(UPDATE_STANDING_ORDER_PART_9);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::UpdateTransaction(std::string const& profile, int const transactionID, std::string const& description, int const accountID, Value const& value, QDate const& date, int const labelID)
+void Database::UpdateTransaction(int const transactionID, std::string const& description, int const accountID, Value const& value, QDate const& date, int const labelID)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -301,11 +245,11 @@ void Database::UpdateTransaction(std::string const& profile, int const transacti
     ex.append(UPDATE_TRANSACTION_PART_9);
     ex.append(std::to_string(transactionID));
     ex.append(UPDATE_TRANSACTION_PART_10);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::DeleteTransaction(std::string const& profile, int const transactionID, bool const changeAccountValue, int const accountID, Value const& value)
+void Database::DeleteTransaction(int const transactionID, bool const changeAccountValue, int const accountID, Value const& value)
 {
     if (changeAccountValue)    UpdateAccountValue(profile, accountID, value);
     sqlite3* db;
@@ -313,22 +257,22 @@ void Database::DeleteTransaction(std::string const& profile, int const transacti
     std::string ex = DELETE_TRANSACTION_PART_1;
     ex.append(std::to_string(transactionID));
     ex.append(DELETE_TRANSACTION_PART_2);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::DeleteStandingOrder(std::string const& profile, int const orderID)
+void Database::DeleteStandingOrder(int const orderID)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
     std::string ex = DELETE_STANDING_ORDER_PART_1;
     ex.append(std::to_string(orderID));
     ex.append(DELETE_STANDING_ORDER_PART_2);
-    sqlite3_exec(db, ex.c_str(), callback, 0, 0);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
 }
 
-void Database::DeleteAccount(std::string const& profile, int const accountID)
+void Database::DeleteAccount(int const accountID)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -339,12 +283,11 @@ void Database::DeleteAccount(std::string const& profile, int const accountID)
     ex.append(DELETE_ACCOUNT_PART_3);
     ex.append(std::to_string(accountID));
     ex.append(DELETE_ACCOUNT_PART_4);
-    sqlite3_exec(db, ex.c_str(), callback, 0, ERRORMESSAGE);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
-    printErrMsg();
 }
 
-void Database::DeleteLabel(std::string const& profile, int const labelID)
+void Database::DeleteLabel(int const labelID)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -355,12 +298,11 @@ void Database::DeleteLabel(std::string const& profile, int const labelID)
     ex.append(DELETE_LABEL_PART_3);
     ex.append(std::to_string(labelID));
     ex.append(DELETE_LABEL_PART_4);
-    sqlite3_exec(db, ex.c_str(), callback, 0, ERRORMESSAGE);
+    sqlite3_exec(db, ex.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
-    printErrMsg();
 }
 
-std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetTransactions(std::string const& profilePath, int const month, int const year)
+std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetTransactions(int const month, int const year)
 {
     sqlite3* db;
     sqlite3_open(profilePath.c_str(), &db);
@@ -386,7 +328,7 @@ std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetT
     return tempTransactions;
 }
 
-std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetTransactions(std::string const& profilePath, int const month, int const year, int const accountID)
+std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetTransactions(int const month, int const year, int const accountID)
 {
     sqlite3* db;
     sqlite3_open(profilePath.c_str(), &db);
@@ -416,7 +358,7 @@ std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetT
     return tempTransactions;
 }
 
-std::vector<std::tuple<int, std::string, Value>> Database::GetAccounts(std::string const& profilePath)
+std::vector<std::tuple<int, std::string, Value>> Database::GetAccounts()
 {
     sqlite3* db;
     sqlite3_open(profilePath.c_str(), &db);
@@ -427,7 +369,7 @@ std::vector<std::tuple<int, std::string, Value>> Database::GetAccounts(std::stri
     return tempAccounts;
 }
 
-std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetAllStandingOrders(std::string const& profile)
+std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetAllStandingOrders()
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -438,7 +380,7 @@ std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDa
     return tempOrders;
 }
 
-std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetExecutableStandingOrders(std::string const& profile, int const date)
+std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetExecutableStandingOrders(int const date)
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -452,7 +394,7 @@ std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDa
     return tempOrders;
 }
 
-std::vector<std::tuple<int, std::string, int>> Database::GetLabels(std::string const& profile)
+std::vector<std::tuple<int, std::string, int>> Database::GetLabels()
 {
     sqlite3* db;
     sqlite3_open(profile.c_str(), &db);
@@ -567,6 +509,11 @@ std::list<std::string> Database::GetFilenames(std::list<std::string> const& rawL
     return returnList;
 }
 
-Database::~Database()
+void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const
 {
+    sqlite3* db;
+    sqlite3_open(openProfile, &db);
+    std::string const& tmp = ss.str();
+    sqlite3_exec(db, tmp.c_str(), nullptr, 0, 0);
+    sqlite3_close(db);
 }

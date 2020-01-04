@@ -2,7 +2,9 @@
 
 #include <string>
 #include <QColor>
+#include <qdatetime.h>
 #include <tuple>
+#include <vector>
 
 /*        german characters, UTF-8 octal coded:
 -----------------------------------------------------------------------------
@@ -387,3 +389,8 @@ static QColor ConvertIntToQColor(const int& color)
     std::tie(r, g, b, a) = ConvertIntToRGBA(color);
     return QColor(r, g, b, a);
 }
+
+using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
+using AccountVector = std::vector<std::tuple<int, std::string, Value>>;
+using LabelVector = std::vector<std::tuple<int, std::string, int>>;
+using StandingOrderVector = std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>>;

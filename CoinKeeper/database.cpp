@@ -302,14 +302,11 @@ Value Database::GetAccountValue(int const accountID)
 TransactionVector Database::GetTransactions(int const month, int const year)
 {
     std::stringstream ss;
-    if (month == 0)        // show all transactions of the selected year
-    {
+    if (month == 0) {       // show all transactions of the selected year
         ss << GET_TRANSACTIONS_Y_PART_1;
         ss << std::to_string(year);
         ss << GET_TRANSACTIONS_Y_PART_2;
-    }
-    else
-    {
+    } else {
         ss << GET_TRANSACTIONS_M_Y_PART_1;
         ss << std::to_string(month);
         ss << GET_TRANSACTIONS_M_Y_PART_2;
@@ -323,93 +320,83 @@ TransactionVector Database::GetTransactions(int const month, int const year)
     return transactions;
 }
 
-std::vector<std::tuple<int, std::string, Value, QDate, int, int>> Database::GetTransactions(int const month, int const year, int const accountID)
+TransactionVector Database::GetTransactions(int const month, int const year, int const accountID)
 {
-    sqlite3* db;
-    sqlite3_open(profilePath.c_str(), &db);
-    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> trans;
-    tempTransactions = trans;
-    std::string ex;
-    if (month == 0)        // show all transactions of the selected year
-    {
-        ex = GET_TRANSACTIONS_Y_A_PART_1;
-        ex.append(std::to_string(year));
-        ex.append(GET_TRANSACTIONS_Y_A_PART_2);
-        ex.append(std::to_string(accountID));
-        ex.append(GET_TRANSACTIONS_Y_A_PART_3);
+    std::stringstream ss;
+    if (month == 0) {       // show all transactions of the selected year
+        ss << GET_TRANSACTIONS_Y_A_PART_1;
+        ss << std::to_string(year);
+        ss << GET_TRANSACTIONS_Y_A_PART_2;
+        ss << std::to_string(accountID);
+        ss << GET_TRANSACTIONS_Y_A_PART_3;
+    } else {
+        ss << GET_TRANSACTIONS_M_Y_A_PART_1;
+        ss << std::to_string(month);
+        ss << GET_TRANSACTIONS_M_Y_A_PART_2;
+        ss << std::to_string(year);
+        ss << GET_TRANSACTIONS_M_Y_A_PART_3;
+        ss << std::to_string(accountID);
+        ss << GET_TRANSACTIONS_M_Y_A_PART_4;
     }
-    else
-    {
-        ex = GET_TRANSACTIONS_M_Y_A_PART_1;
-        ex.append(std::to_string(month));
-        ex.append(GET_TRANSACTIONS_M_Y_A_PART_2);
-        ex.append(std::to_string(year));
-        ex.append(GET_TRANSACTIONS_M_Y_A_PART_3);
-        ex.append(std::to_string(accountID));
-        ex.append(GET_TRANSACTIONS_M_Y_A_PART_4);
-    }
-    sqlite3_exec(db, ex.c_str(), ProcessTransactionsInformation, 0, 0);
-    sqlite3_close(db);
-    return tempTransactions;
+
+    TransactionVector transactions;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetTransactions, static_cast<void*>(&transactions));
+
+    return transactions;
 }
 
-std::vector<std::tuple<int, std::string, Value>> Database::GetAccounts()
+AccountVector Database::GetAccounts()
 {
-    sqlite3* db;
-    sqlite3_open(profilePath.c_str(), &db);
-    std::vector<std::tuple<int, std::string, Value>> acc;
-    tempAccounts = acc;
-    sqlite3_exec(db, GET_ALL_ACCOUNTS.c_str(), ProcessAccountInformation, 0, 0);
-    sqlite3_close(db);
-    return tempAccounts;
+    std::stringstream ss;
+    ss << GET_ALL_ACCOUNTS;
+
+    AccountVector accounts;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetAccounts, static_cast<void*>(&accounts));
+
+    return accounts;
 }
 
-std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetAllStandingOrders()
+StandingOrderVector Database::GetAllStandingOrders()
 {
-    sqlite3* db;
-    sqlite3_open(profile.c_str(), &db);
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> orders;
-    tempOrders = orders;
-    sqlite3_exec(db, GET_ALL_STANDING_ORDERS.c_str(), ProcessOrderInformation, 0, 0);
-    sqlite3_close(db);
-    return tempOrders;
+    std::stringstream ss;
+    ss << GET_ALL_STANDING_ORDERS;
+
+    StandingOrderVector orders;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetStandingOrders, static_cast<void*>(&orders));
+
+    return orders;
 }
 
-std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> Database::GetExecutableStandingOrders(int const date)
+StandingOrderVector Database::GetExecutableStandingOrders(int const date)
 {
-    sqlite3* db;
-    sqlite3_open(profile.c_str(), &db);
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> orders;
-    tempOrders = orders;
-    std::string ex = GET_EXECUTABLE_STANDING_ORDERS_PART_1;
-    ex.append(std::to_string(date));
-    ex.append(GET_EXECUTABLE_STANDING_ORDERS_PART_2);
-    sqlite3_exec(db, ex.c_str(), ProcessOrderInformation, 0, 0);
-    sqlite3_close(db);
-    return tempOrders;
+    std::stringstream ss;
+    ss << GET_EXECUTABLE_STANDING_ORDERS_PART_1;
+    ss << std::to_string(date);
+    ss << GET_EXECUTABLE_STANDING_ORDERS_PART_2;
+
+    StandingOrderVector orders;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetStandingOrders, static_cast<void*>(&orders));
+
+    return orders;
 }
 
-std::vector<std::tuple<int, std::string, int>> Database::GetLabels()
+LabelVector Database::GetLabels()
 {
-    sqlite3* db;
-    sqlite3_open(profile.c_str(), &db);
-    std::vector<std::tuple<int, std::string, int>> labels;
-    tempLabels = labels;
-    sqlite3_exec(db, GET_ALL_LABELS.c_str(), ProcessLabels, 0, 0);
-    sqlite3_close(db);
-    return tempLabels;
+    std::stringstream ss;
+    ss << GET_ALL_LABELS;
+
+    LabelVector labels;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetLabels, static_cast<void*>(&labels));
+
+    return labels;
 }
 
 void Database::InitializeCallbackFunctions()
 {
     CBF_GetAccountValue = [](void* data, int argc, char** argv, char** azColName) {
         Value* valuePtr = static_cast<Value*>(data);
-        if (argc > 1)
-        {
-            if (std::string(azColName[0]) == ACCOUNTS_VK && std::string(azColName[1]) == ACCOUNTS_NK)
-            {
-                *valuePtr = Value(atoi(argv[0]), atoi(argv[1]));
-            }
+        if (argc > 1 && std::string(azColName[0]) == ACCOUNTS_VK && std::string(azColName[1]) == ACCOUNTS_NK) {
+            *valuePtr = Value(atoi(argv[0]), atoi(argv[1]));
         }
         return 0;
     };
@@ -417,8 +404,7 @@ void Database::InitializeCallbackFunctions()
     CBF_GetTransactions = [](void* data, int argc, char** argv, char** azColName) {
         TransactionVector* transactionPtr = static_cast<TransactionVector*>(data);
         int x = 0;
-        while (x + 8 < argc)
-        {
+        while (x + 8 < argc) {
             if (std::string(azColName[x]) == TRANSACTIONS_ID && std::string(azColName[x + 1]) == TRANSACTIONS_DESCRIPTION &&
                 std::string(azColName[x + 2]) == TRANSACTIONS_VK && std::string(azColName[x + 3]) == TRANSACTIONS_NK &&
                 std::string(azColName[x + 4]) == TRANSACTIONS_DAY && std::string(azColName[x + 5]) == TRANSACTIONS_MONTH &&
@@ -429,6 +415,55 @@ void Database::InitializeCallbackFunctions()
                 transactionPtr->push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8])));
             }
             x += 9;
+        }
+        return 0;
+    };
+
+    CBF_GetAccounts = [](void* data, int argc, char** argv, char** azColName) {
+        AccountVector* accountPtr = static_cast<AccountVector*>(data);
+        int x = 0;
+        while (x + 3 < argc) {
+            if (std::string(azColName[x]) == ACCOUNTS_ID && std::string(azColName[x + 1]) == ACCOUNTS_NAME &&
+                std::string(azColName[x + 2]) == ACCOUNTS_VK && std::string(azColName[x + 3]) == ACCOUNTS_NK)
+            {
+                accountPtr->push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3]))));
+            }
+            x += 4;
+        }
+        return 0;
+    };
+
+    CBF_GetStandingOrders = [](void* data, int argc, char** argv, char** azColName) {
+        StandingOrderVector* orderPtr = static_cast<StandingOrderVector*>(data);
+        int x = 0;
+        while (x + 7 < argc) {
+            if (std::string(azColName[x]) == STANDING_ORDER_ID && std::string(azColName[x + 1]) == ACCOUNTS_ID &&
+                std::string(azColName[x + 2]) == LABEL_ID && std::string(azColName[x + 3]) == STANDING_ORDER_VK &&
+                std::string(azColName[x + 4]) == STANDING_ORDER_NK && std::string(azColName[x + 5]) == STANDING_ORDER_DESCRIPTION &&
+                std::string(azColName[x + 6]) == STANDING_ORDER_TYPE && std::string(azColName[x + 7]) == STANDING_ORDER_DATE)
+            {
+                // convert int to date. (..YYYYMMDD)
+                int date = atoi(argv[x + 7]);
+                int year = date / 10000;
+                date -= year * 10000;
+                int month = date / 100;
+                date -= month * 100;
+                orderPtr->push_back(make_tuple(atoi(argv[x]), atoi(argv[x + 1]), atoi(argv[x + 2]), Value(atoi(argv[x + 3]),
+                    atoi(argv[x + 4])), std::string(argv[x + 5]), static_cast<StandingOrderType>(atoi(argv[x + 6])), QDate(year, month, date)));
+            }
+            x += 8;
+        }
+        return 0;
+    };
+
+    CBF_GetLabels = [](void* data, int argc, char** argv, char** azColName) {
+        LabelVector* labelPtr = static_cast<LabelVector*>(data);
+        int x = 0;
+        while (x + 2 < argc) {
+            if (std::string(azColName[x]) == LABEL_ID && std::string(azColName[x + 1]) == LABEL_NAME && std::string(azColName[x + 2]) == LABEL_COLOR) {
+                labelPtr->push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), atoi(argv[x + 2])));
+            }
+            x += 3;
         }
         return 0;
     };

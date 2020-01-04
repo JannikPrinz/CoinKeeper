@@ -20,14 +20,14 @@ CoinKeeperView::~CoinKeeperView() {
     this->close();
 }
 
-void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> const& accounts)
+void CoinKeeperView::FillAccountData(std::vector<std::tuple<int, std::string, Value>> const& accounts)
 {
     int x = static_cast<int>(accounts.size());
     ui.tableAccounts->setRowCount(x);
 
     for (int i = 0; i < x; ++i) {
         int accountID;        // not used
-        string accountName;
+        std::string accountName;
         Value accountValue;
         tie(accountID, accountName, accountValue) = accounts[i];
         ui.tableAccounts->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(accountName)));
@@ -35,14 +35,14 @@ void CoinKeeperView::FillAccountData(vector<tuple<int, string, Value>> const& ac
     }
 }
 
-void CoinKeeperView::FillTransactionData(vector<tuple<QDate, string, int, string, Value>> const& transactions)
+void CoinKeeperView::FillTransactionData(std::vector<std::tuple<QDate, std::string, int, std::string, Value>> const& transactions)
 {
     int x = static_cast<int>(transactions.size());
     ui.tableMonthOverview->setRowCount(x);
     Value sum(0);
     for (int i = 0; i < x; ++i) {
         int color;
-        string labelName, description;
+        std::string labelName, description;
         Value value;
         QDate date;
         tie(date, labelName, color, description, value) = transactions[i];

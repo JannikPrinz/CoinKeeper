@@ -1,5 +1,7 @@
 ﻿#include "profilechooserpresenter.h"
 
+#include "database.h"
+
 ProfileChooserPresenter::ProfileChooserPresenter(QObject * parent) : Presenter(parent) {
     ProfileChooserView* v = new ProfileChooserView();
     (*v).show();

@@ -6,7 +6,7 @@ SupervisorPresenter::SupervisorPresenter(QObject * parent) : QObject(parent)
     connect(presenter.get(), &Presenter::ChangePresenter, this, &SupervisorPresenter::ChangePresenter);
 }
 
-void SupervisorPresenter::ChangePresenter(Presenters NewPresenter, string s)
+void SupervisorPresenter::ChangePresenter(Presenters NewPresenter, std::string const& s)
 {
     switch (NewPresenter)
     {

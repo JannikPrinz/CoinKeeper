@@ -8,7 +8,7 @@ TransactionManager::TransactionManager(std::shared_ptr<Database> data) :
 void TransactionManager::CreateNewTransaction()
 {
     currentAccounts = database->GetAccounts();
-    currentLabels = database->GetLabels(currentProfile);
+    currentLabels = database->GetLabels();
     addTransactionWindow = new Ui::AddTransactionWindow;
     QDialog dialog;
     addTransactionWindow->setupUi(&dialog);
@@ -28,7 +28,7 @@ void TransactionManager::CreateNewTransaction()
 void TransactionManager::UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID)
 {
     currentAccounts = database->GetAccounts();
-    currentLabels = database->GetLabels(currentProfile);
+    currentLabels = database->GetLabels();
     addTransactionWindow = new Ui::AddTransactionWindow;
     QDialog dialog;
     addTransactionWindow->setupUi(&dialog);
@@ -78,7 +78,7 @@ void TransactionManager::UpdateTransactionInDatabase(const int& transactionID, c
     if (oldAccountID != std::get<0>(currentAccounts[selectedAccount]))
     {
         database->UpdateAccountValue(oldAccountID, oldValue * -1);
-        database->UpdateAccountValue(currentProfile, std::get<0>(currentAccounts[selectedAccount]), value);
+        database->UpdateAccountValue(std::get<0>(currentAccounts[selectedAccount]), value);
     }
     else if (oldValue != value)
     {

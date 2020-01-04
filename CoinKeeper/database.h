@@ -7,7 +7,6 @@
 #include "qdatetime.h"
 
 using CallbackFunction = int(*)(void*, int, char**, char**);
-using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
 
 // TODO: order methods
 class Database
@@ -53,7 +52,7 @@ public:
      * Returns: vector of tuples with an integer of the unique identifier of the account and the name and value of the account
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, std::string, Value>> GetAccounts();
+    AccountVector GetAccounts();
     /*
      * This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
      *
@@ -84,7 +83,7 @@ public:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all standing orders.
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetAllStandingOrders();
+    StandingOrderVector GetAllStandingOrders();
     /*
      * This method returns all standing orders, which are saved in the given profile and are ready for execution.
      * An standing order is ready for execution, if set date of the next execution is less then or equal the given date.
@@ -96,12 +95,12 @@ public:
      * Tuple with OrderID, AccountID, LabelID, Value, Description, OrderType and NextDate of all matching standing orders.
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> GetExecutableStandingOrders(int date);
+    StandingOrderVector GetExecutableStandingOrders(int date);
     /*
      * This method returns all labels, which are saved in the given profile.
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, std::string, int>> GetLabels();
+    LabelVector GetLabels();
     /*
      * This method creates a new transaction at the given profile / account with the given description, value, labelID and date of the transaction.
      * Also the value of the account gets updated.
@@ -253,55 +252,7 @@ private:
     const char* openProfile;
     CallbackFunction CBF_GetAccountValue;
     CallbackFunction CBF_GetTransactions;
+    CallbackFunction CBF_GetAccounts;
+    CallbackFunction CBF_GetStandingOrders;
+    CallbackFunction CBF_GetLabels;
 };
-
-static std::vector<std::tuple<int, std::string, Value>> tempAccounts;
-static int ProcessAccountInformation(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    int x = 0;
-    while (x + 3 < argc)
-    {
-        if (std::string(azColName[x]) == ACCOUNTS_ID && std::string(azColName[x + 1]) == ACCOUNTS_NAME && std::string(azColName[x + 2]) == ACCOUNTS_VK && std::string(azColName[x + 3]) == ACCOUNTS_NK)
-        {
-            tempAccounts.push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3]))));
-        }
-        x += 4;
-    }
-    return 0;
-}
-
-static std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> tempOrders;
-static int ProcessOrderInformation(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    int x = 0;
-    while (x + 7 < argc)
-    {
-        if (std::string(azColName[x]) == STANDING_ORDER_ID && std::string(azColName[x + 1]) == ACCOUNTS_ID && std::string(azColName[x + 2]) == LABEL_ID && std::string(azColName[x + 3]) == STANDING_ORDER_VK && std::string(azColName[x + 4]) == STANDING_ORDER_NK && std::string(azColName[x + 5]) == STANDING_ORDER_DESCRIPTION && std::string(azColName[x + 6]) == STANDING_ORDER_TYPE && std::string(azColName[x + 7]) == STANDING_ORDER_DATE)
-        {
-            // convert int to date. (..YYYYMMDD)
-            int date = atoi(argv[x + 7]);
-            int year = date / 10000;
-            date -= year * 10000;
-            int month = date / 100;
-            date -= month * 100;
-            tempOrders.push_back(make_tuple(atoi(argv[x]), atoi(argv[x + 1]), atoi(argv[x + 2]), Value(atoi(argv[x + 3]), atoi(argv[x + 4])), std::string(argv[x + 5]), static_cast<StandingOrderType>(atoi(argv[x + 6])), QDate(year, month, date)));
-        }
-        x += 8;
-    }
-    return 0;
-}
-
-static std::vector<std::tuple<int, std::string, int>> tempLabels;
-static int ProcessLabels(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    int x = 0;
-    while (x + 2 < argc)
-    {
-        if (std::string(azColName[x]) == LABEL_ID && std::string(azColName[x + 1]) == LABEL_NAME && std::string(azColName[x + 2]) == LABEL_COLOR)
-        {
-            tempLabels.push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), atoi(argv[x + 2])));
-        }
-        x += 3;
-    }
-    return 0;
-}

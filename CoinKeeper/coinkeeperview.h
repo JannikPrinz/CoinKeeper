@@ -6,8 +6,6 @@
 #include "constants.h"
 #include "ui_coinkeeper.h"
 
-using namespace std;
-
 class CoinKeeperView : public QMainWindow {
     Q_OBJECT
 
@@ -20,7 +18,7 @@ public:
      * Parameters:
      * vector<tuple<int, string, Value>> accounts : vector of accounts, which are represented as tuples with the AccountID, AccountName, AccountValue
      */
-    void FillAccountData(vector<tuple<int, string, Value>> const& accounts);
+    void FillAccountData(AccountVector const& accounts);
     /* 
      * Fills the table which represents transactions with the given transactions. Also this method calculates the sum 
      * of the values of the given transactions and displays the result.
@@ -29,7 +27,7 @@ public:
      * const vector<tuple<int, string, Value, QDate, int, int>>& transactions : vector of transactions, which are represented as tuples with the date,
      * name of the label, color of the label, TransactionDescription, value of the transaction
      */
-    void FillTransactionData(vector<tuple<QDate, string, int, string, Value>> const& transactions);
+    void FillTransactionData(std::vector<std::tuple<QDate, std::string, int, std::string, Value>> const& transactions);
     /*
      * This method returns the index of the combobox of the selected month
      *

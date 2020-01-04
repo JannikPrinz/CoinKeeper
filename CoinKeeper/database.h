@@ -6,6 +6,10 @@
 #include "qdebug.h"
 #include "qdatetime.h"
 
+using CallbackFunction = int(*)(void*, int, char**, char**);
+using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
+
+// TODO: order methods
 class Database
 {
 public:
@@ -34,6 +38,16 @@ public:
      */
     void CreateNewAccount(std::string const& name, Value const& balance);
     /*
+     * This method returns the value of an given account.
+     *
+     * Parameters:
+     * int accountID : id of an account
+     *
+     * Returns: the value of the given account
+     */
+    [[nodiscard]]
+    Value GetAccountValue(int accountID);
+    /*
      * This method returns all accounts of the given profile
      *
      * Returns: vector of tuples with an integer of the unique identifier of the account and the name and value of the account
@@ -50,7 +64,7 @@ public:
      * Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(int month, int year);
+    TransactionVector GetTransactions(int month, int year);
     /*
      * This method returns transactions of the given profile with the given restrictions.
      *
@@ -62,7 +76,7 @@ public:
      * Returns: vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
      */
     [[nodiscard]]
-    std::vector<std::tuple<int, std::string, Value, QDate, int, int>> GetTransactions(int month, int year, int accountID);
+    TransactionVector GetTransactions(int month, int year, int accountID);
     /*
      * This method returns all standing orders, which are saved in the given profile.
      *
@@ -214,6 +228,7 @@ public:
     void DeleteAccount(int accountID);
 
 private:
+    void InitializeCallbackFunctions();
     // Return the path of the executable with '\*' at the end
     [[nodiscard]]
     static LPWSTR ExePath();
@@ -231,9 +246,13 @@ private:
     [[nodiscard]]
     static std::list<std::string> GetFilenames(std::list<std::string> const& rawList, std::string const& path, std::string const& type = DATABASE_FILETYPE);
     void ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const;
+    void ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, CallbackFunction callback, void* data) const;
+    //void ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, std::function<int(void*, int, char**, char**)> callback, void* data) const;
 
 private:
     const char* openProfile;
+    CallbackFunction CBF_GetAccountValue;
+    CallbackFunction CBF_GetTransactions;
 };
 
 static std::vector<std::tuple<int, std::string, Value>> tempAccounts;
@@ -272,23 +291,6 @@ static int ProcessOrderInformation(void *NotUsed, int argc, char **argv, char **
     return 0;
 }
 
-static std::vector<std::tuple<int, std::string, Value, QDate, int, int>> tempTransactions;
-static int ProcessTransactionsInformation(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    int x = 0;
-    while (x + 8 < argc)
-    {
-        if (std::string(azColName[x]) == TRANSACTIONS_ID && std::string(azColName[x + 1]) == TRANSACTIONS_DESCRIPTION && std::string(azColName[x + 2]) == TRANSACTIONS_VK && std::string(azColName[x + 3]) == TRANSACTIONS_NK && std::string(azColName[x + 4]) == TRANSACTIONS_DAY && std::string(azColName[x + 5]) == TRANSACTIONS_MONTH && std::string(azColName[x + 6]) == TRANSACTIONS_YEAR && std::string(azColName[x + 7]) == ACCOUNTS_ID && std::string(azColName[x + 8]) == LABEL_ID)
-        {
-            QDate date;
-            date.setDate(atoi(argv[x + 6]), atoi(argv[x + 5]), atoi(argv[x + 4]));
-            tempTransactions.push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8])));
-        }
-        x += 9;
-    }
-    return 0;
-}
-
 static std::vector<std::tuple<int, std::string, int>> tempLabels;
 static int ProcessLabels(void *NotUsed, int argc, char **argv, char **azColName)
 {
@@ -300,20 +302,6 @@ static int ProcessLabels(void *NotUsed, int argc, char **argv, char **azColName)
             tempLabels.push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), atoi(argv[x + 2])));
         }
         x += 3;
-    }
-    return 0;
-}
-
-static Value tempAccountValue;
-static int ProcessAccountValue(void *NotUsed, int argc, char **argv, char **azColName)
-{
-    if (argc > 1)
-    {
-        if (std::string(azColName[0]) == ACCOUNTS_VK && std::string(azColName[1]) == ACCOUNTS_NK)
-        {
-            Value v = Value(atoi(argv[0]), atoi(argv[1]));
-            tempAccountValue = v;
-        }
     }
     return 0;
 }

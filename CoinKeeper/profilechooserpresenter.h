@@ -8,7 +8,7 @@ class ProfileChooserPresenter : public Presenter {
     Q_OBJECT
 
 public:
-    ProfileChooserPresenter(Database*, QObject * parent = Q_NULLPTR);
+    ProfileChooserPresenter(QObject* parent = Q_NULLPTR);
     ~ProfileChooserPresenter();
 
 public slots:
@@ -19,7 +19,6 @@ public slots:
 
 private:
     ProfileChooserView* view;
-    std::list<std::string> currentProfiles;
+    ProfileVector currentProfiles;
     void CreateConnections();
-
 };

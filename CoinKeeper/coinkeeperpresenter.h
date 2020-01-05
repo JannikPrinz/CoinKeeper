@@ -1,14 +1,15 @@
 ﻿#pragma once
-#include "presenter.h"
-#include "coinkeeperview.h"
-
 #include <qstringlistmodel.h>
+
+#include "coinkeeperview.h"
+#include "database.h"
+#include "presenter.h"
 
 class CoinKeeperPresenter : public Presenter {
     Q_OBJECT
 
 public:
-    CoinKeeperPresenter(Database* base, string profilePath, QObject * parent = Q_NULLPTR);
+    CoinKeeperPresenter(std::string const& profilePath, QObject * parent = Q_NULLPTR);
     ~CoinKeeperPresenter() = default;
 
 private:
@@ -34,15 +35,16 @@ private:
     void UpdateTransaction();
 
 private:
+    std::shared_ptr<Database> database;
     std::unique_ptr<CoinKeeperView> view;
-    string currentProfile;
+    std::string currentProfile;
     // all accounts of the open profile
-    vector<tuple<int, string, Value>> currentAccounts;
+    AccountVector currentAccounts;
     // transactions of the accounts of the open profile, which comply with the selection of the comboboxes represented as a
     // vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-    vector<tuple<int, string, Value, QDate, int, int>> currentTransactions;
+    TransactionVector currentTransactions;
     // all labels of the current profile.
-    vector<tuple<int, string, int>> currentLabels;
+    LabelVector currentLabels;
     // number of accounts
     int32_t numberOfAccounts = -1;
     // this item represents the content of the combobox, where the user can choose a account (to display the transactions)

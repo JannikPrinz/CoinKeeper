@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qobject.h>
+
 #include "database.h"
 
 class AccountManager : QObject
@@ -14,7 +16,7 @@ public:
      * std::string const& profile : path of the current profile
      * Database* data        : Database-object to change the stored data of the given profile
      */
-    AccountManager(std::string const& profile, Database* data);
+    AccountManager(std::shared_ptr<Database> data);
     ~AccountManager() = default;
     /*
      * This method starts a new account creation.
@@ -37,6 +39,5 @@ private:
     bool ChangeExistingAccount(int accountID, QString const& accountName, int vk, int nk, bool negative);
 
 private:
-    std::string currentProfile;
-    Database* database;
+    std::shared_ptr<Database> database;
 };

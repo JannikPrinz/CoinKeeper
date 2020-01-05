@@ -18,15 +18,14 @@ public:
      * string profilePath : path of the profile
      * Database* data : adress of a database object
      */
-    LabelManager(std::string profilePath, Database* data);
+    LabelManager(std::shared_ptr<Database> data);
     // Opens a new Dialog-Window to manage the labels. After execution is the window closed.
     void ManageLabels();
     ~LabelManager();
 
 private:
     Ui::ManageLabelsWindow* manageLabelsWindow = nullptr;
-    std::string currentProfile;
-    Database* database;
+    std::shared_ptr<Database> database;
     // all labels, which are display in the manage labels window (if open)
     std::vector<std::tuple<int, std::string, int>> currentLabels;
     // Creates a new label using inputs of the user.

@@ -3,10 +3,9 @@
 #include "ui_addaccountwindow.h"
 #include "qmessagebox.h"
 
-AccountManager::AccountManager(std::string const& profile, Database* data)
+AccountManager::AccountManager(std::shared_ptr<Database> data) :
+    database(data)
 {
-    currentProfile = profile;
-    database = data;
 }
 
 void AccountManager::CreateAccount()
@@ -75,7 +74,7 @@ bool AccountManager::CreateNewAccount(QString const& accountName, int const vk, 
     if (negative) {
         value *= -1;
     }
-    database->CreateNewAccount(currentProfile, accountName.toStdString(), value);
+    database->CreateNewAccount(accountName.toStdString(), value);
 
     return true;
 }
@@ -92,7 +91,7 @@ bool AccountManager::ChangeExistingAccount(int const accountID, QString const& a
     if (negative) {
         value *= -1;
     }
-    database->UpdateAccount(currentProfile, accountID, accountName.toStdString(), value);
+    database->UpdateAccount(accountID, accountName.toStdString(), value);
 
     return true;
 }

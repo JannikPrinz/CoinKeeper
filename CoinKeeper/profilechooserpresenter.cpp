@@ -1,6 +1,8 @@
 ﻿#include "profilechooserpresenter.h"
 
-ProfileChooserPresenter::ProfileChooserPresenter(Database* base, QObject * parent) : Presenter(base, parent) {
+#include "database.h"
+
+ProfileChooserPresenter::ProfileChooserPresenter(QObject * parent) : Presenter(parent) {
     ProfileChooserView* v = new ProfileChooserView();
     (*v).show();
     view = v;
@@ -16,7 +18,7 @@ void ProfileChooserPresenter::CreateNewProfile()
     QString text = QInputDialog::getText(view, tr("Neues Profil erstellen"), tr("Profilname:"), QLineEdit::Normal, "", &userClickedOk);
     if (userClickedOk && !text.isEmpty())
     {
-        database->CreateNewProfile(text.toStdString());
+        Database::CreateNewProfile(text.toStdString());
         RefreshProfilesList();
     }
 }
@@ -24,13 +26,12 @@ void ProfileChooserPresenter::CreateNewProfile()
 void ProfileChooserPresenter::RefreshProfilesList()
 {
     view->ClearList();
-    currentProfiles = database->GetDatabaseList();
-    bool mod2 = true;
-    for each (std::string s in currentProfiles)
-    {
-        if (mod2) view->AddProfile(QString::fromStdString(s));
-        mod2 = !mod2;
+    currentProfiles = Database::GetDatabaseList();
+
+    for (auto const& [profileName, path] : currentProfiles) {
+        view->AddProfile(QString::fromStdString(profileName));
     }
+
     view->SetRowAsSelected(currentProfiles.empty() ? -1 : 0);
 }
 
@@ -42,9 +43,8 @@ void ProfileChooserPresenter::DeleteProfile()
 void ProfileChooserPresenter::OpenProfile()
 {
     if (currentProfiles.empty()) return;
-    std::string s = *next(currentProfiles.begin(), view->GetSelectedRow() * 2 + 1);
-    //qDebug("Selected row: %d. Selected profile: %s", view->GetSelectedRow(), s);
-    emit ChangePresenter(Presenters::CoinKeeper, s);
+
+    emit ChangePresenter(Presenters::CoinKeeper, currentProfiles[view->GetSelectedRow()].second.string());
 }
 
 void ProfileChooserPresenter::CreateConnections()

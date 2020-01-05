@@ -17,7 +17,7 @@ public:
      * const std::string& profile : path of the profile
      * Database* data : adress of a database object
      */
-    StandingOrderManager(const std::string& profile, Database* data);
+    StandingOrderManager(std::shared_ptr<Database> data);
     /*
      * Opens a new window, where the user can add, change and delete standing orders.
      *
@@ -33,8 +33,7 @@ public:
     ~StandingOrderManager();
 
 private:
-    std::string currentProfile;
-    Database* database;
+    std::shared_ptr<Database> database;
     std::vector<std::tuple<int, std::string, Value>>* currentAccounts;
     std::vector<std::tuple<int, std::string, int>>* currentLabels;
     std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> currentOrders;
@@ -46,5 +45,4 @@ private:
     void UpdateStandingOrder(const int& orderID);
     void DeleteStandingOrder();
     void RefreshWindow();
-
 };

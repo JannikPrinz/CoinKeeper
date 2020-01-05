@@ -1,9 +1,6 @@
 #pragma once
 
-#include <Windows.h>
-
 #include "constants.h"
-#include "qdebug.h"
 #include "qdatetime.h"
 
 using CallbackFunction = int(*)(void*, int, char**, char**);
@@ -119,12 +116,12 @@ public:
     [[nodiscard]]
     StandingOrderVector GetAllStandingOrders();
     /*
-     * This method searches for database-files (profiles) in the given folders.
+     * This method searches for database-files (profiles) in the current working directory.
      *
-     * Returns: list of profiles (filenames without '.ckdb' alternating with whole path)
+     * Returns: vector of profiles (filenames without '.ckdb' together with the whole path in a pair)
      */
     [[nodiscard]]
-    static std::list<std::string> GetDatabaseList();
+    static ProfileVector GetDatabaseList();
     /*
      * This method returns all standing orders, which are saved in the given profile and are ready for execution.
      * An standing order is ready for execution, if set date of the next execution is less then or equal the given date.
@@ -228,22 +225,6 @@ public:
 
 private:
     void InitializeCallbackFunctions();
-    // Return the path of the executable with '\*' at the end
-    [[nodiscard]]
-    static LPWSTR ExePath();
-    // Converts a string to a LPWSTR
-    [[nodiscard]]
-    static LPWSTR StringToLPWSTR(std::string const& s);
-    // Converts a LPWSTR to a string
-    [[nodiscard]]
-    static std::string LPWSTRToString(LPWSTR l);
-    // extracts filenames of the files from a given list and a given file-type. This strings and original strings (incl. path)
-    // get returned. Example: <abc, ..\abc.ckdb, xyz, ..\xyz.ckdb>
-    // list<std::string> rawList : list of strings
-    // path : path of the files
-    // std::string type : type of files, which filenames get returned. Default: "ckdb" (DATABASE_FILETYPE)
-    [[nodiscard]]
-    static std::list<std::string> GetFilenames(std::list<std::string> const& rawList, std::string const& path, std::string const& type = DATABASE_FILETYPE);
     void ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const;
     void ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, CallbackFunction callback, void* data) const;
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qobject.h>
+
 #include "database.h"
 
 class AccountManager : QObject

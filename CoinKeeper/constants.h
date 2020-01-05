@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 #include <QColor>
 #include <qdatetime.h>
@@ -394,3 +395,4 @@ using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate,
 using AccountVector = std::vector<std::tuple<int, std::string, Value>>;
 using LabelVector = std::vector<std::tuple<int, std::string, int>>;
 using StandingOrderVector = std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>>;
+using ProfileVector = std::vector<std::pair<std::string, std::filesystem::path>>;

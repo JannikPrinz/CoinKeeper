@@ -1,8 +1,11 @@
 #include "database.h"
 
+#include <filesystem>
 #include <sstream>
 
 #include "sqlite-amalgamation-3120100\sqlite3.h"
+
+namespace fs = std::filesystem;
 
 Database::Database(std::string const& profile) :
     openProfile(profile.c_str())
@@ -38,13 +41,11 @@ void Database::CreateNewLabel(std::string const& name, int const color)
 
 void Database::CreateNewProfile(std::string const& fileName)
 {
+    auto path = fs::current_path();
+    path.append(fileName + "." + DATABASE_FILETYPE);
+
     sqlite3* db;
-    std::string exPath = LPWSTRToString(ExePath());
-    exPath.pop_back();
-    exPath.append(fileName);
-    exPath.append(".");
-    exPath.append(DATABASE_FILETYPE);
-    sqlite3_open(exPath.c_str(), &db);
+    sqlite3_open(path.string().c_str(), &db);
     sqlite3_exec(db, CREATE_TABLES_OF_A_PROFILE.c_str(), nullptr, 0, 0);
     sqlite3_exec(db, INSERT_DEFAULT_VALUES.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
@@ -185,28 +186,23 @@ StandingOrderVector Database::GetAllStandingOrders()
     return orders;
 }
 
-std::list<std::string> Database::GetDatabaseList()
+ProfileVector Database::GetDatabaseList()
 {
-    WIN32_FIND_DATA winFD;
-    HANDLE hFind;
-    std::list<std::string> names;
-    LPWSTR executionPath = ExePath();
+    ProfileVector profiles;
+    for (auto const& p : fs::directory_iterator(fs::current_path())) {
+        if (p.is_regular_file()) {
+            std::string const& filename = p.path().filename().string();
 
-    hFind = FindFirstFile(executionPath, &winFD);
-    if (hFind != INVALID_HANDLE_VALUE)
-    {
-        names.push_back(LPWSTRToString(winFD.cFileName));
+            bool filenameHasDBEnding = filename.length() > DATABASE_FILETYPE.length() &&
+                filename.substr(filename.length() - (DATABASE_FILETYPE.length() + 1), DATABASE_FILETYPE.length() + 1) == "." + DATABASE_FILETYPE;
 
-        while (FindNextFile(hFind, &winFD) != 0)
-        {
-            names.push_back(LPWSTRToString(winFD.cFileName));
+            if (filenameHasDBEnding) {
+                profiles.push_back(std::make_pair(filename.substr(0, filename.length() - (DATABASE_FILETYPE.length() + 1)), p.path()));
+            }
         }
     }
-    FindClose(hFind);
 
-    std::string path = LPWSTRToString(executionPath);
-    path.pop_back();
-    return GetFilenames(names, path);
+    return profiles;
 }
 
 StandingOrderVector Database::GetExecutableStandingOrders(int const date)
@@ -469,54 +465,6 @@ void Database::InitializeCallbackFunctions()
         }
         return 0;
     };
-}
-
-LPWSTR Database::ExePath()
-{
-    wchar_t buffer[MAX_PATH];
-    GetModuleFileName(NULL, buffer, MAX_PATH);
-    std::string s = LPWSTRToString(buffer);
-    std::string::size_type pos = s.find_last_of("\\/");
-    s = s.substr(0, pos + 1);
-    s = s.append("*");
-    return StringToLPWSTR(s);
-}
-
-LPWSTR Database::StringToLPWSTR(const std::string& s)
-{
-    int len;
-    int slength = (int)s.length() + 1;
-    len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
-    LPWSTR buf = new WCHAR[len];
-//    LPWSTR buff[260];
-    MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, buf, len);
-    return buf;
-}
-
-std::string Database::LPWSTRToString(LPWSTR lString)
-{
-    char ch[MAX_PATH];
-    char DefChar = ' ';
-    WideCharToMultiByte(CP_ACP, 0, lString, -1, ch, MAX_PATH, &DefChar, NULL);
-    return std::string(ch);
-}
-
-std::list<std::string> Database::GetFilenames(std::list<std::string> const& rawList, std::string const& path, std::string const& type)
-{
-    std::list<std::string> returnList;
-    std::string typeW = std::string(".").append(type);
-    for each (std::string s in rawList)
-    {
-        size_t pos = s.find(typeW);
-        if (pos != std::string::npos)
-        {
-            returnList.push_back(s.substr(0, pos));
-            std::string ss = path;
-            ss.append(s);
-            returnList.push_back(ss);
-        }
-    }
-    return returnList;
 }
 
 void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const

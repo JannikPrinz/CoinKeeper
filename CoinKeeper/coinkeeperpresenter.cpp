@@ -14,7 +14,7 @@ CoinKeeperPresenter::CoinKeeperPresenter(std::string const& profilePath, QObject
     CreateConnections();
 
     // check for executable standing orders:
-    StandingOrderManager standingOrderManager(database);
+    StandingOrderManager standingOrderManager(database, currentAccounts, currentLabels);
     standingOrderManager.ExecuteOrders();
     RefreshWindow();
 }
@@ -110,8 +110,8 @@ void CoinKeeperPresenter::DeleteAccount()
 
 void CoinKeeperPresenter::ManageStandingOrders()
 {
-    StandingOrderManager standingOrderManager(database);
-    standingOrderManager.ManageStandingOrders(&currentAccounts, &currentLabels);
+    StandingOrderManager standingOrderManager(database, currentAccounts, currentLabels);
+    standingOrderManager.ManageStandingOrders();
     RefreshWindow();
 }
 

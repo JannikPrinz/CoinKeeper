@@ -1,34 +1,32 @@
 #include "standingordermanager.h"
 
-StandingOrderManager::StandingOrderManager(std::shared_ptr<Database> data) :
-    database(data)
+StandingOrderManager::StandingOrderManager(std::shared_ptr<Database> data, AccountVector const& accounts, LabelVector const& labels) :
+    database(data),
+    currentAccounts(accounts),
+    currentLabels(labels)
 {
 }
 
-void StandingOrderManager::ManageStandingOrders(std::vector<std::tuple<int, std::string, Value>>* accounts, std::vector<std::tuple<int, std::string, int>>* labels)
+void StandingOrderManager::ManageStandingOrders()
 {
-    currentAccounts = accounts;
-    currentLabels = labels;
-    manageStandingOrders = new Ui::ManageStandingOrders;
+    manageStandingOrders = std::make_unique<Ui::ManageStandingOrders>();
     QDialog dialog;
     manageStandingOrders->setupUi(&dialog);
     RefreshWindow();
     // connect buttons:
-    connect(manageStandingOrders->buttonAddOrder, &QPushButton::clicked, this, [=] { AddStandingOrder(); });
-    connect(manageStandingOrders->buttonChangeOrder, &QPushButton::clicked, this, [=] { ChangeStandingOrder(); });
-    connect(manageStandingOrders->buttonDeleteOrder, &QPushButton::clicked, this, [=] { DeleteStandingOrder(); });
+    connect(manageStandingOrders->buttonAddOrder, &QPushButton::clicked, this, [this] { AddStandingOrder(); });
+    connect(manageStandingOrders->buttonChangeOrder, &QPushButton::clicked, this, [this] { ChangeStandingOrder(); });
+    connect(manageStandingOrders->buttonDeleteOrder, &QPushButton::clicked, this, [this] { DeleteStandingOrder(); });
     dialog.exec();
-    delete manageStandingOrders;
-    manageStandingOrders = nullptr;
 }
 
 void StandingOrderManager::ExecuteOrders()
 {
     QDate currentDate = QDate::currentDate();
     int date = currentDate.year() * 10000 + currentDate.month() * 100 + currentDate.day();
-    std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>> executableOrders = database->GetExecutableStandingOrders(date);
-    if (executableOrders.empty())
-    {
+    StandingOrderVector executableOrders = database->GetExecutableStandingOrders(date);
+
+    if (executableOrders.empty()) {
         return;
     }
 
@@ -41,21 +39,19 @@ void StandingOrderManager::ExecuteOrders()
     std::string description;
     StandingOrderType orderType;
     QDate nextDate;
-    while (executableOrders.size() != 0)
-    {
-        if (std::get<6>(executableOrders[lastItem]) > currentDate)
-        {
+
+    while (executableOrders.size() != 0) {
+        if (std::get<6>(executableOrders[lastItem]) > currentDate) {
             date = std::get<6>(executableOrders[lastItem]).year() * 10000 + std::get<6>(executableOrders[lastItem]).month() * 100 + std::get<6>(executableOrders[lastItem]).day();
             database->UpdateStandingOrderDate(std::get<0>(executableOrders[lastItem]), date);
             executableOrders.pop_back();
             lastItem = executableOrders.size() - 1;
-        } else
-        {
+        } else {
             tie(orderID, accountID, labelID, value, description, orderType, nextDate) = executableOrders[lastItem];
             database->CreateNewTransaction(description, accountID, value, nextDate, labelID);
             addedTransactions++;
-            switch (orderType)
-            {
+
+            switch (orderType) {
             case EveryDay:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addDays(1);
                 break;
@@ -79,6 +75,7 @@ void StandingOrderManager::ExecuteOrders()
             }
         }
     }
+
     QMessageBox msg;
     QString m = QString::fromStdString(TEXT_ADDED_TRANSACTIONS_PART_1);
     m.append(QString::number(addedTransactions));
@@ -89,27 +86,28 @@ void StandingOrderManager::ExecuteOrders()
 
 void StandingOrderManager::AddStandingOrder()
 {
-    addStandingOrderWindow = new Ui::AddStandingOrderWindow;
+    addStandingOrderWindow = std::make_unique<Ui::AddStandingOrderWindow>();
     QDialog dialog;
     addStandingOrderWindow->setupUi(&dialog);
+
     // insert values:
-    for (int i = 0; i < (*currentAccounts).size(); i++)
-    {
-        addStandingOrderWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>((*currentAccounts)[i])));
+    for (int i = 0; i < (currentAccounts).size(); i++) {
+        addStandingOrderWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>((currentAccounts)[i])));
     }
-    for (int i = 0; i < (*currentLabels).size(); i++)
-    {
-        addStandingOrderWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>((*currentLabels)[i])));
+
+    for (int i = 0; i < (currentLabels).size(); i++) {
+        addStandingOrderWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>((currentLabels)[i])));
     }
-    for (int i = 0; i < NUMBER_OF_STANDING_ORDER_TYPES; i++)
-    {
+
+    for (int i = 0; i < NUMBER_OF_STANDING_ORDER_TYPES; i++) {
         addStandingOrderWindow->comboBoxChooseType->addItem(QString::fromStdString(GetStringFromStandingOrderType(static_cast<StandingOrderType>(i))));
     }
+
     addStandingOrderWindow->comboBoxChooseType->setCurrentIndex(static_cast<int>(StandingOrderType::EveryMonth));
     addStandingOrderWindow->dateEditNextDate->setDate(QDate::currentDate());
-    connect(addStandingOrderWindow->buttonAddOrder, &QPushButton::clicked, this, [=] { CreateNewStandingOrder(); });
+    connect(addStandingOrderWindow->buttonAddOrder, &QPushButton::clicked, this, [this] { CreateNewStandingOrder(); });
+
     dialog.exec();
-    delete addStandingOrderWindow;
     ExecuteOrders();
     RefreshWindow();
 }
@@ -117,56 +115,65 @@ void StandingOrderManager::AddStandingOrder()
 void StandingOrderManager::ChangeStandingOrder()
 {
     int selectedRow = manageStandingOrders->tableStandingOrders->currentRow();
-    if (selectedRow < 0) return;
+    if (selectedRow < 0) {
+        return;
+    }
+
     int orderID, accountID, labelID;
     Value value;
     std::string description;
     StandingOrderType orderType;
     QDate nextDate;
     tie(orderID, accountID, labelID, value, description, orderType, nextDate) = currentOrders[selectedRow];
-    addStandingOrderWindow = new Ui::AddStandingOrderWindow;
+    addStandingOrderWindow = std::make_unique<Ui::AddStandingOrderWindow>();
     QDialog dialog;
     addStandingOrderWindow->setupUi(&dialog);
+
     // insert values:
     addStandingOrderWindow->comboBoxChooseAccount->clear();        // remove 'choose account'
-    for (int i = 0; i < (*currentAccounts).size(); i++)
-    {
-        addStandingOrderWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>((*currentAccounts)[i])));
-        if (std::get<0>((*currentAccounts)[i]) == accountID) selectedRow = i;
+
+    for (int i = 0; i < (currentAccounts).size(); i++) {
+        addStandingOrderWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>((currentAccounts)[i])));
+        if (std::get<0>((currentAccounts)[i]) == accountID) {
+            selectedRow = i;
+        }
     }
     addStandingOrderWindow->comboBoxChooseAccount->setCurrentIndex(selectedRow);
-    for (int i = 0; i < (*currentLabels).size(); i++)
-    {
-        addStandingOrderWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>((*currentLabels)[i])));
-        if (std::get<0>((*currentLabels)[i]) == labelID) selectedRow = i;
+
+    for (int i = 0; i < (currentLabels).size(); i++) {
+        addStandingOrderWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>((currentLabels)[i])));
+        if (std::get<0>((currentLabels)[i]) == labelID) {
+            selectedRow = i;
+        }
     }
     addStandingOrderWindow->comboBoxChooseLabel->setCurrentIndex(selectedRow);
-    for (int i = 0; i < NUMBER_OF_STANDING_ORDER_TYPES; i++)
-    {
+
+    for (int i = 0; i < NUMBER_OF_STANDING_ORDER_TYPES; i++) {
         addStandingOrderWindow->comboBoxChooseType->addItem(QString::fromStdString(GetStringFromStandingOrderType(static_cast<StandingOrderType>(i))));
-        if (static_cast<StandingOrderType>(i) == orderType) selectedRow = i;
+        if (static_cast<StandingOrderType>(i) == orderType) {
+            selectedRow = i;
+        }
     }
     addStandingOrderWindow->comboBoxChooseType->setCurrentIndex(selectedRow);
+
     // insert values of the standing order, which is altered
     addStandingOrderWindow->dateEditNextDate->setDate(nextDate);
     addStandingOrderWindow->textEditDescription->setPlainText(QString::fromStdString(description));
-    if (value < Value(0))
-    {
+    if (value < Value(0)) {
         Value v = value * -1;
         addStandingOrderWindow->spinBoxVK->setValue(v.VK);
         addStandingOrderWindow->spinBoxNK->setValue(v.NK);
         addStandingOrderWindow->radioButtonNegativ->setChecked(true);
-    }
-    else
-    {
+    } else {
         addStandingOrderWindow->spinBoxVK->setValue(value.VK);
         addStandingOrderWindow->spinBoxNK->setValue(value.NK);
         addStandingOrderWindow->radioButtonPositiv->setChecked(true);
     }
+
     addStandingOrderWindow->buttonAddOrder->setText(QString::fromStdString(TEXT_CHANGE_STANDING_ORDER));
-    connect(addStandingOrderWindow->buttonAddOrder, &QPushButton::clicked, this, [=] { UpdateStandingOrder(orderID); });
+    connect(addStandingOrderWindow->buttonAddOrder, &QPushButton::clicked, this, [this, orderID] { UpdateStandingOrder(orderID); });
+
     dialog.exec();
-    delete addStandingOrderWindow;
     ExecuteOrders();
     RefreshWindow();
 }
@@ -176,22 +183,23 @@ void StandingOrderManager::UpdateStandingOrder(const int& orderID)
     int selectedAccount = addStandingOrderWindow->comboBoxChooseAccount->currentIndex();
     int selectedLabel = addStandingOrderWindow->comboBoxChooseLabel->currentIndex();
     Value value = Value(addStandingOrderWindow->spinBoxVK->value(), addStandingOrderWindow->spinBoxNK->value());
-    if (addStandingOrderWindow->radioButtonNegativ->isChecked()) value *= -1;
-    database->UpdateStandingOrder(orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), std::get<0>((*currentAccounts)[selectedAccount]),
-        value, addStandingOrderWindow->dateEditNextDate->date(), std::get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
+    if (addStandingOrderWindow->radioButtonNegativ->isChecked()) {
+        value *= -1;
+    }
+
+    database->UpdateStandingOrder(orderID, addStandingOrderWindow->textEditDescription->toPlainText().toStdString(), std::get<0>((currentAccounts)[selectedAccount]),
+        value, addStandingOrderWindow->dateEditNextDate->date(), std::get<0>((currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
     addStandingOrderWindow->buttonCancel->click();
 }
 
 void StandingOrderManager::DeleteStandingOrder()
 {
     int selectedRow = manageStandingOrders->tableStandingOrders->currentRow();
-    if (selectedRow >= 0)
-    {
+    if (selectedRow >= 0) {
         QMessageBox msg;
         msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_STANDING_ORDER));
-        switch (msg.exec())
-        {
+        switch (msg.exec()) {
         case QMessageBox::Yes:
             database->DeleteStandingOrder(std::get<0>(currentOrders[selectedRow]));
             break;
@@ -207,41 +215,52 @@ void StandingOrderManager::DeleteStandingOrder()
 void StandingOrderManager::CreateNewStandingOrder()
 {
     int selectedAccount = addStandingOrderWindow->comboBoxChooseAccount->currentIndex();
-    if (selectedAccount == 0)
-    {
+    if (selectedAccount == 0) {
         QMessageBox msg;
         msg.setText(QString::fromStdString(TEXT_CHOOSE_ACCOUNT_FOR_STANDING_ORDER));
         msg.exec();
         return;
     }
+
     int selectedLabel = addStandingOrderWindow->comboBoxChooseLabel->currentIndex();
     Value value = Value(addStandingOrderWindow->spinBoxVK->value(), addStandingOrderWindow->spinBoxNK->value());
-    if (addStandingOrderWindow->radioButtonNegativ->isChecked()) value *= -1;
+    if (addStandingOrderWindow->radioButtonNegativ->isChecked()) {
+        value *= -1;
+    }
+
     QDate date = addStandingOrderWindow->dateEditNextDate->date();
     database->CreateNewStandingOrder(addStandingOrderWindow->textEditDescription->toPlainText().toStdString(),
-        std::get<0>((*currentAccounts)[selectedAccount - 1]), value, date, std::get<0>((*currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
+        std::get<0>((currentAccounts)[selectedAccount - 1]), value, date, std::get<0>((currentLabels)[selectedLabel]), addStandingOrderWindow->comboBoxChooseType->currentIndex());
     addStandingOrderWindow->buttonCancel->click();
 }
 
 void StandingOrderManager::RefreshWindow()
 {
-    if (manageStandingOrders != nullptr)
-    {
+    if (manageStandingOrders != nullptr) {
         currentOrders = database->GetAllStandingOrders();
         int x = static_cast<int>(currentOrders.size());
         manageStandingOrders->tableStandingOrders->setRowCount(x);
+
         // insert existing values:
-        for (int i = 0; i < x; ++i)
-        {
+        for (int i = 0; i < x; ++i) {
             int orderID, accountID, labelID;
             StandingOrderType type;
             std::string description;
             Value value;
             QDate date;
             tie(orderID, accountID, labelID, value, description, type, date) = currentOrders[i];
-            std::vector<std::tuple<int, std::string, int>>::iterator labelIterator = std::find_if((*currentLabels).begin(), (*currentLabels).end(), [labelID](std::tuple<int, std::string, int> label) { return std::get<0>(label) == labelID; });
-            std::vector<std::tuple<int, std::string, Value>>::iterator accountIterator = std::find_if((*currentAccounts).begin(), (*currentAccounts).end(), [accountID](std::tuple<int, std::string, Value> acc) { return std::get<0>(acc) == accountID; });
-            if (labelIterator == (*currentLabels).end() || accountIterator == (*currentAccounts).end()) return;        //should not happen
+
+            auto labelIterator = std::find_if((currentLabels).begin(), (currentLabels).end(), [labelID](std::tuple<int, std::string, int> label) {
+                return std::get<0>(label) == labelID;
+            });
+            auto accountIterator = std::find_if((currentAccounts).begin(), (currentAccounts).end(), [accountID](std::tuple<int, std::string, Value> acc) {
+                return std::get<0>(acc) == accountID;
+            });
+
+            if (labelIterator == (currentLabels).end() || accountIterator == (currentAccounts).end()) {
+                return;        //should not happen
+            }
+
             QColor qColor = ConvertIntToQColor(std::get<2>(*labelIterator));
             manageStandingOrders->tableStandingOrders->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(std::get<1>(*accountIterator))));
             manageStandingOrders->tableStandingOrders->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(GetStringFromStandingOrderType(type))));
@@ -253,8 +272,4 @@ void StandingOrderManager::RefreshWindow()
             manageStandingOrders->tableStandingOrders->setItem(i, 5, new QTableWidgetItem(QString::fromStdString(description)));
         }
     }
-}
-
-StandingOrderManager::~StandingOrderManager()
-{
 }

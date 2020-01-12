@@ -46,5 +46,5 @@ private:
 private:
     std::shared_ptr<Database> database;
     // all labels, which are display in the manage labels window (if open)
-    std::vector<std::tuple<int, std::string, int>> currentLabels;
+    LabelVector currentLabels;
 };

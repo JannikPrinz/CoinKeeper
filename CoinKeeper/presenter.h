@@ -8,7 +8,7 @@ class Presenter : public QObject {
     Q_OBJECT
 
 public:
-    Presenter(QObject * parent = Q_NULLPTR);
+    Presenter(QObject* parent = Q_NULLPTR);
     ~Presenter();
 
 signals:

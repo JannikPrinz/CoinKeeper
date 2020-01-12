@@ -2,14 +2,12 @@
 
 ProfileChooserView::ProfileChooserView(QWidget * parent) : QMainWindow(parent) {
     ui.setupUi(this);
-//    connect(ui.buttonRefreshList, SIGNAL(clicked()), this, SLOT(Test()));
-    connect(ui.buttonRefreshList, &QPushButton::clicked, this, [=] {emit ButtonRefreshListClicked();});
-    connect(ui.buttonAddFolder, &QPushButton::clicked, this, [=] {emit ButtonAddFolderClicked();});
-    connect(ui.buttonDeleteProfile, &QPushButton::clicked, this, [=] {emit ButtonDeleteProfileClicked();});
-    connect(ui.buttonNewProfile, &QPushButton::clicked, this, [=] {emit ButtonNewProfileClicked();});
-    connect(ui.buttonOpenProfile, &QPushButton::clicked, this, [=] {emit ButtonOpenProfileClicked();});
-//    connect(this, &ProfileChooserView::NewProfileClicked, this, &ProfileChooserView::Test);
-//    connect(ui.buttonAddFolder, SIGNAL(clicked()), ui.listProfiles, SLOT(clear()));
+
+    connect(ui.buttonRefreshList, &QPushButton::clicked, this, [this] { emit ButtonRefreshListClicked(); });
+    connect(ui.buttonAddFolder, &QPushButton::clicked, this, [this] { emit ButtonAddFolderClicked(); });
+    connect(ui.buttonDeleteProfile, &QPushButton::clicked, this, [this] { emit ButtonDeleteProfileClicked(); });
+    connect(ui.buttonNewProfile, &QPushButton::clicked, this, [this] { emit ButtonNewProfileClicked(); });
+    connect(ui.buttonOpenProfile, &QPushButton::clicked, this, [this] { emit ButtonOpenProfileClicked(); });
 }
 
 void ProfileChooserView::AddProfile(QString profile)

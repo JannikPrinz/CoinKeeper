@@ -1,23 +1,22 @@
 ﻿#include "profilechooserpresenter.h"
 
 #include "database.h"
+#include "qinputdialog.h"
 
 ProfileChooserPresenter::ProfileChooserPresenter(QObject * parent) : Presenter(parent) {
-    ProfileChooserView* v = new ProfileChooserView();
-    (*v).show();
-    view = v;
+    view = std::make_unique<ProfileChooserView>();
+
     CreateConnections();
-//    database->CreateNewProfile("CreateDBTest.ckdb");
     RefreshProfilesList();
-    //database->TestForeignKeys();
+    view->show();
 }
 
 void ProfileChooserPresenter::CreateNewProfile()
 {
     bool userClickedOk;
-    QString text = QInputDialog::getText(view, tr("Neues Profil erstellen"), tr("Profilname:"), QLineEdit::Normal, "", &userClickedOk);
-    if (userClickedOk && !text.isEmpty())
-    {
+    QString text = QInputDialog::getText(view.get(), tr("Neues Profil erstellen"), tr("Profilname:"), QLineEdit::Normal, "", &userClickedOk);
+
+    if (userClickedOk && !text.isEmpty()) {
         Database::CreateNewProfile(text.toStdString());
         RefreshProfilesList();
     }
@@ -49,13 +48,8 @@ void ProfileChooserPresenter::OpenProfile()
 
 void ProfileChooserPresenter::CreateConnections()
 {
-    connect(view, &ProfileChooserView::ButtonNewProfileClicked, this, &ProfileChooserPresenter::CreateNewProfile);
-    connect(view, &ProfileChooserView::ButtonRefreshListClicked, this, &ProfileChooserPresenter::RefreshProfilesList);
-    connect(view, &ProfileChooserView::ButtonOpenProfileClicked, this, &ProfileChooserPresenter::OpenProfile);
-    connect(view, &ProfileChooserView::ButtonDeleteProfileClicked, this, &ProfileChooserPresenter::DeleteProfile);
-}
-
-ProfileChooserPresenter::~ProfileChooserPresenter() {
-    view->~ProfileChooserView();
-    //delete view;
+    connect(view.get(), &ProfileChooserView::ButtonNewProfileClicked, this, &ProfileChooserPresenter::CreateNewProfile);
+    connect(view.get(), &ProfileChooserView::ButtonRefreshListClicked, this, &ProfileChooserPresenter::RefreshProfilesList);
+    connect(view.get(), &ProfileChooserView::ButtonOpenProfileClicked, this, &ProfileChooserPresenter::OpenProfile);
+    connect(view.get(), &ProfileChooserView::ButtonDeleteProfileClicked, this, &ProfileChooserPresenter::DeleteProfile);
 }

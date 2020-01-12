@@ -2,14 +2,13 @@
 
 #include "presenter.h"
 #include "profilechooserview.h"
-#include "qinputdialog.h"
 
 class ProfileChooserPresenter : public Presenter {
     Q_OBJECT
 
 public:
     ProfileChooserPresenter(QObject* parent = Q_NULLPTR);
-    ~ProfileChooserPresenter();
+    ~ProfileChooserPresenter() = default;
 
 public slots:
     void CreateNewProfile();
@@ -18,7 +17,7 @@ public slots:
     void DeleteProfile();
 
 private:
-    ProfileChooserView* view;
+    std::unique_ptr<ProfileChooserView> view;
     ProfileVector currentProfiles;
     void CreateConnections();
 };

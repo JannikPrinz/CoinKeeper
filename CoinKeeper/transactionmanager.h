@@ -2,7 +2,6 @@
 
 #include "ui_addtransactionwindow.h"
 #include "database.h"
-#include "qmessagebox.h"
 
 class TransactionManager : QObject
 {
@@ -13,10 +12,10 @@ public:
      * Creates a new LabelManager with the given parameters.
      *
      * Parameters:
-     * std::string profile : path of the profile
-     * Database* data : adress of a database object
+     * std::shared_ptr<Database> data : the current database
      */
     TransactionManager(std::shared_ptr<Database> data);
+    ~TransactionManager() = default;
     /*
      * Starts a new transaction-creation-process. If the user inputs valid data, a new transaction
      * will be inserted into the current profile.
@@ -34,14 +33,14 @@ public:
      * const int& labelID : old id of the corresponding label of the transaction
      */
     void UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID);
-    ~TransactionManager();
 
 private:
-    std::shared_ptr<Database> database;
-    std::vector<std::tuple<int, std::string, Value>> currentAccounts;
-    std::vector<std::tuple<int, std::string, int>> currentLabels;
-    Ui::AddTransactionWindow* addTransactionWindow;
     void CreateTransaction();
     void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const Value& oldValue);
 
+private:
+    std::shared_ptr<Database> database;
+    AccountVector currentAccounts;
+    LabelVector currentLabels;
+    std::unique_ptr<Ui::AddTransactionWindow> addTransactionWindow;
 };

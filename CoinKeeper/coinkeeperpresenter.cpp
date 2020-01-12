@@ -5,6 +5,8 @@
 #include "standingordermanager.h"
 #include "transactionmanager.h"
 
+#include "qmessagebox.h"
+
 CoinKeeperPresenter::CoinKeeperPresenter(std::string const& profilePath, QObject * parent) : Presenter(parent) {
     currentProfile = profilePath;
     database = std::make_shared<Database>(currentProfile);

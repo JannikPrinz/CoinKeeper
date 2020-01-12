@@ -2,16 +2,13 @@
 
 #include <QObject>
 #include "presenter.h"
-#include "database.h"
-#include "profilechooserpresenter.h"
-#include "coinkeeperpresenter.h"
 
 class SupervisorPresenter : public QObject {
     Q_OBJECT
 
 public:
-    SupervisorPresenter(QObject * parent = Q_NULLPTR);
-    ~SupervisorPresenter();
+    SupervisorPresenter(QObject* parent = Q_NULLPTR);
+    ~SupervisorPresenter() = default;
 
 public slots:
     void ChangePresenter(Presenters p, std::string const& s = "");

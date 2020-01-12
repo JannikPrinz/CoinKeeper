@@ -3,7 +3,6 @@
 #include "ui_managestandingorders.h"
 #include "ui_addstandingorder.h"
 #include "database.h"
-#include "qmessagebox.h"
 
 class StandingOrderManager : QObject
 {

@@ -391,6 +391,7 @@ static QColor ConvertIntToQColor(const int& color)
     return QColor(r, g, b, a);
 }
 
+// vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
 using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
 using AccountVector = std::vector<std::tuple<int, std::string, Value>>;
 using LabelVector = std::vector<std::tuple<int, std::string, int>>;

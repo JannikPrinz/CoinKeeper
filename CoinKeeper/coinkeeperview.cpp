@@ -5,7 +5,7 @@ CoinKeeperView::CoinKeeperView(QWidget* parent) : QMainWindow(parent) {
     ui.tableMonthOverview->setColumnWidth(2, 400);
     date = QDateTime::currentDateTime();
     ui.spinBoxYear->setValue(date.toString("yyyy").toInt());
-    ui.comboBoxMonth->setCurrentIndex(date.date().month());
+    ui.comboBoxMonth->setCurrentIndex(13 - date.date().month());
     UpdateTime();
     UpdateEnableButtonsTableMonthOverview();
     UpdateEnableButtonsTableAccounts();
@@ -61,7 +61,11 @@ void CoinKeeperView::FillTransactionData(std::vector<std::tuple<QDate, std::stri
 
 int CoinKeeperView::GetSelectedMonth()
 {
-    return ui.comboBoxMonth->currentIndex();
+    int currentIndex = ui.comboBoxMonth->currentIndex();
+    if (currentIndex == 0) {
+        return 0;
+    }
+    return 13 - ui.comboBoxMonth->currentIndex();
 }
 
 int CoinKeeperView::GetSelectedYear()

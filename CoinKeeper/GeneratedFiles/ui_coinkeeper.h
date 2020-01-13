@@ -427,18 +427,18 @@ public:
         labelTime->setText(QApplication::translate("CoinKeeperClass", "15:22:33", nullptr));
         txtBalance->setText(QApplication::translate("CoinKeeperClass", "3.789.100,63\342\202\254", nullptr));
         comboBoxMonth->setItemText(0, QApplication::translate("CoinKeeperClass", "Alle Monate", nullptr));
-        comboBoxMonth->setItemText(1, QApplication::translate("CoinKeeperClass", "Januar", nullptr));
-        comboBoxMonth->setItemText(2, QApplication::translate("CoinKeeperClass", "Februar", nullptr));
-        comboBoxMonth->setItemText(3, QApplication::translate("CoinKeeperClass", "M\303\244rz", nullptr));
-        comboBoxMonth->setItemText(4, QApplication::translate("CoinKeeperClass", "April", nullptr));
-        comboBoxMonth->setItemText(5, QApplication::translate("CoinKeeperClass", "Mai", nullptr));
-        comboBoxMonth->setItemText(6, QApplication::translate("CoinKeeperClass", "Juni", nullptr));
-        comboBoxMonth->setItemText(7, QApplication::translate("CoinKeeperClass", "Juli", nullptr));
-        comboBoxMonth->setItemText(8, QApplication::translate("CoinKeeperClass", "August", nullptr));
-        comboBoxMonth->setItemText(9, QApplication::translate("CoinKeeperClass", "September", nullptr));
-        comboBoxMonth->setItemText(10, QApplication::translate("CoinKeeperClass", "Oktober", nullptr));
-        comboBoxMonth->setItemText(11, QApplication::translate("CoinKeeperClass", "November", nullptr));
-        comboBoxMonth->setItemText(12, QApplication::translate("CoinKeeperClass", "Dezember", nullptr));
+        comboBoxMonth->setItemText(1, QApplication::translate("CoinKeeperClass", "Dezember", nullptr));
+        comboBoxMonth->setItemText(2, QApplication::translate("CoinKeeperClass", "November", nullptr));
+        comboBoxMonth->setItemText(3, QApplication::translate("CoinKeeperClass", "Oktober", nullptr));
+        comboBoxMonth->setItemText(4, QApplication::translate("CoinKeeperClass", "September", nullptr));
+        comboBoxMonth->setItemText(5, QApplication::translate("CoinKeeperClass", "August", nullptr));
+        comboBoxMonth->setItemText(6, QApplication::translate("CoinKeeperClass", "Juli", nullptr));
+        comboBoxMonth->setItemText(7, QApplication::translate("CoinKeeperClass", "Juni", nullptr));
+        comboBoxMonth->setItemText(8, QApplication::translate("CoinKeeperClass", "Mai", nullptr));
+        comboBoxMonth->setItemText(9, QApplication::translate("CoinKeeperClass", "April", nullptr));
+        comboBoxMonth->setItemText(10, QApplication::translate("CoinKeeperClass", "M\303\244rz", nullptr));
+        comboBoxMonth->setItemText(11, QApplication::translate("CoinKeeperClass", "Februar", nullptr));
+        comboBoxMonth->setItemText(12, QApplication::translate("CoinKeeperClass", "Januar", nullptr));
 
         comboBoxAccount->setItemText(0, QApplication::translate("CoinKeeperClass", "Alle Konten", nullptr));
 

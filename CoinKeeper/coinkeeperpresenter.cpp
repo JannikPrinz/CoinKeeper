@@ -52,6 +52,7 @@ void CoinKeeperPresenter::ChangeAccount()
         tie(accountID, accountName, accountValue) = currentAccounts[row];
         AccountManager accountManager(database);
         accountManager.ChangeAccount(accountID, accountName, accountValue);
+        numberOfAccounts = -1;                                              // force refresh of account combobox
         RefreshWindow();
     }
 }
@@ -148,10 +149,8 @@ void CoinKeeperPresenter::RefreshWindow()
     if (numberOfAccounts != static_cast<int32_t>(currentAccounts.size())) {
         QStringList items;
         items.insert(0, QString::fromStdString(TEXT_ALL_ACCOUNTS));
-        //acc.setRowCount(currentAccounts.size() + 1);
-        //acc.setItem(0, &QStandardItem(TEXT_ALL_ACCOUNTS));
-        for (size_t i = 1; i <= currentAccounts.size(); i++)
-        {
+
+        for (size_t i = 1; i <= currentAccounts.size(); ++i) {
             items.insert(static_cast<int>(i), QString::fromStdString(std::get<1>(currentAccounts[i - 1])));
         }
         accountList.setStringList(items);
@@ -170,6 +169,11 @@ void CoinKeeperPresenter::RefreshWindow()
     } else {
         currentTransactions = database->GetTransactions(month, year, std::get<0>(currentAccounts[account - 1]));
     }
+
+    // sort transactions:
+    std::sort(currentTransactions.begin(), currentTransactions.end(), [](auto const& el1, auto const& el2) {
+        return std::get<3>(el1).toJulianDay() < std::get<3>(el2).toJulianDay();
+    });
 
     // combine transaction and label information for 'nice' representation:
     currentLabels = database->GetLabels();

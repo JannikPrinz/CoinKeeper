@@ -1,7 +1,8 @@
 ﻿#include "coinkeeperview.h"
 
-CoinKeeperView::CoinKeeperView(QWidget* parent) : QMainWindow(parent) {
+CoinKeeperView::CoinKeeperView(std::string const& profileName, QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
+    this->setWindowTitle(QString::fromStdString("CoinKeeper - " + profileName));
     ui.tableMonthOverview->setColumnWidth(2, 400);
     date = QDateTime::currentDateTime();
     ui.spinBoxYear->setValue(date.toString("yyyy").toInt());

@@ -10,7 +10,7 @@ class CoinKeeperView : public QMainWindow {
     Q_OBJECT
 
 public:
-    CoinKeeperView(QWidget* parent = Q_NULLPTR);
+    CoinKeeperView(std::string const& profileName, QWidget* parent = Q_NULLPTR);
     ~CoinKeeperView();
     /*
      * Fills the table which represents the existing accounts with the given accounts

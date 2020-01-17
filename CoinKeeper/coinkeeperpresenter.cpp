@@ -1,5 +1,7 @@
 ﻿#include "coinkeeperpresenter.h"
 
+#include <filesystem>
+
 #include "accountmanager.h"
 #include "labelmanager.h"
 #include "standingordermanager.h"
@@ -8,10 +10,11 @@
 #include "qmessagebox.h"
 
 CoinKeeperPresenter::CoinKeeperPresenter(std::string const& profilePath, QObject * parent) : Presenter(parent) {
-    currentProfile = profilePath;
-    database = std::make_shared<Database>(currentProfile);
-    //qDebug("Übergebener string: %s", profilePath.c_str());
-    view = std::make_unique<CoinKeeperView>();
+    database = std::make_shared<Database>(profilePath);
+
+    std::string profileName = std::filesystem::path(profilePath).filename().string();
+    profileName = profileName.substr(0, profileName.length() - (DATABASE_FILETYPE.length() + 1));
+    view = std::make_unique<CoinKeeperView>(profileName);
     view->show();
     CreateConnections();
 

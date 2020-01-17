@@ -37,7 +37,6 @@ private:
 private:
     std::shared_ptr<Database> database;
     std::unique_ptr<CoinKeeperView> view;
-    std::string currentProfile;
     // all accounts of the open profile
     AccountVector currentAccounts;
     // transactions of the accounts of the open profile, which comply with the selection of the comboboxes represented as a

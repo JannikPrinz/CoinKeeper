@@ -229,7 +229,7 @@ private:
     void ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, CallbackFunction callback, void* data) const;
 
 private:
-    const char* openProfile;
+    std::string openProfile;
     CallbackFunction CBF_GetAccountValue;
     CallbackFunction CBF_GetTransactions;
     CallbackFunction CBF_GetAccounts;

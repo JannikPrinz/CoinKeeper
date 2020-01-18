@@ -8,7 +8,7 @@
 namespace fs = std::filesystem;
 
 Database::Database(std::string const& profile) :
-    openProfile(profile.c_str())
+    openProfile(profile)
 {
     InitializeCallbackFunctions();
 }
@@ -470,7 +470,7 @@ void Database::InitializeCallbackFunctions()
 void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const
 {
     sqlite3* db;
-    sqlite3_open(openProfile, &db);
+    sqlite3_open(openProfile.c_str(), &db);
     std::string const& tmp = ss.str();
     sqlite3_exec(db, tmp.c_str(), nullptr, 0, 0);
     sqlite3_close(db);
@@ -479,7 +479,7 @@ void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss
 void Database::ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, CallbackFunction callback, void* data) const
 {
     sqlite3* db;
-    sqlite3_open(openProfile, &db);
+    sqlite3_open(openProfile.c_str(), &db);
     std::string const& tmp = ss.str();
     sqlite3_exec(db, tmp.c_str(), callback, data, 0);
     sqlite3_close(db);

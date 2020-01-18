@@ -68,6 +68,9 @@ public:
     int GetSelectedRowTableAccounts();
 
 private:
+    void resizeEvent(QResizeEvent* event) override;
+    void showEvent(QShowEvent *event) override;
+    void ResizeColumns();
     void CreateConnections();
     void UpdateEnableButtonsTableMonthOverview();
     void UpdateEnableButtonsTableAccounts();

@@ -3,7 +3,7 @@
 CoinKeeperView::CoinKeeperView(std::string const& profileName, QWidget* parent) : QMainWindow(parent) {
     ui.setupUi(this);
     this->setWindowTitle(QString::fromStdString("CoinKeeper - " + profileName));
-    ui.tableMonthOverview->setColumnWidth(2, 400);
+
     date = QDateTime::currentDateTime();
     ui.spinBoxYear->setValue(date.toString("yyyy").toInt());
     ui.comboBoxMonth->setCurrentIndex(13 - date.date().month());
@@ -95,6 +95,29 @@ int CoinKeeperView::GetSelectedRowTableMonthOverview()
 int CoinKeeperView::GetSelectedRowTableAccounts()
 {
     return ui.tableAccounts->currentRow();
+}
+
+void CoinKeeperView::resizeEvent(QResizeEvent* event)
+{
+    QMainWindow::resizeEvent(event);
+    ResizeColumns();
+}
+
+void CoinKeeperView::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    ResizeColumns();
+}
+
+void CoinKeeperView::ResizeColumns()
+{
+    ui.tableAccounts->setColumnWidth(0, ui.tableAccounts->width() - 200);
+    ui.tableAccounts->setColumnWidth(1, 0);
+
+    ui.tableMonthOverview->setColumnWidth(0, 100);
+    ui.tableMonthOverview->setColumnWidth(1, 100);
+    ui.tableMonthOverview->setColumnWidth(2, ui.tableMonthOverview->width() - 350);
+    ui.tableMonthOverview->setColumnWidth(3, 0);
 }
 
 void CoinKeeperView::CreateConnections()

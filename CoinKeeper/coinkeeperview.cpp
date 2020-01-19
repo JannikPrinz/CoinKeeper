@@ -21,7 +21,7 @@ CoinKeeperView::~CoinKeeperView() {
     this->close();
 }
 
-void CoinKeeperView::FillAccountData(std::vector<std::tuple<int, std::string, Value>> const& accounts)
+void CoinKeeperView::FillAccountData(AccountVector const& accounts)
 {
     int x = static_cast<int>(accounts.size());
     ui.tableAccounts->setRowCount(x);

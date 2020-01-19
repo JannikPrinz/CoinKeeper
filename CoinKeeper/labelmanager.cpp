@@ -41,7 +41,7 @@ void LabelManager::CreateNewLabel()
 {
     auto textInput = QInputDialog();
     textInput.setInputMode(QInputDialog::TextInput);
-    textInput.setLabelText(QString::fromStdString(TEXT_NAME_COLON));
+    textInput.setLabelText(QString::fromStdString(TEXT_NAME_ENTRY));
     textInput.setWindowTitle(QString::fromStdString(TEXT_CREATE_NEW_LABEL));
     textInput.resize(300, 100);
     bool userClickedOk = textInput.exec() == QInputDialog::Accepted;
@@ -64,7 +64,7 @@ void LabelManager::ChangeLabelName(int const selectedRow)
 
         auto textInput = QInputDialog();
         textInput.setInputMode(QInputDialog::TextInput);
-        textInput.setLabelText(QString::fromStdString(TEXT_NAME_COLON));
+        textInput.setLabelText(QString::fromStdString(TEXT_NAME_ENTRY));
         textInput.setWindowTitle(QString::fromStdString(TEXT_CHANGE_LABEL));
         textInput.setTextValue(QString::fromStdString(oldText));
         textInput.resize(300, 100);

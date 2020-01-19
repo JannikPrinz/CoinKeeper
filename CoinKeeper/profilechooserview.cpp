@@ -4,7 +4,7 @@ ProfileChooserView::ProfileChooserView(QWidget * parent) : QMainWindow(parent) {
     ui.setupUi(this);
 
     connect(ui.buttonRefreshList, &QPushButton::clicked, this, [this] { emit ButtonRefreshListClicked(); });
-    connect(ui.buttonAddFolder, &QPushButton::clicked, this, [this] { emit ButtonAddFolderClicked(); });
+    connect(ui.buttonChangeProfileName, &QPushButton::clicked, this, [this] { emit ButtonChangeProfileNameClicked(); });
     connect(ui.buttonDeleteProfile, &QPushButton::clicked, this, [this] { emit ButtonDeleteProfileClicked(); });
     connect(ui.buttonNewProfile, &QPushButton::clicked, this, [this] { emit ButtonNewProfileClicked(); });
     connect(ui.buttonOpenProfile, &QPushButton::clicked, this, [this] { emit ButtonOpenProfileClicked(); });

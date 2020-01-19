@@ -184,7 +184,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="buttonAddFolder">
+        <widget class="QPushButton" name="buttonChangeProfileName">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -211,7 +211,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Ordner hinzufügen</string>
+          <string>Umbenennen</string>
          </property>
         </widget>
        </item>

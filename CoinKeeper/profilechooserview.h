@@ -21,9 +21,9 @@ public:
 signals:
     void ButtonNewProfileClicked();
     void ButtonDeleteProfileClicked();
-    void ButtonAddFolderClicked();
     void ButtonRefreshListClicked();
     void ButtonOpenProfileClicked();
+    void ButtonChangeProfileNameClicked();
 
 private:
     Ui_MainWindow ui;

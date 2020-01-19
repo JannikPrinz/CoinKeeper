@@ -11,6 +11,7 @@ class Database
 public:
     Database(std::string const& profile);
     ~Database() = default;
+    static void ChangeProfileName(std::filesystem::path const& oldPath, std::string const& newProfileName);
     /*
      * This method creates a new account with the given name and balance.
      *
@@ -73,6 +74,7 @@ public:
      * int labelID                : id of the label, which gets deleted
      */
     void DeleteLabel(int labelID);
+    static void DeleteProfile(std::filesystem::path const& profilePath);
     /*
      * This method deletes the specified standing order.
      *

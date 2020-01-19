@@ -37,7 +37,7 @@ public:
     QPushButton *buttonNewProfile;
     QPushButton *buttonOpenProfile;
     QPushButton *buttonDeleteProfile;
-    QPushButton *buttonAddFolder;
+    QPushButton *buttonChangeProfileName;
     QPushButton *buttonRefreshList;
     QSpacerItem *verticalSpacer;
     QStatusBar *statusbar;
@@ -128,15 +128,15 @@ public:
 
         verticalLayout->addWidget(buttonDeleteProfile);
 
-        buttonAddFolder = new QPushButton(widget);
-        buttonAddFolder->setObjectName(QStringLiteral("buttonAddFolder"));
-        sizePolicy2.setHeightForWidth(buttonAddFolder->sizePolicy().hasHeightForWidth());
-        buttonAddFolder->setSizePolicy(sizePolicy2);
-        buttonAddFolder->setMinimumSize(QSize(0, 35));
-        buttonAddFolder->setMaximumSize(QSize(16777215, 50));
-        buttonAddFolder->setFont(font);
+        buttonChangeProfileName = new QPushButton(widget);
+        buttonChangeProfileName->setObjectName(QStringLiteral("buttonChangeProfileName"));
+        sizePolicy2.setHeightForWidth(buttonChangeProfileName->sizePolicy().hasHeightForWidth());
+        buttonChangeProfileName->setSizePolicy(sizePolicy2);
+        buttonChangeProfileName->setMinimumSize(QSize(0, 35));
+        buttonChangeProfileName->setMaximumSize(QSize(16777215, 50));
+        buttonChangeProfileName->setFont(font);
 
-        verticalLayout->addWidget(buttonAddFolder);
+        verticalLayout->addWidget(buttonChangeProfileName);
 
         buttonRefreshList = new QPushButton(widget);
         buttonRefreshList->setObjectName(QStringLiteral("buttonRefreshList"));
@@ -175,7 +175,7 @@ public:
         buttonNewProfile->setText(QApplication::translate("MainWindow", "Neu", nullptr));
         buttonOpenProfile->setText(QApplication::translate("MainWindow", "\303\226ffnen", nullptr));
         buttonDeleteProfile->setText(QApplication::translate("MainWindow", "L\303\266schen", nullptr));
-        buttonAddFolder->setText(QApplication::translate("MainWindow", "Ordner hinzuf\303\274gen", nullptr));
+        buttonChangeProfileName->setText(QApplication::translate("MainWindow", "Umbenennen", nullptr));
         buttonRefreshList->setText(QApplication::translate("MainWindow", "Liste aktualisieren", nullptr));
     } // retranslateUi
 

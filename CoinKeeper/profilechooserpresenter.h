@@ -15,6 +15,7 @@ public slots:
     void RefreshProfilesList();
     void OpenProfile();
     void DeleteProfile();
+    void ChangeProfileName();
 
 private:
     std::unique_ptr<ProfileChooserView> view;

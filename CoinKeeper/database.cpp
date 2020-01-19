@@ -13,6 +13,18 @@ Database::Database(std::string const& profile) :
     InitializeCallbackFunctions();
 }
 
+void Database::ChangeProfileName(std::filesystem::path const& oldPath, std::string const& newProfileName)
+{
+    fs::path newPath(oldPath);
+    newPath.replace_filename(newProfileName + "." + DATABASE_FILETYPE);
+
+    if (fs::exists(newPath)) {
+        return;
+    }
+
+    fs::rename(oldPath, newPath);
+}
+
 void Database::CreateNewAccount(std::string const& name, Value const& balance)
 {
     std::stringstream ss;
@@ -125,6 +137,11 @@ void Database::DeleteLabel(int const labelID)
     ss << DELETE_LABEL_PART_4;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
+}
+
+void Database::DeleteProfile(std::filesystem::path const& profilePath)
+{
+    fs::remove(profilePath);
 }
 
 void Database::DeleteStandingOrder(int const orderID)

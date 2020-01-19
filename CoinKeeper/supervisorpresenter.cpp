@@ -12,11 +12,11 @@ SupervisorPresenter::SupervisorPresenter(QObject * parent) : QObject(parent)
 void SupervisorPresenter::ChangePresenter(Presenters NewPresenter, std::string const& s)
 {
     switch (NewPresenter) {
-    case ProfileChooser:
+    case Presenters::ProfileChooser:
         presenter = std::make_unique<ProfileChooserPresenter>(this);
         connect(presenter.get(), &Presenter::ChangePresenter, this, &SupervisorPresenter::ChangePresenter);
         break;
-    case CoinKeeper:
+    case Presenters::CoinKeeper:
         if (s == "") {
             break;
         }

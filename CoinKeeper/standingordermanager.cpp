@@ -54,22 +54,22 @@ void StandingOrderManager::ExecuteOrders()
             addedTransactions++;
 
             switch (orderType) {
-            case EveryDay:
+            case StandingOrderType::EveryDay:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addDays(1);
                 break;
-            case EveryWeek:
+            case StandingOrderType::EveryWeek:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addDays(7);
                 break;
-            case EveryMonth:
+            case StandingOrderType::EveryMonth:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(1);
                 break;
-            case EveryQuarter:
+            case StandingOrderType::EveryQuarter:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(3);
                 break;
-            case Every4Months:
+            case StandingOrderType::Every4Months:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addMonths(4);
                 break;
-            case EveryYear:
+            case StandingOrderType::EveryYear:
                 std::get<6>(executableOrders[lastItem]) = nextDate.addYears(1);
                 break;
             default:

@@ -154,13 +154,13 @@ constexpr unsigned int GREEN_BIT_MASK = 0b00000000111111110000000000000000;
 constexpr unsigned int BLUE_BIT_MASK  = 0b00000000000000001111111100000000;
 constexpr unsigned int ALPHA_BIT_MASK = 0b00000000000000000000000011111111;
 
-enum Presenters
+enum class Presenters
 {
     ProfileChooser, CoinKeeper
 };
 
 const int NUMBER_OF_STANDING_ORDER_TYPES = 6;
-enum StandingOrderType
+enum class StandingOrderType
 {
     EveryDay = 0, EveryWeek = 1, EveryMonth = 2, EveryQuarter = 3, Every4Months = 4, EveryYear = 5
 };
@@ -169,22 +169,22 @@ static std::string GetStringFromStandingOrderType(StandingOrderType type)
 {
     switch (type)
     {
-    case EveryDay:
+    case StandingOrderType::EveryDay:
         return TEXT_STANDING_ORDER_EVERY_DAY;
         break;
-    case EveryWeek:
+    case StandingOrderType::EveryWeek:
         return TEXT_STANDING_ORDER_EVERY_WEEK;
         break;
-    case EveryMonth:
+    case StandingOrderType::EveryMonth:
         return TEXT_STANDING_ORDER_EVERY_MONTH;
         break;
-    case EveryQuarter:
+    case StandingOrderType::EveryQuarter:
         return TEXT_STANDING_ORDER_EVERY_QUARTER;
         break;
-    case Every4Months:
+    case StandingOrderType::Every4Months:
         return TEXT_STANDING_ORDER_EVERY_4_MONTHS;
         break;
-    case EveryYear:
+    case StandingOrderType::EveryYear:
         return TEXT_STANDING_ORDER_EVERY_YEAR;
         break;
     default:

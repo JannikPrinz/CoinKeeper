@@ -14,6 +14,7 @@ void LabelManager::ManageLabels()
     auto manageLabelsWindow = std::make_unique<Ui::ManageLabelsWindow>();
     QDialog dialog;
     manageLabelsWindow->setupUi(&dialog);
+    manageLabelsWindow->tableLabels->setColumnWidth(0, 300);
     RefreshWindow(manageLabelsWindow);
 
     connect(manageLabelsWindow->buttonNewLabel, &QPushButton::clicked, this, [this, &manageLabelsWindow] {

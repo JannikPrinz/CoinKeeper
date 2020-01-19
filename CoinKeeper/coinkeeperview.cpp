@@ -31,8 +31,11 @@ void CoinKeeperView::FillAccountData(AccountVector const& accounts)
         std::string accountName;
         Value accountValue;
         tie(accountID, accountName, accountValue) = accounts[i];
+
         ui.tableAccounts->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(accountName)));
-        ui.tableAccounts->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(accountValue.ToString())));
+        auto item = new QTableWidgetItem(QString::fromStdString(accountValue.ToString()));
+        item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        ui.tableAccounts->setItem(i, 1, item);
     }
 }
 
@@ -48,12 +51,17 @@ void CoinKeeperView::FillTransactionData(std::vector<std::tuple<QDate, std::stri
         QDate date;
         tie(date, labelName, color, description, value) = transactions[i];
         QColor qColor = ConvertIntToQColor(color);
-        ui.tableMonthOverview->setItem(i, 0, new QTableWidgetItem(date.toString("dd.MM.yy")));
+
+        auto dateItem = new QTableWidgetItem(date.toString("dd.MM.yy"));
+        dateItem->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+        ui.tableMonthOverview->setItem(i, 0, dateItem);
         ui.tableMonthOverview->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(labelName)));
         ui.tableMonthOverview->item(i, 1)->setBackgroundColor(qColor);
         ui.tableMonthOverview->item(i, 1)->setTextColor((qColor.value() + (255 - qColor.alpha()) < 128) ? Qt::white : Qt::black);
         ui.tableMonthOverview->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(description)));
-        ui.tableMonthOverview->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(value.ToString())));
+        auto valueItem = new QTableWidgetItem(QString::fromStdString(value.ToString()));
+        valueItem->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        ui.tableMonthOverview->setItem(i, 3, valueItem);
         sum += value;
     }
     ui.txtBalance->setText(QString::fromStdString(sum.ToString()));
@@ -114,9 +122,9 @@ void CoinKeeperView::ResizeColumns()
     ui.tableAccounts->setColumnWidth(0, ui.tableAccounts->width() - 200);
     ui.tableAccounts->setColumnWidth(1, 0);
 
-    ui.tableMonthOverview->setColumnWidth(0, 100);
+    ui.tableMonthOverview->setColumnWidth(0, 80);
     ui.tableMonthOverview->setColumnWidth(1, 100);
-    ui.tableMonthOverview->setColumnWidth(2, ui.tableMonthOverview->width() - 350);
+    ui.tableMonthOverview->setColumnWidth(2, ui.tableMonthOverview->width() - 330);
     ui.tableMonthOverview->setColumnWidth(3, 0);
 }
 

@@ -38,8 +38,14 @@ void LabelManager::ManageLabels()
 
 void LabelManager::CreateNewLabel()
 {
-    bool userClickedOk;
-    QString text = QInputDialog::getText(Q_NULLPTR, QString::fromStdString(TEXT_CREATE_NEW_LABEL), QString::fromStdString(TEXT_NAME_COLON), QLineEdit::Normal, "", &userClickedOk);
+    auto textInput = QInputDialog();
+    textInput.setInputMode(QInputDialog::TextInput);
+    textInput.setLabelText(QString::fromStdString(TEXT_NAME_COLON));
+    textInput.setWindowTitle(QString::fromStdString(TEXT_CREATE_NEW_LABEL));
+    textInput.resize(300, 100);
+    bool userClickedOk = textInput.exec() == QInputDialog::Accepted;
+    QString text = textInput.textValue();
+
     if (userClickedOk && !text.isEmpty()) {
         QColor color = QColorDialog::getColor(Qt::white, Q_NULLPTR, QString::fromStdString(TEXT_CHOOSE_COLOR), QColorDialog::ShowAlphaChannel);
         if (color.isValid()) {
@@ -54,8 +60,16 @@ void LabelManager::ChangeLabelName(int const selectedRow)
         std::string oldText;
         int labelID, color;
         tie(labelID, oldText, color) = currentLabels[selectedRow];
-        bool userClickedOk;
-        QString text = QInputDialog::getText(Q_NULLPTR, QString::fromStdString(TEXT_CHANGE_LABEL), QString::fromStdString(TEXT_NAME_COLON), QLineEdit::Normal, QString::fromStdString(oldText), &userClickedOk);
+
+        auto textInput = QInputDialog();
+        textInput.setInputMode(QInputDialog::TextInput);
+        textInput.setLabelText(QString::fromStdString(TEXT_NAME_COLON));
+        textInput.setWindowTitle(QString::fromStdString(TEXT_CHANGE_LABEL));
+        textInput.setTextValue(QString::fromStdString(oldText));
+        textInput.resize(300, 100);
+        bool userClickedOk = textInput.exec() == QInputDialog::Accepted;
+        QString text = textInput.textValue();
+
         if (userClickedOk && !text.isEmpty()) {
             database->UpdateLabel(labelID, text.toStdString(), color);
         }

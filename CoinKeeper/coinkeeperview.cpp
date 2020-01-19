@@ -123,8 +123,8 @@ void CoinKeeperView::ResizeColumns()
     ui.tableAccounts->setColumnWidth(1, 0);
 
     ui.tableMonthOverview->setColumnWidth(0, 80);
-    ui.tableMonthOverview->setColumnWidth(1, 100);
-    ui.tableMonthOverview->setColumnWidth(2, ui.tableMonthOverview->width() - 330);
+    ui.tableMonthOverview->setColumnWidth(1, 110);
+    ui.tableMonthOverview->setColumnWidth(2, ui.tableMonthOverview->width() - 310);
     ui.tableMonthOverview->setColumnWidth(3, 0);
 }
 

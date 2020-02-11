@@ -31,7 +31,7 @@ void Database::CreateNewAccount(std::string const& name, Value const& balance)
     ss << INSERT_NEW_ACCOUNT_PART_1;
     ss << name;
     ss << INSERT_NEW_ACCOUNT_PART_2;
-    ss << balance.VK;                   // TODO: test if this works and apply to other methods if yes
+    ss << balance.VK;
     ss << INSERT_NEW_ACCOUNT_PART_3;
     ss << balance.NK;
     ss << INSERT_NEW_ACCOUNT_PART_4;
@@ -45,7 +45,7 @@ void Database::CreateNewLabel(std::string const& name, int const color)
     ss << INSERT_NEW_LABEL_PART_1;
     ss << name;
     ss << INSERT_NEW_LABEL_PART_2;
-    ss << std::to_string(color);
+    ss << color;
     ss << INSERT_NEW_LABEL_PART_3;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -67,19 +67,19 @@ void Database::CreateNewStandingOrder(std::string const& description, int const 
 {
     std::stringstream ss;
     ss << INSERT_NEW_STANDING_ORDER_PART_1;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << INSERT_NEW_STANDING_ORDER_PART_2_TO_4;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << INSERT_NEW_STANDING_ORDER_PART_2_TO_4;
-    ss << std::to_string(value.VK);
+    ss << value.VK;
     ss << INSERT_NEW_STANDING_ORDER_PART_2_TO_4;
-    ss << std::to_string(value.NK);
+    ss << value.NK;
     ss << INSERT_NEW_STANDING_ORDER_PART_5;
     ss << description;
     ss << INSERT_NEW_STANDING_ORDER_PART_6;
-    ss << std::to_string(orderType);
+    ss << orderType;
     ss << INSERT_NEW_STANDING_ORDER_PART_7;
-    ss << std::to_string(date.year() * 10000 + date.month() * 100 + date.day());
+    ss << (date.year() * 10000 + date.month() * 100 + date.day());
     ss << INSERT_NEW_STANDING_ORDER_PART_8;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -92,19 +92,19 @@ void Database::CreateNewTransaction(std::string const& description, int const ac
     ss << INSERT_NEW_TRANSACTION_PART_1;
     ss << description;
     ss << INSERT_NEW_TRANSACTION_PART_2;
-    ss << std::to_string(value.VK);
+    ss << value.VK;
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(value.NK);
+    ss << value.NK;
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(date.day());
+    ss << date.day();
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(date.month());
+    ss << date.month();
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(date.year());
+    ss << date.year();
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(account);
+    ss << account;
     ss << INSERT_NEW_TRANSACTION_PART_3_TO_8;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << INSERT_NEW_TRANSACTION_PART_9;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -115,11 +115,11 @@ void Database::DeleteAccount(int const accountID)
 {
     std::stringstream ss;
     ss << DELETE_ACCOUNT_PART_1;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << DELETE_ACCOUNT_PART_2;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << DELETE_ACCOUNT_PART_3;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << DELETE_ACCOUNT_PART_4;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -129,11 +129,11 @@ void Database::DeleteLabel(int const labelID)
 {
     std::stringstream ss;
     ss << DELETE_LABEL_PART_1;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << DELETE_LABEL_PART_2;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << DELETE_LABEL_PART_3;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << DELETE_LABEL_PART_4;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -148,7 +148,7 @@ void Database::DeleteStandingOrder(int const orderID)
 {
     std::stringstream ss;
     ss << DELETE_STANDING_ORDER_PART_1;
-    ss << std::to_string(orderID);
+    ss << orderID;
     ss << DELETE_STANDING_ORDER_PART_2;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -162,7 +162,7 @@ void Database::DeleteTransaction(int const transactionID, bool const changeAccou
 
     std::stringstream ss;
     ss << DELETE_TRANSACTION_PART_1;
-    ss << std::to_string(transactionID);
+    ss << transactionID;
     ss << DELETE_TRANSACTION_PART_2;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -183,7 +183,7 @@ Value Database::GetAccountValue(int const accountID)
 {
     std::stringstream ss;
     ss << GET_ACCOUNT_VALUE_PART_1;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << GET_ACCOUNT_VALUE_PART_2;
 
     Value value;
@@ -206,15 +206,15 @@ StandingOrderVector Database::GetAllStandingOrders()
 ProfileVector Database::GetDatabaseList()
 {
     ProfileVector profiles;
-    for (auto const& p : fs::directory_iterator(fs::current_path())) {
-        if (p.is_regular_file()) {
-            std::string const& filename = p.path().filename().string();
+    for (auto const& directoryEntry : fs::directory_iterator(fs::current_path())) {
+        if (directoryEntry.is_regular_file()) {
+            std::string const& filename = directoryEntry.path().filename().string();
 
             bool filenameHasDBEnding = filename.length() > DATABASE_FILETYPE.length() &&
                 filename.substr(filename.length() - (DATABASE_FILETYPE.length() + 1), DATABASE_FILETYPE.length() + 1) == "." + DATABASE_FILETYPE;
 
             if (filenameHasDBEnding) {
-                profiles.push_back(std::make_pair(filename.substr(0, filename.length() - (DATABASE_FILETYPE.length() + 1)), p.path()));
+                profiles.push_back(std::make_pair(filename.substr(0, filename.length() - (DATABASE_FILETYPE.length() + 1)), directoryEntry.path()));
             }
         }
     }
@@ -226,7 +226,7 @@ StandingOrderVector Database::GetExecutableStandingOrders(int const date)
 {
     std::stringstream ss;
     ss << GET_EXECUTABLE_STANDING_ORDERS_PART_1;
-    ss << std::to_string(date);
+    ss << date;
     ss << GET_EXECUTABLE_STANDING_ORDERS_PART_2;
 
     StandingOrderVector orders;
@@ -251,14 +251,14 @@ TransactionVector Database::GetTransactions(int const month, int const year)
     std::stringstream ss;
     if (month == 0) {       // show all transactions of the selected year
         ss << GET_TRANSACTIONS_Y_PART_1;
-        ss << std::to_string(year);
+        ss << year;
         ss << GET_TRANSACTIONS_Y_PART_2;
     }
     else {
         ss << GET_TRANSACTIONS_M_Y_PART_1;
-        ss << std::to_string(month);
+        ss << month;
         ss << GET_TRANSACTIONS_M_Y_PART_2;
-        ss << std::to_string(year);
+        ss << year;
         ss << GET_TRANSACTIONS_M_Y_PART_3;
     }
 
@@ -273,18 +273,18 @@ TransactionVector Database::GetTransactions(int const month, int const year, int
     std::stringstream ss;
     if (month == 0) {       // show all transactions of the selected year
         ss << GET_TRANSACTIONS_Y_A_PART_1;
-        ss << std::to_string(year);
+        ss << year;
         ss << GET_TRANSACTIONS_Y_A_PART_2;
-        ss << std::to_string(accountID);
+        ss << accountID;
         ss << GET_TRANSACTIONS_Y_A_PART_3;
     }
     else {
         ss << GET_TRANSACTIONS_M_Y_A_PART_1;
-        ss << std::to_string(month);
+        ss << month;
         ss << GET_TRANSACTIONS_M_Y_A_PART_2;
-        ss << std::to_string(year);
+        ss << year;
         ss << GET_TRANSACTIONS_M_Y_A_PART_3;
-        ss << std::to_string(accountID);
+        ss << accountID;
         ss << GET_TRANSACTIONS_M_Y_A_PART_4;
     }
 
@@ -300,11 +300,11 @@ void Database::UpdateAccount(int const accountID, std::string const& accountName
     ss << UPDATE_ACCOUNT_PART_1;
     ss << accountName;
     ss << UPDATE_ACCOUNT_PART_2;
-    ss << std::to_string(accountValue.VK);
+    ss << accountValue.VK;
     ss << UPDATE_ACCOUNT_PART_3;
-    ss << std::to_string(accountValue.NK);
+    ss << accountValue.NK;
     ss << UPDATE_ACCOUNT_PART_4;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << UPDATE_ACCOUNT_PART_5;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -319,11 +319,11 @@ void Database::UpdateAccountValue(int const accountID, Value const& value)
     v += value;
     std::stringstream ss;
     ss << UPDATE_ACCOUNT_VALUE_PART_1;
-    ss << std::to_string(v.VK);
+    ss << v.VK;
     ss << UPDATE_ACCOUNT_VALUE_PART_2;
-    ss << std::to_string(v.NK);
+    ss << v.NK;
     ss << UPDATE_ACCOUNT_VALUE_PART_3;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << UPDATE_ACCOUNT_VALUE_PART_4;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -335,9 +335,9 @@ void Database::UpdateLabel(int const labelID, std::string const& name, int const
     ss << UPDATE_LABEL_PART_1;
     ss << name;
     ss << UPDATE_LABEL_PART_2;
-    ss << std::to_string(color);
+    ss << color;
     ss << UPDATE_LABEL_PART_3;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << UPDATE_LABEL_PART_4;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -348,21 +348,21 @@ void Database::UpdateStandingOrder(int const orderID, std::string const& descrip
 {
     std::stringstream ss;
     ss << UPDATE_STANDING_ORDER_PART_1;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << UPDATE_STANDING_ORDER_PART_2;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << UPDATE_STANDING_ORDER_PART_3;
-    ss << std::to_string(value.VK);
+    ss << value.VK;
     ss << UPDATE_STANDING_ORDER_PART_4;
-    ss << std::to_string(value.NK);
+    ss << value.NK;
     ss << UPDATE_STANDING_ORDER_PART_5;
     ss << description;
     ss << UPDATE_STANDING_ORDER_PART_6;
-    ss << std::to_string(orderType);
+    ss << orderType;
     ss << UPDATE_STANDING_ORDER_PART_7;
-    ss << std::to_string(nextDate.year() * 10000 + nextDate.month() * 100 + nextDate.day());
+    ss << (nextDate.year() * 10000 + nextDate.month() * 100 + nextDate.day());
     ss << UPDATE_STANDING_ORDER_PART_8;
-    ss << std::to_string(orderID);
+    ss << orderID;
     ss << UPDATE_STANDING_ORDER_PART_9;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -372,9 +372,9 @@ void Database::UpdateStandingOrderDate(int const orderID, int const date)
 {
     std::stringstream ss;
     ss << UPDATE_STANDING_ORDER_DATE_PART_1;
-    ss << std::to_string(date);
+    ss << date;
     ss << UPDATE_STANDING_ORDER_DATE_PART_2;
-    ss << std::to_string(orderID);
+    ss << orderID;
     ss << UPDATE_STANDING_ORDER_DATE_PART_3;
 
     ExecuteSQLStatementWithoutReturnValue(ss);
@@ -386,21 +386,21 @@ void Database::UpdateTransaction(int const transactionID, std::string const& des
     ss << UPDATE_TRANSACTION_PART_1;
     ss << description;
     ss << UPDATE_TRANSACTION_PART_2;
-    ss << std::to_string(value.VK);
+    ss << value.VK;
     ss << UPDATE_TRANSACTION_PART_3;
-    ss << std::to_string(value.NK);
+    ss << value.NK;
     ss << UPDATE_TRANSACTION_PART_4;
-    ss << std::to_string(date.day());
+    ss << date.day();
     ss << UPDATE_TRANSACTION_PART_5;
-    ss << std::to_string(date.month());
+    ss << date.month();
     ss << UPDATE_TRANSACTION_PART_6;
-    ss << std::to_string(date.year());
+    ss << date.year();
     ss << UPDATE_TRANSACTION_PART_7;
-    ss << std::to_string(accountID);
+    ss << accountID;
     ss << UPDATE_TRANSACTION_PART_8;
-    ss << std::to_string(labelID);
+    ss << labelID;
     ss << UPDATE_TRANSACTION_PART_9;
-    ss << std::to_string(transactionID);
+    ss << transactionID;
     ss << UPDATE_TRANSACTION_PART_10;
 
     ExecuteSQLStatementWithoutReturnValue(ss);

@@ -217,9 +217,6 @@
                 <bold>false</bold>
                </font>
               </property>
-              <property name="minimum">
-               <number>-999999999</number>
-              </property>
               <property name="maximum">
                <number>999999999</number>
               </property>

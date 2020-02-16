@@ -180,7 +180,6 @@ public:
         font2.setBold(false);
         font2.setWeight(50);
         spinBoxVK->setFont(font2);
-        spinBoxVK->setMinimum(-999999999);
         spinBoxVK->setMaximum(999999999);
 
         horizontalLayout_2->addWidget(spinBoxVK);

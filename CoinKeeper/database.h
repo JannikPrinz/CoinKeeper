@@ -5,7 +5,6 @@
 
 using CallbackFunction = int(*)(void*, int, char**, char**);
 
-// TODO: order methods
 class Database
 {
 public:

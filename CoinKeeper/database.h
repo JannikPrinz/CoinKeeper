@@ -141,6 +141,12 @@ public:
     [[nodiscard]]
     LabelVector GetLabels();
     /*
+     * This method returns the value of the given option.
+     * If the option does not exist, an empty string gets returned.
+     */
+    [[nodiscard]]
+    std::string GetOption(Options option);
+    /*
      * This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
      *
      * Parameters:
@@ -226,6 +232,7 @@ public:
 
 private:
     void InitializeCallbackFunctions();
+    void UpdateDBVersion();
     void ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const;
     void ExecuteSQLStatementWithReturnValue(std::stringstream const& ss, CallbackFunction callback, void* data) const;
 
@@ -236,4 +243,5 @@ private:
     CallbackFunction CBF_GetAccounts;
     CallbackFunction CBF_GetStandingOrders;
     CallbackFunction CBF_GetLabels;
+    CallbackFunction CBF_GetOption;
 };

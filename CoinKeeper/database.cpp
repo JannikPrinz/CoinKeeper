@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <sstream>
 
+#include <qmessagebox.h>
+
 #include "sqlite-amalgamation-3120100\sqlite3.h"
 
 namespace fs = std::filesystem;
@@ -11,6 +13,7 @@ Database::Database(std::string const& profile) :
     openProfile(profile)
 {
     InitializeCallbackFunctions();
+    UpdateDBVersion();
 }
 
 void Database::ChangeProfileName(std::filesystem::path const& oldPath, std::string const& newProfileName)
@@ -246,6 +249,19 @@ LabelVector Database::GetLabels()
     return labels;
 }
 
+std::string Database::GetOption(Options option)
+{
+    std::stringstream ss;
+    ss << GET_OPTION_PART_1;
+    ss << static_cast<int32_t>(option);
+    ss << GET_OPTION_PART_2;
+
+    std::string value;
+    ExecuteSQLStatementWithReturnValue(ss, CBF_GetOption, static_cast<void*>(&value));
+
+    return value;
+}
+
 TransactionVector Database::GetTransactions(int const month, int const year)
 {
     std::stringstream ss;
@@ -406,6 +422,7 @@ void Database::UpdateTransaction(int const transactionID, std::string const& des
     ExecuteSQLStatementWithoutReturnValue(ss);
 }
 
+// TODO: define callback functions statically
 void Database::InitializeCallbackFunctions()
 {
     CBF_GetAccountValue = [](void* data, int argc, char** argv, char** azColName) {
@@ -482,6 +499,53 @@ void Database::InitializeCallbackFunctions()
         }
         return 0;
     };
+
+    CBF_GetOption = [](void* data, int argc, char** argv, char** azColName) {
+        std::string* valuePtr = static_cast<std::string*>(data);
+        if (argc == 1 && std::string(azColName[0]) == OPTION_VALUE) {
+            *valuePtr = std::string(argv[0]);
+        }
+        return 0;
+    };
+}
+
+void Database::UpdateDBVersion()
+{
+    // Check if an update is needed:
+    auto dbVersionString = GetOption(Options::DB_Version);
+    int32_t dbVersion;
+    if (dbVersionString.empty()) {
+        dbVersion = 1;
+    } else {
+        dbVersion = std::stoi(dbVersionString);
+    }
+
+    // TODO Remove this
+    QMessageBox msg;
+    QString m = QString("DBVersion: '");
+    m.append(QString::fromStdString(std::to_string(dbVersion)));
+    m.append("'");
+    msg.setText(m);
+    msg.exec();
+
+    if (dbVersion > LATEST_DB_VERSION) {
+        // TODO handle this -> exit program / go back to profile chooser, notice user
+    }
+
+    if (dbVersion < LATEST_DB_VERSION) {
+        std::stringstream ss;
+        switch (dbVersion)
+        {
+        case 1:
+            ss << ALTER_DB_FROM_VERSION_1_TO_2;
+            break;
+        default:
+            break;
+        }
+        ExecuteSQLStatementWithoutReturnValue(ss);
+    }
+
+    // TODO Update dbVersion in Options if already exists
 }
 
 void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const

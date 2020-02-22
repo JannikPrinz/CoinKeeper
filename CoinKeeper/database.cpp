@@ -261,14 +261,14 @@ LabelVector Database::GetLabels()
     return labels;
 }
 
-std::string Database::GetOption(Options option)
+std::optional<std::string> Database::GetOption(Options option)
 {
     std::stringstream ss;
     ss << GET_OPTION_PART_1;
     ss << static_cast<int32_t>(option);
     ss << GET_OPTION_PART_2;
 
-    std::string value;
+    std::optional<std::string> value = std::nullopt;
     ExecuteSQLStatementWithReturnValue(ss, CBF_GetOption, static_cast<void*>(&value));
 
     return value;
@@ -525,7 +525,7 @@ void Database::InitializeCallbackFunctions()
     };
 
     CBF_GetOption = [](void* data, int argc, char** argv, char** azColName) {
-        std::string* valuePtr = static_cast<std::string*>(data);
+        std::optional<std::string>* valuePtr = static_cast<std::optional<std::string>*>(data);
         if (argc == 1 && std::string(azColName[0]) == OPTION_VALUE) {
             *valuePtr = std::string(argv[0]);
         }
@@ -536,12 +536,12 @@ void Database::InitializeCallbackFunctions()
 void Database::UpdateDBVersion()
 {
     // Check if an update is needed:
-    auto dbVersionString = GetOption(Options::DB_Version);
+    auto optDBVersionString = GetOption(Options::DB_Version);
     int32_t dbVersion;
-    if (dbVersionString.empty()) {
+    if (!optDBVersionString.has_value()) {
         dbVersion = 1;
     } else {
-        dbVersion = std::stoi(dbVersionString);
+        dbVersion = std::stoi(optDBVersionString.value());
     }
 
     if (dbVersion == LATEST_DB_VERSION) {

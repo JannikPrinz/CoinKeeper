@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "constants.h"
 #include "qdatetime.h"
 
@@ -146,10 +148,10 @@ public:
     LabelVector GetLabels();
     /*
      * This method returns the value of the given option.
-     * If the option does not exist, an empty string gets returned.
+     * If the option does not exist, std::nullopt gets returned.
      */
     [[nodiscard]]
-    std::string GetOption(Options option);
+    std::optional<std::string> GetOption(Options option);
     /*
      * This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
      *

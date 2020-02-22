@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <QObject>
-#include "presenter.h"
+#include "Presenter/presenter.h"
 
 class SupervisorPresenter : public QObject {
     Q_OBJECT

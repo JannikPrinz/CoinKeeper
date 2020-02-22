@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include <qstringlistmodel.h>
 
-#include "coinkeeperview.h"
-#include "database.h"
-#include "presenter.h"
+#include "Views/coinkeeperview.h"
+#include "DataHandler/database.h"
+#include "Presenter/presenter.h"
 
 class CoinKeeperPresenter : public Presenter {
     Q_OBJECT

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "presenter.h"
-#include "profilechooserview.h"
+#include "Presenter/presenter.h"
+#include "Views/profilechooserview.h"
 
 class ProfileChooserPresenter : public Presenter {
     Q_OBJECT

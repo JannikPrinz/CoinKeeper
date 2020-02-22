@@ -1,7 +1,7 @@
-﻿#include "supervisorpresenter.h"
+﻿#include "Presenter/supervisorpresenter.h"
 
-#include "profilechooserpresenter.h"
-#include "coinkeeperpresenter.h"
+#include "Presenter/profilechooserpresenter.h"
+#include "Presenter/coinkeeperpresenter.h"
 
 SupervisorPresenter::SupervisorPresenter(QObject * parent) : QObject(parent)
 {

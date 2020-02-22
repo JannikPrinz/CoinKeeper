@@ -33,16 +33,31 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\DataHandler">
+      <UniqueIdentifier>{bbc1b506-b2d6-4d64-9d72-fe463e9c12bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Presenter">
+      <UniqueIdentifier>{63a95427-1e04-4a6d-9413-5c38b897a63e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Views">
+      <UniqueIdentifier>{21dc5655-bad4-445c-9349-37b3ec63f1df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataHandler">
+      <UniqueIdentifier>{c0316fc3-7ecc-4798-8e8e-8ea31e9e5e15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Presenter">
+      <UniqueIdentifier>{25238d66-9fa8-4bcd-baa3-0b915ac90024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Views">
+      <UniqueIdentifier>{8d0e0d54-638b-4d8d-918a-27acaca1369b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="sources\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_coinkeeper.cpp">
       <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="supervisorpresenter.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_supervisorpresenter.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -50,17 +65,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_supervisorpresenter.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="presenter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_presenter.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_presenter.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="profilechooserpresenter.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_profilechooserpresenter.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -68,22 +77,13 @@
     <ClCompile Include="GeneratedFiles\Release\moc_profilechooserpresenter.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="profilechooserview.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_profilechooserview.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_profilechooserview.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="database.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sqlite-amalgamation-3120100\sqlite3.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="coinkeeperpresenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_coinkeeperpresenter.cpp">
@@ -91,9 +91,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_coinkeeperpresenter.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="coinkeeperview.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_coinkeeperview.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -107,20 +104,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_labelmanager.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="labelmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_transactionmanager.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_transactionmanager.cpp">
       <Filter>Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="transactionmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="accountmanager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_accountmanager.cpp">
       <Filter>Generated Files\Debug</Filter>
@@ -134,14 +122,41 @@
     <ClCompile Include="GeneratedFiles\Release\moc_standingordermanager.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="standingordermanager.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="sources\DataHandler\accountmanager.cpp">
+      <Filter>Source Files\DataHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\DataHandler\database.cpp">
+      <Filter>Source Files\DataHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\DataHandler\labelmanager.cpp">
+      <Filter>Source Files\DataHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\DataHandler\transactionmanager.cpp">
+      <Filter>Source Files\DataHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\DataHandler\standingordermanager.cpp">
+      <Filter>Source Files\DataHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Presenter\coinkeeperpresenter.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Presenter\presenter.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Presenter\profilechooserpresenter.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Presenter\supervisorpresenter.cpp">
+      <Filter>Source Files\Presenter</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Views\coinkeeperview.cpp">
+      <Filter>Source Files\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\Views\profilechooserview.cpp">
+      <Filter>Source Files\Views</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="coinkeeper.qrc">
-      <Filter>Resource Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="Form Files\addaccountwindow.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
@@ -157,41 +172,44 @@
     <CustomBuild Include="Form Files\managelabels.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="managestandingorders.ui">
+    <CustomBuild Include="Form Files\managestandingorders.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="addstandingorder.ui">
+    <CustomBuild Include="Form Files\addstandingorder.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="accountmanager.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\DataHandler\accountmanager.h">
+      <Filter>Header Files\DataHandler</Filter>
     </CustomBuild>
-    <CustomBuild Include="coinkeeperpresenter.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\DataHandler\labelmanager.h">
+      <Filter>Header Files\DataHandler</Filter>
     </CustomBuild>
-    <CustomBuild Include="coinkeeperview.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\DataHandler\standingordermanager.h">
+      <Filter>Header Files\DataHandler</Filter>
     </CustomBuild>
-    <CustomBuild Include="labelmanager.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\DataHandler\transactionmanager.h">
+      <Filter>Header Files\DataHandler</Filter>
     </CustomBuild>
-    <CustomBuild Include="presenter.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Presenter\coinkeeperpresenter.h">
+      <Filter>Header Files\Presenter</Filter>
     </CustomBuild>
-    <CustomBuild Include="profilechooserpresenter.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Presenter\presenter.h">
+      <Filter>Header Files\Presenter</Filter>
     </CustomBuild>
-    <CustomBuild Include="profilechooserview.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Presenter\profilechooserpresenter.h">
+      <Filter>Header Files\Presenter</Filter>
     </CustomBuild>
-    <CustomBuild Include="standingordermanager.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Presenter\supervisorpresenter.h">
+      <Filter>Header Files\Presenter</Filter>
     </CustomBuild>
-    <CustomBuild Include="supervisorpresenter.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Views\profilechooserview.h">
+      <Filter>Header Files\Views</Filter>
     </CustomBuild>
-    <CustomBuild Include="transactionmanager.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="header\Views\coinkeeperview.h">
+      <Filter>Header Files\Views</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\coinkeeper.qrc">
+      <Filter>Resource Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -207,16 +225,13 @@
     <ClInclude Include="GeneratedFiles\ui_profileChooser.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="database.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sqlite-amalgamation-3120100\sqlite3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sqlite-amalgamation-3120100\sqlite3ext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="constants.h">
+    <ClInclude Include="header\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_managelabels.h">
@@ -227,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_addstandingorder.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DataHandler\database.h">
+      <Filter>Header Files\DataHandler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

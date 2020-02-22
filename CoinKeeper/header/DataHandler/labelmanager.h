@@ -1,6 +1,6 @@
 #pragma once
 
-#include "database.h"
+#include "DataHandler/database.h"
 #include "ui_managelabels.h"
 
 class LabelManager : QObject

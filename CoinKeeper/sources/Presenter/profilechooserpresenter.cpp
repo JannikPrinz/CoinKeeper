@@ -1,6 +1,7 @@
-﻿#include "profilechooserpresenter.h"
+﻿#include "Presenter/profilechooserpresenter.h"
 
-#include "database.h"
+#include "DataHandler/database.h"
+
 #include "qinputdialog.h"
 #include "qmessagebox.h"
 

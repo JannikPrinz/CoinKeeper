@@ -2,7 +2,7 @@
 
 #include "ui_managestandingorders.h"
 #include "ui_addstandingorder.h"
-#include "database.h"
+#include "DataHandler/database.h"
 
 class StandingOrderManager : QObject
 {

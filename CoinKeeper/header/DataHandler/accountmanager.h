@@ -2,7 +2,7 @@
 
 #include <qobject.h>
 
-#include "database.h"
+#include "DataHandler/database.h"
 
 class AccountManager : QObject
 {

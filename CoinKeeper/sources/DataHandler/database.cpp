@@ -1,11 +1,11 @@
-#include "database.h"
+#include "DataHandler/database.h"
 
 #include <filesystem>
 #include <sstream>
 
 #include <qmessagebox.h>
 
-#include "sqlite-amalgamation-3120100\sqlite3.h"
+#include "sqlite-amalgamation-3120100/sqlite3.h"
 
 namespace fs = std::filesystem;
 

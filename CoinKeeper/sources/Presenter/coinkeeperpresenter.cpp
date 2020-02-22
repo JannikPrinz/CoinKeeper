@@ -1,11 +1,11 @@
-﻿#include "coinkeeperpresenter.h"
+﻿#include "Presenter/coinkeeperpresenter.h"
 
 #include <filesystem>
 
-#include "accountmanager.h"
-#include "labelmanager.h"
-#include "standingordermanager.h"
-#include "transactionmanager.h"
+#include "DataHandler/accountmanager.h"
+#include "DataHandler/labelmanager.h"
+#include "DataHandler/standingordermanager.h"
+#include "DataHandler/transactionmanager.h"
 
 #include "qmessagebox.h"
 

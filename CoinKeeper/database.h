@@ -28,6 +28,10 @@ public:
      */
     void CreateNewLabel(std::string const& name, int color);
     /*
+     * This method inserts a new option value into the database.
+     */
+    void CreateNewOption(Options const& option, std::string const& optionValue);
+    /*
      * This method creates a new database for the new profile.
      *
      * Parameters:
@@ -195,6 +199,10 @@ public:
      * int color               : new color of the label
      */
     void UpdateLabel(int labelID, std::string const& name, int color);
+    /*
+     * This method updates the given option with the new value.
+     */
+    void UpdateOption(Options const& option, std::string const& optionValue);
     /*
      * This method updates an existing standing order at the given profile with the given parameters.
      *

@@ -54,6 +54,18 @@ void Database::CreateNewLabel(std::string const& name, int const color)
     ExecuteSQLStatementWithoutReturnValue(ss);
 }
 
+void Database::CreateNewOption(Options const& option, std::string const& optionValue)
+{
+    std::stringstream ss;
+    ss << INSERT_NEW_OPTION_PART_1;
+    ss << static_cast<int32_t>(option);
+    ss << INSERT_NEW_OPTION_PART_2;
+    ss << optionValue;
+    ss << INSERT_NEW_OPTION_PART_3;
+
+    ExecuteSQLStatementWithoutReturnValue(ss);
+}
+
 void Database::CreateNewProfile(std::string const& fileName)
 {
     auto path = fs::current_path();
@@ -359,6 +371,18 @@ void Database::UpdateLabel(int const labelID, std::string const& name, int const
     ExecuteSQLStatementWithoutReturnValue(ss);
 }
 
+void Database::UpdateOption(Options const& option, std::string const& optionValue)
+{
+    std::stringstream ss;
+    ss << UPDATE_OPTION_PART_1;
+    ss << optionValue;
+    ss << UPDATE_OPTION_PART_2;
+    ss << static_cast<int32_t>(option);
+    ss << UPDATE_OPTION_PART_3;
+
+    ExecuteSQLStatementWithoutReturnValue(ss);
+}
+
 void Database::UpdateStandingOrder(int const orderID, std::string const& description, int const accountID,
     Value const& value, QDate const& nextDate, int const labelID, int const orderType)
 {
@@ -520,32 +544,45 @@ void Database::UpdateDBVersion()
         dbVersion = std::stoi(dbVersionString);
     }
 
-    // TODO Remove this
-    QMessageBox msg;
-    QString m = QString("DBVersion: '");
-    m.append(QString::fromStdString(std::to_string(dbVersion)));
-    m.append("'");
-    msg.setText(m);
-    msg.exec();
+    if (dbVersion == LATEST_DB_VERSION) {
+        return;
+    }
 
     if (dbVersion > LATEST_DB_VERSION) {
-        // TODO handle this -> exit program / go back to profile chooser, notice user
+        QMessageBox msg;
+        QString m = QString::fromStdString(TEXT_DB_VERSION_NOT_SUPPORTED_PART_1);
+        m.append(QString::fromStdString(std::to_string(dbVersion)));
+        m.append(QString::fromStdString(TEXT_DB_VERSION_NOT_SUPPORTED_PART_2));
+        m.append(QString::fromStdString(std::to_string(LATEST_DB_VERSION)));
+        msg.setText(m);
+        msg.exec();
+
+        exit(0);
     }
 
-    if (dbVersion < LATEST_DB_VERSION) {
-        std::stringstream ss;
-        switch (dbVersion)
-        {
-        case 1:
-            ss << ALTER_DB_FROM_VERSION_1_TO_2;
-            break;
-        default:
-            break;
-        }
-        ExecuteSQLStatementWithoutReturnValue(ss);
+    // Update db version:
+    std::stringstream ss;
+    switch (dbVersion)
+    {
+    case 1:
+        ss << ALTER_DB_FROM_VERSION_1_TO_2;
+        [[fallthrough]];
+    default:
+        break;
+    }
+    ExecuteSQLStatementWithoutReturnValue(ss);
+
+    if (dbVersion == 1) {
+        CreateNewOption(Options::DB_Version, std::to_string(LATEST_DB_VERSION));
+    } else {
+        UpdateOption(Options::DB_Version, std::to_string(LATEST_DB_VERSION));
     }
 
-    // TODO Update dbVersion in Options if already exists
+    QMessageBox msg;
+    QString m = QString::fromStdString(TEXT_DB_VERSION_UPDATED);
+    m.append(QString::fromStdString(std::to_string(LATEST_DB_VERSION)));
+    msg.setText(m);
+    msg.exec();
 }
 
 void Database::ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const

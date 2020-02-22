@@ -1,7 +1,10 @@
 ﻿#include "Presenter/presenter.h"
 
-Presenter::Presenter(QObject * parent) : QObject(parent) {
-}
+namespace Presenter
+{
+    Presenter::Presenter(QObject* parent) : QObject(parent) {
+    }
 
-Presenter::~Presenter() {
+    Presenter::~Presenter() {
+    }
 }

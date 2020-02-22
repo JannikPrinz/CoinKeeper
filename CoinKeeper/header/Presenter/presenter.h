@@ -4,13 +4,16 @@
 
 #include "constants.h"
 
-class Presenter : public QObject {
-    Q_OBJECT
+namespace Presenter
+{
+    class Presenter : public QObject {
+        Q_OBJECT
 
-public:
-    Presenter(QObject* parent = Q_NULLPTR);
-    ~Presenter();
+    public:
+        Presenter(QObject* parent = Q_NULLPTR);
+        ~Presenter();
 
-signals:
-    void ChangePresenter(Presenters p, std::string s = "");
-};
+    signals:
+        void ChangePresenter(Presenters p, std::string s = "");
+    };
+}

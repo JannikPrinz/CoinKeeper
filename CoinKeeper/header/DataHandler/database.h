@@ -65,7 +65,7 @@ namespace DataHandler
          * QDate const& date              : date of the transaction
          * int labelID                    : id of the label
          */
-        void CreateNewTransaction(std::string const& description, int account, DataClasses::Value const& value, QDate const& date, int labelID);
+        void CreateNewTransaction(std::string const& description, int32_t account, DataClasses::Value const& value, QDate const& date, int32_t labelID, std::optional<int32_t> targetAccount);
         /*
          * This method deletes the given account and all corresponding transactions.
          *

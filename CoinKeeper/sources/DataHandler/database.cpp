@@ -103,7 +103,7 @@ namespace DataHandler
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
 
-    void Database::CreateNewTransaction(std::string const& description, int const account, Value const& value, QDate const& date, int const labelID)
+    void Database::CreateNewTransaction(std::string const& description, int32_t const account, Value const& value, QDate const& date, int32_t const labelID, std::optional<int32_t> targetAccount)
     {
         // insert the new transaction:
         std::stringstream ss;
@@ -463,17 +463,23 @@ namespace DataHandler
         CBF_GetTransactions = [](void* data, int argc, char** argv, char** azColName) {
             TransactionVector* transactionPtr = static_cast<TransactionVector*>(data);
             int x = 0;
-            while (x + 8 < argc) {
+            while (x + 9 < argc) {
                 if (std::string(azColName[x]) == TRANSACTIONS_ID && std::string(azColName[x + 1]) == TRANSACTIONS_DESCRIPTION &&
                     std::string(azColName[x + 2]) == TRANSACTIONS_VK && std::string(azColName[x + 3]) == TRANSACTIONS_NK &&
                     std::string(azColName[x + 4]) == TRANSACTIONS_DAY && std::string(azColName[x + 5]) == TRANSACTIONS_MONTH &&
-                    std::string(azColName[x + 6]) == TRANSACTIONS_YEAR && std::string(azColName[x + 7]) == ACCOUNTS_ID && std::string(azColName[x + 8]) == LABEL_ID)
+                    std::string(azColName[x + 6]) == TRANSACTIONS_YEAR && std::string(azColName[x + 7]) == ACCOUNTS_ID &&
+                    std::string(azColName[x + 8]) == LABEL_ID && std::string(azColName[x + 9]) == TRANSACTION_CONNECTED_TRANSACTION_ID)
                 {
                     QDate date;
                     date.setDate(atoi(argv[x + 6]), atoi(argv[x + 5]), atoi(argv[x + 4]));
-                    transactionPtr->push_back(DataClasses::Transaction(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8])));
+                    std::optional<int32_t> connectedTransaction = std::nullopt;
+                    if (argv[x + 9] != NULL) {
+                        connectedTransaction = atoi(argv[x + 9]);
+                    }
+                    transactionPtr->push_back(DataClasses::Transaction(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]),
+                        atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8]), connectedTransaction));
                 }
-                x += 9;
+                x += 10;
             }
             return 0;
         };

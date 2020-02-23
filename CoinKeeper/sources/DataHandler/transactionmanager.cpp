@@ -21,6 +21,7 @@ namespace DataHandler
 
         for (int i = 0; i < currentAccounts.size(); i++) {
             addTransactionWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
+            addTransactionWindow->comboBoxChooseTargetAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
         }
 
         for (int i = 0; i < currentLabels.size(); i++) {
@@ -28,6 +29,7 @@ namespace DataHandler
         }
 
         connect(addTransactionWindow->buttonAddTransaction, &QPushButton::clicked, this, [this] { CreateTransaction(); });
+        connect(addTransactionWindow->checkBoxActivateInternalTransaction, &QCheckBox::clicked, this, [this] { UpdateEnabledElements(); });
         dialog.exec();
     }
 
@@ -105,15 +107,30 @@ namespace DataHandler
 
     void TransactionManager::CreateTransaction()
     {
-        int selectedAccount = addTransactionWindow->comboBoxChooseAccount->currentIndex();
-        if (selectedAccount == 0) {
+        int32_t selectedAccountIndex = addTransactionWindow->comboBoxChooseAccount->currentIndex();
+        if (selectedAccountIndex == 0) {
             QMessageBox msg;
             msg.setText(QString::fromStdString(TEXT_CHOOSE_ACCOUNT_FOR_TRANSACTION));
             msg.exec();
             return;
         }
 
-        int selectedLabel = addTransactionWindow->comboBoxChooseLabel->currentIndex();
+        std::optional<int32_t> selectedTargetAccountId = std::nullopt;
+        bool isInternalTransaction = addTransactionWindow->checkBoxActivateInternalTransaction->checkState() == Qt::CheckState::Checked;
+        if (isInternalTransaction) {
+            auto selectedTargetAccountIndex = addTransactionWindow->comboBoxChooseTargetAccount->currentIndex();
+
+            if (selectedTargetAccountIndex == 0) {
+                QMessageBox msg;
+                msg.setText(QString::fromStdString(TEXT_CHOOSE_TARGET_ACCOUNT_FOR_TRANSACTION));
+                msg.exec();
+                return;
+            }
+
+            selectedTargetAccountId = std::get<0>(currentAccounts[selectedTargetAccountIndex - 1]);
+        }
+
+        int32_t selectedLabel = addTransactionWindow->comboBoxChooseLabel->currentIndex();
         Value value = Value(addTransactionWindow->spinBoxVK->value(), addTransactionWindow->spinBoxNK->value());
 
         if (addTransactionWindow->radioButtonNegativ->isChecked()) {
@@ -121,8 +138,17 @@ namespace DataHandler
         }
 
         QDate date = addTransactionWindow->calendarWidget->selectedDate();
+
         database->CreateNewTransaction(addTransactionWindow->textEditDescription->toPlainText().toStdString(),
-            std::get<0>(currentAccounts[selectedAccount - 1]), value, date, std::get<0>(currentLabels[selectedLabel]));
+            std::get<0>(currentAccounts[selectedAccountIndex - 1]), value, date, std::get<0>(currentLabels[selectedLabel]), selectedTargetAccountId);
         addTransactionWindow->buttonCancel->click();
+    }
+
+    void TransactionManager::UpdateEnabledElements()
+    {
+        bool enabled = addTransactionWindow->checkBoxActivateInternalTransaction->checkState() == Qt::CheckState::Checked;
+
+        addTransactionWindow->lblTargetAccount->setEnabled(enabled);
+        addTransactionWindow->comboBoxChooseTargetAccount->setEnabled(enabled);
     }
 }

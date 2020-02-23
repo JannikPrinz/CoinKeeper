@@ -55,7 +55,7 @@ namespace DataHandler
             }
             else {
                 tie(orderID, accountID, labelID, value, description, orderType, nextDate) = executableOrders[lastItem];
-                database->CreateNewTransaction(description, accountID, value, nextDate, labelID);
+                database->CreateNewTransaction(description, accountID, value, nextDate, labelID, std::nullopt); // TODO enable internal transactions
                 addedTransactions++;
 
                 switch (orderType) {

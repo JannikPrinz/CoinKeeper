@@ -34,6 +34,7 @@ namespace DataHandler
     private:
         void CreateTransaction();
         void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const DataClasses::Value& oldValue);
+        void UpdateEnabledElements();
 
     private:
         std::shared_ptr<Database> database;

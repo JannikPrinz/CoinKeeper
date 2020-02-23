@@ -4,6 +4,8 @@
 
 namespace DataHandler
 {
+    using Value = DataClasses::Value;
+
     TransactionManager::TransactionManager(std::shared_ptr<Database> data) :
         database(data)
     {
@@ -29,7 +31,7 @@ namespace DataHandler
         dialog.exec();
     }
 
-    void TransactionManager::UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID)
+    void TransactionManager::UpdateTransaction(DataClasses::Transaction const& transaction)
     {
         currentAccounts = database->GetAccounts();
         currentLabels = database->GetLabels();
@@ -41,7 +43,7 @@ namespace DataHandler
 
         for (int i = 0; i < currentAccounts.size(); i++) {
             addTransactionWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
-            if (std::get<0>(currentAccounts[i]) == accountID) {
+            if (std::get<0>(currentAccounts[i]) == transaction.AccountId) {
                 preSelectRow = i;
             }
         }
@@ -49,32 +51,32 @@ namespace DataHandler
         addTransactionWindow->comboBoxChooseAccount->setCurrentIndex(preSelectRow);
         for (int i = 0; i < currentLabels.size(); i++) {
             addTransactionWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>(currentLabels[i])));
-            if (std::get<0>(currentLabels[i]) == labelID) {
+            if (std::get<0>(currentLabels[i]) == transaction.LabelId) {
                 preSelectRow = i;
             }
         }
 
         addTransactionWindow->comboBoxChooseLabel->setCurrentIndex(preSelectRow);
-        addTransactionWindow->calendarWidget->setSelectedDate(date);
-        addTransactionWindow->textEditDescription->setPlainText(QString::fromStdString(description));
+        addTransactionWindow->calendarWidget->setSelectedDate(transaction.Date);
+        addTransactionWindow->textEditDescription->setPlainText(QString::fromStdString(transaction.Description));
 
         // set old value in form:
-        if (value < Value(0)) {
-            Value v = value * -1;
+        if (transaction.TransactionValue < Value(0)) {
+            Value v = transaction.TransactionValue * -1;
             addTransactionWindow->spinBoxVK->setValue(v.VK);
             addTransactionWindow->spinBoxNK->setValue(v.NK);
             addTransactionWindow->radioButtonNegativ->setChecked(true);
         }
         else {
-            addTransactionWindow->spinBoxVK->setValue(value.VK);
-            addTransactionWindow->spinBoxNK->setValue(value.NK);
+            addTransactionWindow->spinBoxVK->setValue(transaction.TransactionValue.VK);
+            addTransactionWindow->spinBoxNK->setValue(transaction.TransactionValue.NK);
             addTransactionWindow->radioButtonPositiv->setChecked(true);
         }
 
         addTransactionWindow->buttonAddTransaction->setText(QString::fromStdString(TEXT_CHANGE_TRANSACTION));
-        connect(addTransactionWindow->buttonAddTransaction, &QPushButton::clicked, this, [this, transactionID, accountID, value] {
-            UpdateTransactionInDatabase(transactionID, accountID, value);
-            });
+        connect(addTransactionWindow->buttonAddTransaction, &QPushButton::clicked, this, [this, transaction] {
+            UpdateTransactionInDatabase(transaction.TransactionId, transaction.AccountId, transaction.TransactionValue);
+        });
         dialog.exec();
     }
 

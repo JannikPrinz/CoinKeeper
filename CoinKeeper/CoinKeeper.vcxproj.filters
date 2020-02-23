@@ -51,6 +51,12 @@
     <Filter Include="Source Files\Views">
       <UniqueIdentifier>{8d0e0d54-638b-4d8d-918a-27acaca1369b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DataClasses">
+      <UniqueIdentifier>{81ab6b70-1f76-4ad9-adac-033cb9880298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DataClasses">
+      <UniqueIdentifier>{da28aa44-108f-4365-9af9-30fcee883c29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sources\main.cpp">
@@ -155,6 +161,12 @@
     <ClCompile Include="sources\Views\profilechooserview.cpp">
       <Filter>Source Files\Views</Filter>
     </ClCompile>
+    <ClCompile Include="sources\DataClasses\transaction.cpp">
+      <Filter>Source Files\DataClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="sources\DataClasses\value.cpp">
+      <Filter>Source Files\DataClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Form Files\addaccountwindow.ui">
@@ -245,6 +257,12 @@
     </ClInclude>
     <ClInclude Include="header\DataHandler\database.h">
       <Filter>Header Files\DataHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DataClasses\transaction.h">
+      <Filter>Header Files\DataClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DataClasses\value.h">
+      <Filter>Header Files\DataClasses</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

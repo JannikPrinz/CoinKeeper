@@ -29,7 +29,7 @@ namespace Views
          * const vector<tuple<int, string, Value, QDate, int, int>>& transactions : vector of transactions, which are represented as tuples with the date,
          * name of the label, color of the label, TransactionDescription, value of the transaction
          */
-        void FillTransactionData(std::vector<std::tuple<QDate, std::string, int, std::string, Value>> const& transactions);
+        void FillTransactionData(std::vector<std::tuple<QDate, std::string, int, std::string, DataClasses::Value>> const& transactions);
         /*
          * This method returns the index of the combobox of the selected month
          *

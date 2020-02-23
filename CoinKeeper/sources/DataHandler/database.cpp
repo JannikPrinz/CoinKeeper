@@ -10,6 +10,7 @@
 namespace DataHandler
 {
     namespace fs = std::filesystem;
+    using Value = DataClasses::Value;
 
     Database::Database(std::string const& profile) :
         openProfile(profile)
@@ -470,7 +471,7 @@ namespace DataHandler
                 {
                     QDate date;
                     date.setDate(atoi(argv[x + 6]), atoi(argv[x + 5]), atoi(argv[x + 4]));
-                    transactionPtr->push_back(make_tuple(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8])));
+                    transactionPtr->push_back(DataClasses::Transaction(atoi(argv[x]), std::string(argv[x + 1]), Value(atoi(argv[x + 2]), atoi(argv[x + 3])), date, atoi(argv[x + 7]), atoi(argv[x + 8])));
                 }
                 x += 9;
             }

@@ -12,6 +12,7 @@
 namespace Presenter
 {
     using CoinKeeperView = Views::CoinKeeperView;
+    using Value = DataClasses::Value;
 
     CoinKeeperPresenter::CoinKeeperPresenter(std::string const& profilePath, QObject* parent) : Presenter(parent) {
         database = std::make_shared<DataHandler::Database>(profilePath);
@@ -75,16 +76,16 @@ namespace Presenter
     {
         int row = view->GetSelectedRowTableMonthOverview();
         if (row >= 0) {
-            std::tuple<int, std::string, Value, QDate, int, int> transaction = currentTransactions[row];
+            auto const& transaction = currentTransactions[row];
             QMessageBox msg;
             msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
             msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
             switch (msg.exec()) {
             case QMessageBox::Yes:
-                database->DeleteTransaction(std::get<0>(transaction), true, std::get<4>(transaction), std::get<2>(transaction) * -1);
+                database->DeleteTransaction(transaction.TransactionId, true, transaction.AccountId, transaction.TransactionValue * -1);
                 break;
             case QMessageBox::No:
-                database->DeleteTransaction(std::get<0>(transaction), false);
+                database->DeleteTransaction(transaction.TransactionId, false);
                 break;
             case QMessageBox::Abort:
                 break;
@@ -136,13 +137,8 @@ namespace Presenter
     {
         int row = view->GetSelectedRowTableMonthOverview();
         if (row >= 0) {
-            int transactionID, accountID, labelID;
-            QDate date;
-            std::string description;
-            Value value;
-            tie(transactionID, description, value, date, accountID, labelID) = currentTransactions[row];
             DataHandler::TransactionManager transactionCreator(database);
-            transactionCreator.UpdateTransaction(transactionID, description, accountID, value, date, labelID);
+            transactionCreator.UpdateTransaction(currentTransactions[row]);
             RefreshWindow();
         }
     }
@@ -180,27 +176,25 @@ namespace Presenter
 
         // sort transactions:
         std::sort(currentTransactions.begin(), currentTransactions.end(), [](auto const& el1, auto const& el2) {
-            return std::get<3>(el1).toJulianDay() < std::get<3>(el2).toJulianDay();
-            });
+            return el1.Date.toJulianDay() < el2.Date.toJulianDay();
+        });
 
         // combine transaction and label information for 'nice' representation:
         currentLabels = database->GetLabels();
         std::vector<std::tuple<QDate, std::string, int, std::string, Value>> transactions;    // date, name of label, color of label, description of transaction, value of transaction
-        int transactionID, accountID, labelID;
-        std::string description;
-        Value value;
-        QDate date;
+
         for (size_t i = 0; i < currentTransactions.size(); i++) {
-            tie(transactionID, description, value, date, accountID, labelID) = currentTransactions[i];
-            auto it = find_if(currentLabels.begin(), currentLabels.end(), [labelID](std::tuple<int, std::string, int> label) {
+            auto const& transaction = currentTransactions[i];
+            auto it = find_if(currentLabels.begin(), currentLabels.end(), [labelID = transaction.LabelId](std::tuple<int, std::string, int> label) {
                 return std::get<0>(label) == labelID;
-                });
+            });
+
             if (it == currentLabels.end()) {    // labelID not found. Should not happen. Use default-label.
                 std::tuple<int, std::string, int> defaultLabel = currentLabels[0];
-                transactions.push_back(make_tuple(date, std::get<1>(defaultLabel), std::get<2>(defaultLabel), description, value));
+                transactions.push_back(make_tuple(transaction.Date, std::get<1>(defaultLabel), std::get<2>(defaultLabel), transaction.Description, transaction.TransactionValue));
             }
             else {
-                transactions.push_back(make_tuple(date, std::get<1>(*it), std::get<2>(*it), description, value));
+                transactions.push_back(make_tuple(transaction.Date, std::get<1>(*it), std::get<2>(*it), transaction.Description, transaction.TransactionValue));
                 //qDebug("Transaction %d: labelID: %d, labelName: %s, color: %d\n", i, get<0>(*it), get<1>(*it), get<2>(*it));
             }
         }

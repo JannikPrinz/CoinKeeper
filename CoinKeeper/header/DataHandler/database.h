@@ -22,7 +22,7 @@ namespace DataHandler
          * std::string const& name : name of the new account
          * Value const& balance    : start-balance of the new account
          */
-        void CreateNewAccount(std::string const& name, Value const& balance);
+        void CreateNewAccount(std::string const& name, DataClasses::Value const& balance);
         /*
          * This method creates a new label in the given profile with the given name and color.
          *
@@ -53,7 +53,7 @@ namespace DataHandler
          * int labelID              : id of the label, which all inserted transactions will get
          * int orderType            : indentifier of the type of the standing order
          */
-        void CreateNewStandingOrder(std::string const& description, int accountID, Value const& value, QDate const& date, int labelID, int orderType);
+        void CreateNewStandingOrder(std::string const& description, int accountID, DataClasses::Value const& value, QDate const& date, int labelID, int orderType);
         /*
          * This method creates a new transaction at the given profile / account with the given description, value, labelID and date of the transaction.
          * Also the value of the account gets updated.
@@ -65,7 +65,7 @@ namespace DataHandler
          * QDate const& date              : date of the transaction
          * int labelID                    : id of the label
          */
-        void CreateNewTransaction(std::string const& description, int account, Value const& value, QDate const& date, int labelID);
+        void CreateNewTransaction(std::string const& description, int account, DataClasses::Value const& value, QDate const& date, int labelID);
         /*
          * This method deletes the given account and all corresponding transactions.
          *
@@ -98,7 +98,7 @@ namespace DataHandler
          * int accountID           : id of the account, where the given value gets added if wanted (default = 0)
          * Value const& value      : value which gets added to the given account if wanted (default = 0)
          */
-        void DeleteTransaction(int transactionID, bool changeAccountValue, int accountID = 0, Value const& value = Value(0));
+        void DeleteTransaction(int transactionID, bool changeAccountValue, int accountID = 0, DataClasses::Value const& value = DataClasses::Value(0));
         /*
          * This method returns all accounts of the given profile
          *
@@ -115,7 +115,7 @@ namespace DataHandler
          * Returns: the value of the given account
          */
         [[nodiscard]]
-        Value GetAccountValue(int accountID);
+        DataClasses::Value GetAccountValue(int accountID);
         /*
          * This method returns all standing orders, which are saved in the given profile.
          *
@@ -185,7 +185,7 @@ namespace DataHandler
          * std::string const& accountName : new name of the account
          * Value const& value             : new value of the account
          */
-        void UpdateAccount(int accountID, std::string const& accountName, Value const& value);
+        void UpdateAccount(int accountID, std::string const& accountName, DataClasses::Value const& value);
         /*
          * This method adds the given value to the given account.
          *
@@ -193,7 +193,7 @@ namespace DataHandler
          * int accountID      : id of the account on which the value-change is applied
          * Value const& value : value, which gets added to the current value of the selected account
          */
-        void UpdateAccountValue(int accountID, Value const& value);
+        void UpdateAccountValue(int accountID, DataClasses::Value const& value);
         /*
          * This method changes the name and the color of the specified label with given parameters
          *
@@ -219,7 +219,7 @@ namespace DataHandler
          * int labelID                    : id of the label
          * int orderType                  : type of the standing order
          */
-        void UpdateStandingOrder(int orderID, std::string const& description, int accountID, Value const& value, QDate const& nextDate, int labelID, int orderType);
+        void UpdateStandingOrder(int orderID, std::string const& description, int accountID, DataClasses::Value const& value, QDate const& nextDate, int labelID, int orderType);
         /*
          * This method sets the next execution date of the specified standing order to the given date.
          *
@@ -240,7 +240,7 @@ namespace DataHandler
          * QDate const& date              : date of the transaction
          * int const& labelID             : id of the label
          */
-        void UpdateTransaction(int transactionID, std::string const& description, int accountID, Value const& value, QDate const& date, int labelID);
+        void UpdateTransaction(int transactionID, std::string const& description, int accountID, DataClasses::Value const& value, QDate const& date, int labelID);
 
     private:
         void InitializeCallbackFunctions();

@@ -4,6 +4,8 @@
 
 namespace DataHandler
 {
+    using Value = DataClasses::Value;
+
     StandingOrderManager::StandingOrderManager(std::shared_ptr<Database> data, AccountVector const& accounts, LabelVector const& labels) :
         database(data),
         currentAccounts(accounts),

@@ -7,6 +7,8 @@
 #include <tuple>
 #include <vector>
 
+#include "DataClasses/transaction.h"
+
 enum class Options
 {
     DB_Version = 1
@@ -217,147 +219,6 @@ static std::string GetStringFromStandingOrderType(StandingOrderType type)
     }
 }
 
-// TODO remove code from this file
-struct Value
-{
-    int VK;
-    int NK;
-
-    /*
-     * Creates a new instance with the given parameters.
-     *
-     * Parameters:
-     * int vk0 : value before the comma (default = 0)
-     * int nk0 : value after the comma. Should be >= 0 and < 100 (default = 0)
-     */
-    Value(int vk0 = 0, int nk0 = 0) : VK(vk0), NK(nk0) {}
-
-    std::string ToString()
-    {
-        std::string s = "";
-        if (VK < 0 || (VK == 0 && NK < 0)) s.append("-");
-        int v = (VK < 0) ? -VK : VK;
-        std::string d = "";
-        d = std::to_string(v % 10).append(d);
-        v /= 10;
-        int x = 0;
-        while (v > 0)
-        {
-            if (x == 2) d = std::string(".").append(d);
-            d = std::to_string(v % 10).append(d);
-            v /= 10;
-            x++;
-            x %= 3;
-        }
-        s.append(d);
-        s.append(",");
-        if (NK < 0)
-        {
-            if (NK > -10) s.append("0");
-            s.append(std::to_string(-NK));
-        }
-        else
-        {
-            if (NK < 10) s.append("0");
-            s.append(std::to_string(NK));
-        }
-        return s;
-    }
-
-    Value operator +(const Value& a) const
-    {
-        int v1 = VK;
-        int v2 = a.VK;
-        int n1 = (VK < 0) ? -NK : NK;
-        int n2 = (a.VK < 0) ? -a.NK : a.NK;
-        int v = v1 + v2;
-        int n = n1 + n2;
-        if (n >= 100)
-        {
-            n -= 100;
-            v += 1;
-        }
-        if (n <= -100)
-        {
-            n += 100;
-            v -= 1;
-        }
-        if (v >= 0 && n >= 0) return Value(v, n);
-        if (v < 0 && n <= 0) return Value(v, -n);
-        if (v == 0 && n < 0) return Value(v, n);
-        if (v > 0 && n < 0) return Value(v - 1, n + 100);
-
-        // v < 0 && n > 0
-        v += 1;
-        n = 100 - n;
-        if (v == 0) n *= -1;
-        return Value(v, n);
-    }
-
-    Value operator *(const int& x) const
-    {
-        if (x >= 0)
-        {
-            int y = NK * x;
-            return Value(VK * x + (y / 100), y % 100);
-        }
-        else
-        {
-            int y = (VK != 0) ? NK * x * (-1) : NK * x;
-            return Value(-(VK * (-x) + (y / 100)), y % 100);
-        }
-    }
-
-    Value operator *=(const int& x)
-    {
-        *this = *this * x;
-        return *this;
-    }
-
-    Value operator +=(const Value& x)
-    {
-        *this = *this + x;
-        return *this;
-    }
-
-    Value operator -(const Value& a) const
-    {
-        return *this + (a * (-1));
-    }
-
-    bool operator ==(const Value& a) const
-    {
-        return VK == a.VK && NK == a.NK;
-    }
-
-    bool operator !=(const Value& a) const
-    {
-        return !(*this == a);
-    }
-
-    bool operator <(const Value& a) const
-    {
-        if (VK < a.VK) return true;
-        if (VK == a.VK && NK < a.NK) return true;
-        return false;
-    }
-
-    bool operator <=(const Value& a) const
-    {
-        return (*this < a) || (*this == a);
-    }
-
-    bool operator >(const Value& a) const
-    {
-        return !(*this <= a);
-    }
-
-    bool operator >=(const Value& a) const
-    {
-        return !(*this < a);
-    }
-};
-
 //---------------------------------------------------------------------------------------------------------------------
 // Color-functions:
 
@@ -416,8 +277,9 @@ static QColor ConvertIntToQColor(const int& color)
 }
 
 // vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
-using AccountVector = std::vector<std::tuple<int, std::string, Value>>;
+using TransactionVector = std::vector<DataClasses::Transaction>;
+// TODO: Add data classes for Account, Label, StandingOrder
+using AccountVector = std::vector<std::tuple<int, std::string, DataClasses::Value>>;
 using LabelVector = std::vector<std::tuple<int, std::string, int>>;
-using StandingOrderVector = std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>>;
+using StandingOrderVector = std::vector<std::tuple<int, int, int, DataClasses::Value, std::string, StandingOrderType, QDate>>;
 using ProfileVector = std::vector<std::pair<std::string, std::filesystem::path>>;

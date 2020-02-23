@@ -5,6 +5,8 @@
 
 namespace DataHandler
 {
+    using Value = DataClasses::Value;
+
     AccountManager::AccountManager(std::shared_ptr<Database> data) :
         database(data)
     {

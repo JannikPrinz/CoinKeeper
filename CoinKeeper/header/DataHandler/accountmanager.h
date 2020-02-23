@@ -32,7 +32,7 @@ namespace DataHandler
          * std::string const& oldName : old name of the account
          * Value const& oldValue : old value of the account
          */
-        void ChangeAccount(int accountID, std::string const& oldName, Value const& oldValue);
+        void ChangeAccount(int accountID, std::string const& oldName, DataClasses::Value const& oldValue);
 
     private:
         [[nodiscard]]

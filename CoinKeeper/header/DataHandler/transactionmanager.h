@@ -27,18 +27,13 @@ namespace DataHandler
          * Opens a window, where the user can change values of an existing transaction.
          *
          * Parameters:
-         * const int& transactionID : id of the transaction, which will be changed
-         * const std::string& description : old description of transaction
-         * const int& accountID : old id of the corresponding account of the transaction
-         * const Value& value : old value of the transaction
-         * const QDate& date : old date of the transaction
-         * const int& labelID : old id of the corresponding label of the transaction
+         * DataClasses::Transaction const& oldTransaction : the old transaction, which will be changed
          */
-        void UpdateTransaction(const int& transactionID, const std::string& description, const int& accountID, const Value& value, const QDate& date, const int& labelID);
+        void UpdateTransaction(DataClasses::Transaction const& oldTransaction);
 
     private:
         void CreateTransaction();
-        void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const Value& oldValue);
+        void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const DataClasses::Value& oldValue);
 
     private:
         std::shared_ptr<Database> database;

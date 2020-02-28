@@ -127,6 +127,15 @@ namespace DataHandler
 
         ExecuteSQLStatementWithoutReturnValue(ss);
         UpdateAccountValue(account, value);
+
+        if (targetAccount.has_value()) {
+            int32_t firstID = GetMaxTransactionID().value();
+            int32_t secondID = firstID + 1;
+
+            CreateNewTransaction(description, targetAccount.value(), value * -1, date, labelID, std::nullopt);
+            UpdateConnectedTransaction(firstID, secondID);
+            UpdateConnectedTransaction(secondID, firstID);
+        }
     }
 
     void Database::DeleteAccount(int const accountID)
@@ -360,6 +369,18 @@ namespace DataHandler
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
 
+    void Database::UpdateConnectedTransaction(int32_t transactionID, std::optional<int32_t> connectedTransactionID)
+    {
+        std::stringstream ss;
+        ss << UPDATE_CONNECTED_TRANSACTION_PART_1;
+        ss << ((connectedTransactionID.has_value()) ? std::to_string(connectedTransactionID.value()) : "NULL");
+        ss << UPDATE_CONNECTED_TRANSACTION_PART_2;
+        ss << transactionID;
+        ss << UPDATE_CONNECTED_TRANSACTION_PART_3;
+
+        ExecuteSQLStatementWithoutReturnValue(ss);
+    }
+
     void Database::UpdateLabel(int const labelID, std::string const& name, int const color)
     {
         std::stringstream ss;
@@ -447,6 +468,17 @@ namespace DataHandler
         ss << UPDATE_TRANSACTION_PART_10;
 
         ExecuteSQLStatementWithoutReturnValue(ss);
+    }
+
+    std::optional<int32_t> Database::GetMaxTransactionID()
+    {
+        std::stringstream ss;
+        ss << GET_MAX_TRANSACTION_ID;
+
+        std::optional<int32_t> transactionID = std::nullopt;
+        ExecuteSQLStatementWithReturnValue(ss, CBF_GetMaxTransactionID, &transactionID);
+
+        return transactionID;
     }
 
     // TODO: define callback functions statically
@@ -537,6 +569,15 @@ namespace DataHandler
             std::optional<std::string>* valuePtr = static_cast<std::optional<std::string>*>(data);
             if (argc == 1 && std::string(azColName[0]) == OPTION_VALUE) {
                 *valuePtr = std::string(argv[0]);
+            }
+            return 0;
+        };
+
+        CBF_GetMaxTransactionID = [](void* data, int argc, char** argv, char** azColName) {
+            std::optional<int32_t>* valuePtr = static_cast<std::optional<int32_t>*>(data);
+            if (argc == 1 && argv[0] != NULL)
+            {
+                *valuePtr = atoi(argv[0]);
             }
             return 0;
         };

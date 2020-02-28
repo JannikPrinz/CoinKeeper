@@ -71,6 +71,7 @@ static const std::string GET_ACCOUNT_VALUE_PART_1 = "PRAGMA foreign_keys = ON; S
 static const std::string GET_ACCOUNT_VALUE_PART_2 = ";";
 static const std::string GET_EXECUTABLE_STANDING_ORDERS_PART_1 = "PRAGMA foreign_keys = ON; SELECT * FROM StandingOrders WHERE NextDate <= ";
 static const std::string GET_EXECUTABLE_STANDING_ORDERS_PART_2 = ";";
+static const std::string GET_MAX_TRANSACTION_ID = "PRAGMA foreign_keys = ON; SELECT MAX(TransactionID) FROM Transactions;";
 static const std::string GET_OPTION_PART_1 = "PRAGMA foreign_keys = ON; SELECT OptionValue FROM Options WHERE OptionID IS ";
 static const std::string GET_OPTION_PART_2 = ";";
 static const std::string GET_TRANSACTIONS_M_Y_PART_1 = "PRAGMA foreign_keys = ON; SELECT * FROM Transactions WHERE Month IS ";
@@ -94,6 +95,9 @@ static const std::string UPDATE_ACCOUNT_VALUE_PART_1 = "PRAGMA foreign_keys = ON
 static const std::string UPDATE_ACCOUNT_VALUE_PART_2 = ", NK = ";
 static const std::string UPDATE_ACCOUNT_VALUE_PART_3 = " WHERE AccountID IS ";
 static const std::string UPDATE_ACCOUNT_VALUE_PART_4 = ";";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_1 = "PRAGMA foreign_keys = ON; UPDATE Transactions SET ConnectedTransactionID = ";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_2 = " WHERE TransactionID IS ";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_3 = ";";
 static const std::string UPDATE_LABEL_PART_1 = "PRAGMA foreign_keys = ON; UPDATE Labels SET Name = \"";
 static const std::string UPDATE_LABEL_PART_2 = "\", Color = ";
 static const std::string UPDATE_LABEL_PART_3 = " WHERE LabelID IS ";

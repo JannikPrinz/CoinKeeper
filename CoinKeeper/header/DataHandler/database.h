@@ -195,6 +195,11 @@ namespace DataHandler
          */
         void UpdateAccountValue(int accountID, DataClasses::Value const& value);
         /*
+         * This method set the connectedTransactionID of a given transaction. If std::nullopt is given as
+         * a parameter, NULL is inserted (to remove existing connections).
+         */
+        void UpdateConnectedTransaction(int32_t transactionID, std::optional<int32_t> connectedTransactionID);
+        /*
          * This method changes the name and the color of the specified label with given parameters
          *
          * Parameters:
@@ -230,7 +235,7 @@ namespace DataHandler
         void UpdateStandingOrderDate(int orderID, int date);
         /*
          * This method updates an existing transaction at the given profile with the given parameters.
-         * Tthe value of the account will not be changed within this method!
+         * The value of the account will not be changed within this method!
          *
          * Parameters:
          * int transactionID              : id of the transaction
@@ -243,6 +248,7 @@ namespace DataHandler
         void UpdateTransaction(int transactionID, std::string const& description, int accountID, DataClasses::Value const& value, QDate const& date, int labelID);
 
     private:
+        std::optional<int32_t> GetMaxTransactionID();
         void InitializeCallbackFunctions();
         void UpdateDBVersion();
         void ExecuteSQLStatementWithoutReturnValue(std::stringstream const& ss) const;
@@ -256,5 +262,6 @@ namespace DataHandler
         CallbackFunction CBF_GetStandingOrders;
         CallbackFunction CBF_GetLabels;
         CallbackFunction CBF_GetOption;
+        CallbackFunction CBF_GetMaxTransactionID;
     };
 }

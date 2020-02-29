@@ -39,15 +39,6 @@ public:
     QHBoxLayout *horizontalLayout_7;
     QLabel *lblLabel;
     QComboBox *comboBoxChooseLabel;
-    QWidget *widget;
-    QHBoxLayout *horizontalLayout_6;
-    QGroupBox *groupBoxInternalTransaction;
-    QVBoxLayout *verticalLayout_3;
-    QCheckBox *checkBoxActivateInternalTransaction;
-    QWidget *widgetTargetAccount;
-    QHBoxLayout *horizontalLayout_9;
-    QLabel *lblTargetAccount;
-    QComboBox *comboBoxChooseTargetAccount;
     QWidget *widgetValueDateDescription;
     QHBoxLayout *horizontalLayout_4;
     QWidget *widgetValueDescription;
@@ -65,6 +56,15 @@ public:
     QLabel *lblDescription;
     QPlainTextEdit *textEditDescription;
     QCalendarWidget *calendarWidget;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_6;
+    QGroupBox *groupBoxInternalTransaction;
+    QVBoxLayout *verticalLayout_3;
+    QCheckBox *checkBoxActivateInternalTransaction;
+    QWidget *widgetTargetAccount;
+    QHBoxLayout *horizontalLayout_9;
+    QLabel *lblTargetAccount;
+    QComboBox *comboBoxChooseTargetAccount;
     QWidget *widgetButtons;
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer_3;
@@ -135,63 +135,6 @@ public:
 
         verticalLayout->addWidget(widgetLabel);
 
-        widget = new QWidget(AddTransactionWindow);
-        widget->setObjectName(QStringLiteral("widget"));
-        horizontalLayout_6 = new QHBoxLayout(widget);
-        horizontalLayout_6->setSpacing(6);
-        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
-        groupBoxInternalTransaction = new QGroupBox(widget);
-        groupBoxInternalTransaction->setObjectName(QStringLiteral("groupBoxInternalTransaction"));
-        QFont font1;
-        font1.setFamily(QStringLiteral("Arial"));
-        font1.setPointSize(10);
-        font1.setBold(true);
-        font1.setWeight(75);
-        groupBoxInternalTransaction->setFont(font1);
-        verticalLayout_3 = new QVBoxLayout(groupBoxInternalTransaction);
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
-        checkBoxActivateInternalTransaction = new QCheckBox(groupBoxInternalTransaction);
-        checkBoxActivateInternalTransaction->setObjectName(QStringLiteral("checkBoxActivateInternalTransaction"));
-        checkBoxActivateInternalTransaction->setFont(font1);
-
-        verticalLayout_3->addWidget(checkBoxActivateInternalTransaction);
-
-        widgetTargetAccount = new QWidget(groupBoxInternalTransaction);
-        widgetTargetAccount->setObjectName(QStringLiteral("widgetTargetAccount"));
-        horizontalLayout_9 = new QHBoxLayout(widgetTargetAccount);
-        horizontalLayout_9->setSpacing(6);
-        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
-        horizontalLayout_9->setContentsMargins(0, -1, 0, -1);
-        lblTargetAccount = new QLabel(widgetTargetAccount);
-        lblTargetAccount->setObjectName(QStringLiteral("lblTargetAccount"));
-        lblTargetAccount->setEnabled(false);
-        lblTargetAccount->setMaximumSize(QSize(85, 16777215));
-        lblTargetAccount->setFont(font);
-
-        horizontalLayout_9->addWidget(lblTargetAccount);
-
-        comboBoxChooseTargetAccount = new QComboBox(widgetTargetAccount);
-        comboBoxChooseTargetAccount->addItem(QString());
-        comboBoxChooseTargetAccount->setObjectName(QStringLiteral("comboBoxChooseTargetAccount"));
-        comboBoxChooseTargetAccount->setEnabled(false);
-        comboBoxChooseTargetAccount->setFont(font);
-        comboBoxChooseTargetAccount->setDuplicatesEnabled(true);
-
-        horizontalLayout_9->addWidget(comboBoxChooseTargetAccount);
-
-
-        verticalLayout_3->addWidget(widgetTargetAccount);
-
-
-        horizontalLayout_6->addWidget(groupBoxInternalTransaction);
-
-
-        verticalLayout->addWidget(widget);
-
         widgetValueDateDescription = new QWidget(AddTransactionWindow);
         widgetValueDateDescription->setObjectName(QStringLiteral("widgetValueDateDescription"));
         horizontalLayout_4 = new QHBoxLayout(widgetValueDateDescription);
@@ -212,9 +155,14 @@ public:
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalLayout_2->setContentsMargins(0, -1, 0, -1);
+        horizontalLayout_2->setContentsMargins(0, 0, 0, -1);
         lblValue = new QLabel(widgetValue);
         lblValue->setObjectName(QStringLiteral("lblValue"));
+        QFont font1;
+        font1.setFamily(QStringLiteral("Arial"));
+        font1.setPointSize(10);
+        font1.setBold(true);
+        font1.setWeight(75);
         lblValue->setFont(font1);
 
         horizontalLayout_2->addWidget(lblValue);
@@ -283,13 +231,65 @@ public:
 
         calendarWidget = new QCalendarWidget(widgetValueDateDescription);
         calendarWidget->setObjectName(QStringLiteral("calendarWidget"));
-        calendarWidget->setMinimumSize(QSize(251, 191));
+        calendarWidget->setMinimumSize(QSize(320, 191));
         calendarWidget->setGridVisible(true);
 
         horizontalLayout_4->addWidget(calendarWidget);
 
 
         verticalLayout->addWidget(widgetValueDateDescription);
+
+        widget = new QWidget(AddTransactionWindow);
+        widget->setObjectName(QStringLiteral("widget"));
+        horizontalLayout_6 = new QHBoxLayout(widget);
+        horizontalLayout_6->setSpacing(6);
+        horizontalLayout_6->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
+        groupBoxInternalTransaction = new QGroupBox(widget);
+        groupBoxInternalTransaction->setObjectName(QStringLiteral("groupBoxInternalTransaction"));
+        groupBoxInternalTransaction->setFont(font1);
+        verticalLayout_3 = new QVBoxLayout(groupBoxInternalTransaction);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
+        checkBoxActivateInternalTransaction = new QCheckBox(groupBoxInternalTransaction);
+        checkBoxActivateInternalTransaction->setObjectName(QStringLiteral("checkBoxActivateInternalTransaction"));
+        checkBoxActivateInternalTransaction->setFont(font1);
+
+        verticalLayout_3->addWidget(checkBoxActivateInternalTransaction);
+
+        widgetTargetAccount = new QWidget(groupBoxInternalTransaction);
+        widgetTargetAccount->setObjectName(QStringLiteral("widgetTargetAccount"));
+        horizontalLayout_9 = new QHBoxLayout(widgetTargetAccount);
+        horizontalLayout_9->setSpacing(6);
+        horizontalLayout_9->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        horizontalLayout_9->setContentsMargins(0, -1, 0, -1);
+        lblTargetAccount = new QLabel(widgetTargetAccount);
+        lblTargetAccount->setObjectName(QStringLiteral("lblTargetAccount"));
+        lblTargetAccount->setEnabled(false);
+        lblTargetAccount->setMaximumSize(QSize(160, 16777215));
+        lblTargetAccount->setFont(font);
+
+        horizontalLayout_9->addWidget(lblTargetAccount);
+
+        comboBoxChooseTargetAccount = new QComboBox(widgetTargetAccount);
+        comboBoxChooseTargetAccount->addItem(QString());
+        comboBoxChooseTargetAccount->setObjectName(QStringLiteral("comboBoxChooseTargetAccount"));
+        comboBoxChooseTargetAccount->setEnabled(false);
+        comboBoxChooseTargetAccount->setFont(font);
+        comboBoxChooseTargetAccount->setDuplicatesEnabled(true);
+
+        horizontalLayout_9->addWidget(comboBoxChooseTargetAccount);
+
+
+        verticalLayout_3->addWidget(widgetTargetAccount);
+
+
+        horizontalLayout_6->addWidget(groupBoxInternalTransaction);
+
+
+        verticalLayout->addWidget(widget);
 
         widgetButtons = new QWidget(AddTransactionWindow);
         widgetButtons->setObjectName(QStringLiteral("widgetButtons"));
@@ -321,15 +321,15 @@ public:
         verticalLayout->addWidget(widgetButtons);
 
         QWidget::setTabOrder(comboBoxChooseAccount, comboBoxChooseLabel);
-        QWidget::setTabOrder(comboBoxChooseLabel, checkBoxActivateInternalTransaction);
-        QWidget::setTabOrder(checkBoxActivateInternalTransaction, comboBoxChooseTargetAccount);
-        QWidget::setTabOrder(comboBoxChooseTargetAccount, radioButtonPositiv);
+        QWidget::setTabOrder(comboBoxChooseLabel, radioButtonPositiv);
         QWidget::setTabOrder(radioButtonPositiv, radioButtonNegativ);
         QWidget::setTabOrder(radioButtonNegativ, spinBoxVK);
         QWidget::setTabOrder(spinBoxVK, spinBoxNK);
         QWidget::setTabOrder(spinBoxNK, textEditDescription);
         QWidget::setTabOrder(textEditDescription, calendarWidget);
-        QWidget::setTabOrder(calendarWidget, buttonAddTransaction);
+        QWidget::setTabOrder(calendarWidget, checkBoxActivateInternalTransaction);
+        QWidget::setTabOrder(checkBoxActivateInternalTransaction, comboBoxChooseTargetAccount);
+        QWidget::setTabOrder(comboBoxChooseTargetAccount, buttonAddTransaction);
         QWidget::setTabOrder(buttonAddTransaction, buttonCancel);
 
         retranslateUi(AddTransactionWindow);
@@ -348,16 +348,16 @@ public:
         comboBoxChooseAccount->setItemText(0, QApplication::translate("AddTransactionWindow", "Konto ausw\303\244hlen", nullptr));
 
         lblLabel->setText(QApplication::translate("AddTransactionWindow", "Kategorie:", nullptr));
-        groupBoxInternalTransaction->setTitle(QApplication::translate("AddTransactionWindow", "Profilinterne Transaktion", nullptr));
-        checkBoxActivateInternalTransaction->setText(QApplication::translate("AddTransactionWindow", "Aktivieren", nullptr));
-        lblTargetAccount->setText(QApplication::translate("AddTransactionWindow", "Ziel-Konto:", nullptr));
-        comboBoxChooseTargetAccount->setItemText(0, QApplication::translate("AddTransactionWindow", "Konto ausw\303\244hlen", nullptr));
-
         lblValue->setText(QApplication::translate("AddTransactionWindow", "Wert:", nullptr));
         radioButtonPositiv->setText(QApplication::translate("AddTransactionWindow", "+", nullptr));
         radioButtonNegativ->setText(QApplication::translate("AddTransactionWindow", "-", nullptr));
         label_3->setText(QApplication::translate("AddTransactionWindow", ",", nullptr));
         lblDescription->setText(QApplication::translate("AddTransactionWindow", "Beschreibung:", nullptr));
+        groupBoxInternalTransaction->setTitle(QApplication::translate("AddTransactionWindow", "Profilinterne Transaktion", nullptr));
+        checkBoxActivateInternalTransaction->setText(QApplication::translate("AddTransactionWindow", "Aktivieren", nullptr));
+        lblTargetAccount->setText(QApplication::translate("AddTransactionWindow", "Verbundenes Konto:", nullptr));
+        comboBoxChooseTargetAccount->setItemText(0, QApplication::translate("AddTransactionWindow", "Konto ausw\303\244hlen", nullptr));
+
         buttonAddTransaction->setText(QApplication::translate("AddTransactionWindow", "Transaktion hinzuf\303\274gen", nullptr));
         buttonCancel->setText(QApplication::translate("AddTransactionWindow", "Abbrechen", nullptr));
     } // retranslateUi

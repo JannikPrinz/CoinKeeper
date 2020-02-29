@@ -94,11 +94,9 @@ namespace DataHandler
          *
          * Parameters:
          * int transactionID       : id of the transaction, which gets deleted
-         * bool changeAccountValue : if true, the value of the given account gets changed by the given value
-         * int accountID           : id of the account, where the given value gets added if wanted (default = 0)
-         * Value const& value      : value which gets added to the given account if wanted (default = 0)
+         * bool changeAccountValue : if true, the change of the given account gets undone
          */
-        void DeleteTransaction(int transactionID, bool changeAccountValue, int accountID = 0, DataClasses::Value const& value = DataClasses::Value(0));
+        void DeleteTransaction(int transactionID, bool changeAccountValue);
         /*
          * This method returns all accounts of the given profile
          *
@@ -154,6 +152,10 @@ namespace DataHandler
          */
         [[nodiscard]]
         std::optional<std::string> GetOption(Options option);
+        /*
+         * This method return the transaction specified by the given transactionID, if existend.
+         */
+        std::optional<DataClasses::Transaction> GetTransaction(int32_t transactionID);
         /*
          * This method returns transactions of the given profile with the given restrictions, but with no account-restriction.
          *
@@ -257,6 +259,7 @@ namespace DataHandler
     private:
         std::string openProfile;
         CallbackFunction CBF_GetAccountValue;
+        CallbackFunction CBF_GetTransaction;
         CallbackFunction CBF_GetTransactions;
         CallbackFunction CBF_GetAccounts;
         CallbackFunction CBF_GetStandingOrders;

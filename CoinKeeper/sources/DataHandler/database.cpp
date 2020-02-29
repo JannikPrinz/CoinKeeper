@@ -181,10 +181,11 @@ namespace DataHandler
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
 
-    void Database::DeleteTransaction(int const transactionID, bool const changeAccountValue, int const accountID, Value const& value)
+    void Database::DeleteTransaction(int const transactionID, bool const changeAccountValue)
     {
         if (changeAccountValue) {
-            UpdateAccountValue(accountID, value);
+            auto transactionOpt = GetTransaction(transactionID);
+            UpdateAccountValue(transactionOpt->AccountId, transactionOpt->TransactionValue * -1);
         }
 
         std::stringstream ss;
@@ -284,6 +285,19 @@ namespace DataHandler
         ExecuteSQLStatementWithReturnValue(ss, CBF_GetOption, static_cast<void*>(&value));
 
         return value;
+    }
+
+    std::optional<DataClasses::Transaction> Database::GetTransaction(int32_t transactionID)
+    {
+        std::stringstream ss;
+        ss << GET_TRANSACTION_PART_1;
+        ss << transactionID;
+        ss << GET_TRANSACTION_PART_2;
+
+        std::optional<DataClasses::Transaction> transaction = std::nullopt;
+        ExecuteSQLStatementWithReturnValue(ss, CBF_GetTransaction, static_cast<void*>(&transaction));
+
+        return transaction;
     }
 
     TransactionVector Database::GetTransactions(int const month, int const year)
@@ -488,6 +502,26 @@ namespace DataHandler
             Value* valuePtr = static_cast<Value*>(data);
             if (argc > 1 && std::string(azColName[0]) == ACCOUNTS_VK && std::string(azColName[1]) == ACCOUNTS_NK) {
                 *valuePtr = Value(atoi(argv[0]), atoi(argv[1]));
+            }
+            return 0;
+        };
+
+        CBF_GetTransaction = [](void* data, int argc, char** argv, char** azColName) {
+            std::optional<DataClasses::Transaction>* transactionPtr = static_cast<std::optional<DataClasses::Transaction>*>(data);
+            if (argc == 10 && std::string(azColName[0]) == TRANSACTIONS_ID && std::string(azColName[1]) == TRANSACTIONS_DESCRIPTION &&
+                std::string(azColName[2]) == TRANSACTIONS_VK && std::string(azColName[3]) == TRANSACTIONS_NK &&
+                std::string(azColName[4]) == TRANSACTIONS_DAY && std::string(azColName[5]) == TRANSACTIONS_MONTH &&
+                std::string(azColName[6]) == TRANSACTIONS_YEAR && std::string(azColName[7]) == ACCOUNTS_ID &&
+                std::string(azColName[8]) == LABEL_ID && std::string(azColName[9]) == TRANSACTION_CONNECTED_TRANSACTION_ID)
+            {
+                QDate date;
+                date.setDate(atoi(argv[6]), atoi(argv[5]), atoi(argv[4]));
+                std::optional<int32_t> connectedTransaction = std::nullopt;
+                if (argv[9] != NULL) {
+                    connectedTransaction = atoi(argv[9]);
+                }
+                *transactionPtr = DataClasses::Transaction(atoi(argv[0]), std::string(argv[1]), Value(atoi(argv[2]),
+                    atoi(argv[3])), date, atoi(argv[7]), atoi(argv[8]), connectedTransaction);
             }
             return 0;
         };

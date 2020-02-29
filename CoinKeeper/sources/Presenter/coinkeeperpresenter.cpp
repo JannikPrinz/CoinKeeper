@@ -75,25 +75,58 @@ namespace Presenter
     void CoinKeeperPresenter::DeleteTransaction()
     {
         int row = view->GetSelectedRowTableMonthOverview();
-        if (row >= 0) {
-            auto const& transaction = currentTransactions[row];
-            QMessageBox msg;
-            msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
-            msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
+        if (row < 0) {
+            return;
+        }
+
+        auto const& transaction = currentTransactions[row];
+        QMessageBox msg;
+        msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
+
+        bool deleteConnectedTransaction = false;
+        if (transaction.ConnectedTransactionId.has_value()) {
+            msg.setText(QString::fromStdString(TEXT_QUESTION_DELETE_CONNECTED_TRANSACTION));
+
             switch (msg.exec()) {
             case QMessageBox::Yes:
-                database->DeleteTransaction(transaction.TransactionId, true, transaction.AccountId, transaction.TransactionValue * -1);
+                deleteConnectedTransaction = true;
                 break;
             case QMessageBox::No:
-                database->DeleteTransaction(transaction.TransactionId, false);
+                deleteConnectedTransaction = false;
                 break;
             case QMessageBox::Abort:
-                break;
             default:
-                break;
+                return;
             }
-            RefreshWindow();
         }
+
+        bool undoAccountValueChange = false;
+        msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
+
+        switch (msg.exec()) {
+        case QMessageBox::Yes:
+            undoAccountValueChange = true;
+            break;
+        case QMessageBox::No:
+            undoAccountValueChange = false;
+            break;
+        case QMessageBox::Abort:
+        default:
+            return;
+        }
+
+        if (transaction.ConnectedTransactionId.has_value()) {
+            database->UpdateConnectedTransaction(transaction.TransactionId, std::nullopt);
+            database->UpdateConnectedTransaction(transaction.ConnectedTransactionId.value(), std::nullopt);
+        }
+
+        database->DeleteTransaction(transaction.TransactionId, undoAccountValueChange);
+
+        if (deleteConnectedTransaction) {
+            database->DeleteTransaction(transaction.ConnectedTransactionId.value(), undoAccountValueChange);
+        }
+
+        RefreshWindow();
     }
 
     void CoinKeeperPresenter::DeleteAccount()

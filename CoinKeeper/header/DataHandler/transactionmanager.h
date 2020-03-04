@@ -33,7 +33,7 @@ namespace DataHandler
 
     private:
         void CreateTransaction();
-        void UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const DataClasses::Value& oldValue);
+        void UpdateTransactionInDatabase(DataClasses::Transaction const& oldTransaction);
         void UpdateEnabledElements();
 
     private:

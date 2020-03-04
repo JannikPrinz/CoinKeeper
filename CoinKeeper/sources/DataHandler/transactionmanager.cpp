@@ -40,25 +40,38 @@ namespace DataHandler
         addTransactionWindow = std::make_unique<Ui::AddTransactionWindow>();
         QDialog dialog;
         addTransactionWindow->setupUi(&dialog);
-        int preSelectRow = 0;
+        int preSelectRow = -1;
+        int preSelectTargetAccountRow = -1;
         addTransactionWindow->comboBoxChooseAccount->clear();        // remove the "select account" value.
+        addTransactionWindow->comboBoxChooseTargetAccount->clear();
+
+        std::optional<DataClasses::Transaction> connectedTransaction = std::nullopt;
+        if (transaction.ConnectedTransactionId.has_value()) {
+            connectedTransaction = database->GetTransaction(transaction.ConnectedTransactionId.value());
+        }
 
         for (int i = 0; i < currentAccounts.size(); i++) {
             addTransactionWindow->comboBoxChooseAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
+            addTransactionWindow->comboBoxChooseTargetAccount->addItem(QString::fromStdString(std::get<1>(currentAccounts[i])));
             if (std::get<0>(currentAccounts[i]) == transaction.AccountId) {
                 preSelectRow = i;
             }
-        }
 
+            if (transaction.ConnectedTransactionId.has_value() && std::get<0>(currentAccounts[i]) == connectedTransaction.value().AccountId) {
+                preSelectTargetAccountRow = i;
+            }
+        }
         addTransactionWindow->comboBoxChooseAccount->setCurrentIndex(preSelectRow);
+        addTransactionWindow->comboBoxChooseTargetAccount->setCurrentIndex(preSelectTargetAccountRow);
+
         for (int i = 0; i < currentLabels.size(); i++) {
             addTransactionWindow->comboBoxChooseLabel->addItem(QString::fromStdString(std::get<1>(currentLabels[i])));
             if (std::get<0>(currentLabels[i]) == transaction.LabelId) {
                 preSelectRow = i;
             }
         }
-
         addTransactionWindow->comboBoxChooseLabel->setCurrentIndex(preSelectRow);
+
         addTransactionWindow->calendarWidget->setSelectedDate(transaction.Date);
         addTransactionWindow->textEditDescription->setPlainText(QString::fromStdString(transaction.Description));
 
@@ -75,33 +88,90 @@ namespace DataHandler
             addTransactionWindow->radioButtonPositiv->setChecked(true);
         }
 
+        addTransactionWindow->checkBoxActivateInternalTransaction->setEnabled(false);
+        if (transaction.ConnectedTransactionId.has_value()) {
+            addTransactionWindow->checkBoxActivateInternalTransaction->setChecked(true);
+        }
+
         addTransactionWindow->buttonAddTransaction->setText(QString::fromStdString(TEXT_CHANGE_TRANSACTION));
+        dialog.setWindowTitle(QString::fromStdString(TEXT_CHANGE_TRANSACTION));
         connect(addTransactionWindow->buttonAddTransaction, &QPushButton::clicked, this, [this, transaction] {
-            UpdateTransactionInDatabase(transaction.TransactionId, transaction.AccountId, transaction.TransactionValue);
+            UpdateTransactionInDatabase(transaction);
         });
         dialog.exec();
     }
 
-    void TransactionManager::UpdateTransactionInDatabase(const int& transactionID, const int& oldAccountID, const Value& oldValue)
+    void TransactionManager::UpdateTransactionInDatabase(DataClasses::Transaction const& oldTransaction)
     {
         int selectedAccount = addTransactionWindow->comboBoxChooseAccount->currentIndex();
+        int selectedTargetAccount = addTransactionWindow->comboBoxChooseTargetAccount->currentIndex();
         int selectedLabel = addTransactionWindow->comboBoxChooseLabel->currentIndex();
         Value value = Value(addTransactionWindow->spinBoxVK->value(), addTransactionWindow->spinBoxNK->value());
         if (addTransactionWindow->radioButtonNegativ->isChecked()) {
             value *= -1;
         }
 
-        // check if the selected account changed:
-        if (oldAccountID != std::get<0>(currentAccounts[selectedAccount])) {
-            database->UpdateAccountValue(oldAccountID, oldValue * -1);
-            database->UpdateAccountValue(std::get<0>(currentAccounts[selectedAccount]), value);
-        }
-        else if (oldValue != value) {
-            database->UpdateAccountValue(oldAccountID, value - oldValue);
+        bool accountChanged = oldTransaction.AccountId != std::get<0>(currentAccounts[selectedAccount]);
+        bool valueChanged = oldTransaction.TransactionValue != value;
+        bool isInternalTransaction = oldTransaction.ConnectedTransactionId.has_value();
+        bool removeConnectionBetweenTransactions = false;
+
+        if (isInternalTransaction && accountChanged) {
+            QMessageBox msg;
+            msg.setStandardButtons(QMessageBox::Ok | QMessageBox::Abort);
+            msg.setText(QString::fromStdString(TEXT_CONFIRMATION_REMOVE_CONNECTED_ACCOUNT_ON_ACCOUNT_CHANGE_ON_TRANSACTION_CHANGE));
+
+            switch (msg.exec()) {
+            case QMessageBox::Ok:
+                removeConnectionBetweenTransactions = true;
+                break;
+            case QMessageBox::Abort:
+            default:
+                return;
+            }
         }
 
-        database->UpdateTransaction(transactionID, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
+        if (isInternalTransaction && valueChanged && !removeConnectionBetweenTransactions)
+        {
+            QMessageBox msg;
+            msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
+            msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_CONNECTED_TRANSACTION));
+
+            switch (msg.exec()) {
+            case QMessageBox::Yes:
+                database->UpdateAccountValue(std::get<0>(currentAccounts[selectedTargetAccount]), (value - oldTransaction.TransactionValue) * -1);
+                break;
+            case QMessageBox::No:
+                removeConnectionBetweenTransactions = true;
+                break;
+            case QMessageBox::Abort:
+            default:
+                return;
+            }
+        }
+
+        if (removeConnectionBetweenTransactions) {
+            database->UpdateConnectedTransaction(oldTransaction.TransactionId, std::nullopt);
+            database->UpdateConnectedTransaction(oldTransaction.ConnectedTransactionId.value(), std::nullopt);
+        }
+
+        if (accountChanged) {
+            database->UpdateAccountValue(oldTransaction.AccountId, oldTransaction.TransactionValue * -1);
+            database->UpdateAccountValue(std::get<0>(currentAccounts[selectedAccount]), value);
+        }
+        else if (valueChanged) {
+            database->UpdateAccountValue(oldTransaction.AccountId, value - oldTransaction.TransactionValue);
+        }
+
+        database->UpdateTransaction(oldTransaction.TransactionId, addTransactionWindow->textEditDescription->toPlainText().toStdString(),
             std::get<0>(currentAccounts[selectedAccount]), value, addTransactionWindow->calendarWidget->selectedDate(), std::get<0>(currentLabels[selectedLabel]));
+
+        if (isInternalTransaction && !removeConnectionBetweenTransactions) {
+            database->UpdateTransaction(oldTransaction.ConnectedTransactionId.value(), addTransactionWindow->textEditDescription->toPlainText().toStdString(),
+                std::get<0>(currentAccounts[selectedTargetAccount]), value * -1, addTransactionWindow->calendarWidget->selectedDate(),
+                std::get<0>(currentLabels[selectedLabel]));
+        }
+
         addTransactionWindow->buttonCancel->click();
     }
 

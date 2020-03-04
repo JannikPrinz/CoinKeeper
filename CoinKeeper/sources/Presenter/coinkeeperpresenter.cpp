@@ -101,7 +101,7 @@ namespace Presenter
         }
 
         bool undoAccountValueChange = false;
-        msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION));
+        msg.setText(QString::fromStdString(TEXT_QUESTION_MODIFY_ACCOUNT_ON_TRANSACTION_DELETION));
 
         switch (msg.exec()) {
         case QMessageBox::Yes:

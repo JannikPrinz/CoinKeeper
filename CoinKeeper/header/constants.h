@@ -7,6 +7,15 @@
 #include <tuple>
 #include <vector>
 
+#include "DataClasses/transaction.h"
+
+enum class Options
+{
+    DB_Version = 1
+};
+
+static const int32_t LATEST_DB_VERSION = 2;
+
 /*        german characters, UTF-8 octal coded:
 -----------------------------------------------------------------------------
     ä : \303\244
@@ -20,12 +29,16 @@
 */
 
 static const std::string DATABASE_FILETYPE = "ckdb";
-static const std::string CREATE_TABLES_OF_A_PROFILE = "PRAGMA foreign_keys = ON; CREATE TABLE IF NOT EXISTS Accounts (AccountID INTEGER PRIMARY KEY, Name TEXT, VK INTEGER, NK INTEGER); CREATE TABLE IF NOT EXISTS Labels (LabelID INTEGER PRIMARY KEY, Name TEXT, Color INTEGER); CREATE TABLE IF NOT EXISTS Transactions (TransactionID INTEGER PRIMARY KEY, Description TEXT, VK INTEGER, NK INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID)); CREATE TABLE IF NOT EXISTS Options (OptionID INTEGER PRIMARY KEY, OptionValue TEXT); CREATE TABLE IF NOT EXISTS StandingOrders (OrderID INTEGER PRIMARY KEY, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), VK INTEGER, NK INTEGER, Description TEXT, OrderType INTEGER, NextDate INTEGER);";
-static const std::string INSERT_DEFAULT_VALUES = "PRAGMA foreign_keys = ON; INSERT INTO Labels (LabelID, Name, Color) VALUES (1, \"Default\", -1); INSERT INTO Accounts (Name, VK, NK) VALUES (\"Bargeld\", 0, 0);";
+static const std::string ALTER_DB_FROM_VERSION_1_TO_2 = "PRAGMA foreign_keys = ON; ALTER TABLE Transactions ADD COLUMN ConnectedTransactionID INTEGER REFERENCES Transactions (TransactionID);";
+static const std::string CREATE_TABLES_OF_A_PROFILE = "PRAGMA foreign_keys = ON; CREATE TABLE IF NOT EXISTS Accounts (AccountID INTEGER PRIMARY KEY, Name TEXT, VK INTEGER, NK INTEGER); CREATE TABLE IF NOT EXISTS Labels (LabelID INTEGER PRIMARY KEY, Name TEXT, Color INTEGER); CREATE TABLE IF NOT EXISTS Transactions (TransactionID INTEGER PRIMARY KEY, Description TEXT, VK INTEGER, NK INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), ConnectedTransactionID INTEGER REFERENCES Transactions (TransactionID)); CREATE TABLE IF NOT EXISTS Options (OptionID INTEGER PRIMARY KEY, OptionValue TEXT); CREATE TABLE IF NOT EXISTS StandingOrders (OrderID INTEGER PRIMARY KEY, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), VK INTEGER, NK INTEGER, Description TEXT, OrderType INTEGER, NextDate INTEGER);";
+static const std::string INSERT_DEFAULT_VALUES = std::string("PRAGMA foreign_keys = ON; INSERT INTO Labels (LabelID, Name, Color) VALUES (1, \"Default\", -1); INSERT INTO Accounts (Name, VK, NK) VALUES (\"Bargeld\", 0, 0); INSERT INTO Options (OptionID, OptionValue) VALUES (") + std::to_string(static_cast<int32_t>(Options::DB_Version)) + ", \"" + std::to_string(LATEST_DB_VERSION) + "\");";
 static const std::string INSERT_NEW_ACCOUNT_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO Accounts (Name, VK, NK) VALUES (\"";
 static const std::string INSERT_NEW_ACCOUNT_PART_2 = "\", ";
 static const std::string INSERT_NEW_ACCOUNT_PART_3 = ", ";
 static const std::string INSERT_NEW_ACCOUNT_PART_4 = ");";
+static const std::string INSERT_NEW_OPTION_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO Options (OptionID, OptionValue) VALUES (";
+static const std::string INSERT_NEW_OPTION_PART_2 = ", \"";
+static const std::string INSERT_NEW_OPTION_PART_3 = "\");";
 static const std::string INSERT_NEW_TRANSACTION_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO Transactions (Description, VK, NK, Day, Month, Year, AccountID, LabelID) VALUES (\"";
 static const std::string INSERT_NEW_TRANSACTION_PART_2 = "\", ";
 static const std::string INSERT_NEW_TRANSACTION_PART_3_TO_8 = ", ";
@@ -58,6 +71,11 @@ static const std::string GET_ACCOUNT_VALUE_PART_1 = "PRAGMA foreign_keys = ON; S
 static const std::string GET_ACCOUNT_VALUE_PART_2 = ";";
 static const std::string GET_EXECUTABLE_STANDING_ORDERS_PART_1 = "PRAGMA foreign_keys = ON; SELECT * FROM StandingOrders WHERE NextDate <= ";
 static const std::string GET_EXECUTABLE_STANDING_ORDERS_PART_2 = ";";
+static const std::string GET_MAX_TRANSACTION_ID = "PRAGMA foreign_keys = ON; SELECT MAX(TransactionID) FROM Transactions;";
+static const std::string GET_OPTION_PART_1 = "PRAGMA foreign_keys = ON; SELECT OptionValue FROM Options WHERE OptionID IS ";
+static const std::string GET_OPTION_PART_2 = ";";
+static const std::string GET_TRANSACTION_PART_1 = "PRAGMA foreign_keys = ON; SELECT * FROM Transactions WHERE TransactionID IS ";
+static const std::string GET_TRANSACTION_PART_2 = ";";
 static const std::string GET_TRANSACTIONS_M_Y_PART_1 = "PRAGMA foreign_keys = ON; SELECT * FROM Transactions WHERE Month IS ";
 static const std::string GET_TRANSACTIONS_M_Y_PART_2 = " AND Year IS ";
 static const std::string GET_TRANSACTIONS_M_Y_PART_3 = ";";
@@ -79,10 +97,16 @@ static const std::string UPDATE_ACCOUNT_VALUE_PART_1 = "PRAGMA foreign_keys = ON
 static const std::string UPDATE_ACCOUNT_VALUE_PART_2 = ", NK = ";
 static const std::string UPDATE_ACCOUNT_VALUE_PART_3 = " WHERE AccountID IS ";
 static const std::string UPDATE_ACCOUNT_VALUE_PART_4 = ";";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_1 = "PRAGMA foreign_keys = ON; UPDATE Transactions SET ConnectedTransactionID = ";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_2 = " WHERE TransactionID IS ";
+static const std::string UPDATE_CONNECTED_TRANSACTION_PART_3 = ";";
 static const std::string UPDATE_LABEL_PART_1 = "PRAGMA foreign_keys = ON; UPDATE Labels SET Name = \"";
 static const std::string UPDATE_LABEL_PART_2 = "\", Color = ";
 static const std::string UPDATE_LABEL_PART_3 = " WHERE LabelID IS ";
 static const std::string UPDATE_LABEL_PART_4 = ";";
+static const std::string UPDATE_OPTION_PART_1 = "PRAGMA foreign_keys = ON; UPDATE Options SET OptionValue = \"";
+static const std::string UPDATE_OPTION_PART_2 = "\" WHERE OptionID IS ";
+static const std::string UPDATE_OPTION_PART_3 = ";";
 static const std::string UPDATE_STANDING_ORDER_PART_1 = "PRAGMA foreign_keys = ON; UPDATE StandingOrders SET AccountID = ";
 static const std::string UPDATE_STANDING_ORDER_PART_2 = ", LabelID = ";
 static const std::string UPDATE_STANDING_ORDER_PART_3 = ", VK = ";
@@ -116,6 +140,7 @@ static const std::string TRANSACTIONS_NK = "NK";
 static const std::string TRANSACTIONS_DAY = "Day";
 static const std::string TRANSACTIONS_MONTH = "Month";
 static const std::string TRANSACTIONS_YEAR = "Year";
+static const std::string TRANSACTION_CONNECTED_TRANSACTION_ID = "ConnectedTransactionID";
 static const std::string LABEL_ID = "LabelID";
 static const std::string LABEL_NAME = "Name";
 static const std::string LABEL_COLOR = "Color";
@@ -125,6 +150,7 @@ static const std::string STANDING_ORDER_NK = "NK";
 static const std::string STANDING_ORDER_DESCRIPTION = "Description";
 static const std::string STANDING_ORDER_TYPE = "OrderType";
 static const std::string STANDING_ORDER_DATE = "NextDate";
+static const std::string OPTION_VALUE = "OptionValue";
 static const std::string TEXT_ACCOUNT_NAME_NEEDED = "Bitte geben Sie einen Namen f\303\274r das Konto an.";
 static const std::string TEXT_ADDED_TRANSACTIONS_PART_1 = "Es wurden ";
 static const std::string TEXT_ADDED_TRANSACTIONS_PART_2 = " Transaktionen durch Dauerauftr\303\244ge hinzugef\303\274gt.";
@@ -134,16 +160,23 @@ static const std::string TEXT_CHANGE_LABEL = "Kategorie \303\244ndern";
 static const std::string TEXT_CHANGE_PROFILE_NAME = "Profilnamen \303\244ndern";
 static const std::string TEXT_CHANGE_STANDING_ORDER = "Dauerauftrag \303\244ndern";
 static const std::string TEXT_CHANGE_TRANSACTION = "Transaktion \303\244ndern";
+static const std::string TEXT_CONFIRMATION_REMOVE_CONNECTED_ACCOUNT_ON_ACCOUNT_CHANGE_ON_TRANSACTION_CHANGE = "Bei dieser Transaktion besteht eine Verbindung zu einer anderen Transaktion. Da ein anderes Konto ausgew\303\244hlt ist, wird diese Verbindung entfernt.";
 static const std::string TEXT_CHOOSE_ACCOUNT_FOR_STANDING_ORDER = "Bitte w\303\244hlen Sie ein Konto aus, auf dem die Transaktionen des Dauerauftrags ausgef\303\274hrt werden soll.";
 static const std::string TEXT_CHOOSE_ACCOUNT_FOR_TRANSACTION = "Bitte w\303\244hlen Sie ein Konto aus, auf dem die Transaktion ausgef\303\274hrt werden soll.";
+static const std::string TEXT_CHOOSE_CONNECTED_ACCOUNT_FOR_TRANSACTION = "Bitte w\303\244hlen Sie ein verbundenes Konto aus, auf dem die entgegengesetzte Transaktion ausgef\303\274hrt werden soll.";
 static const std::string TEXT_CHOOSE_COLOR = "Farbe ausw\303\244hlen";
 static const std::string TEXT_CREATE_NEW_LABEL = "Neue Kategorie erstellen";
 static const std::string TEXT_CREATE_NEW_PROFILE = "Neues Profil erstellen";
+static const std::string TEXT_DB_VERSION_NOT_SUPPORTED_PART_1 = "Datenbankversion des Profils: ";
+static const std::string TEXT_DB_VERSION_NOT_SUPPORTED_PART_2 = "\nMaximal in dieser Programmversion unterst\303\274tzte Version: ";
+static const std::string TEXT_DB_VERSION_UPDATED = "Die Datenbankversion des Profils wurde geupdated zu Version ";
 static const std::string TEXT_DEFAULT_LABEL_NOT_DELETABLE = "Die default-Kategorie kann nicht gel\303\266scht werden.";
 static const std::string TEXT_NAME_ENTRY = "Name:";
 static const std::string TEXT_PROFILE_NAME_ENTRY = "Profilname:";
-static const std::string TEXT_QUESTION_MODIFY_ACCOUNT_AT_TRANSACTION_DELETION = "Soll die \303\204nderung des entsprechenden Kontos auch r\303\274ckg\303\244ngig gemacht werden?";
+static const std::string TEXT_QUESTION_MODIFY_CONNECTED_TRANSACTION = "Mit dieser Transaktion ist eine weitere Transaktion verbunden. Soll diese ebenfalls ge\303\244ndert werden?\nFalls nicht, wird diese Verbindung entfernt.";
+static const std::string TEXT_QUESTION_MODIFY_ACCOUNT_ON_TRANSACTION_DELETION = "Die Transaktion wird gel\303\266scht.\nSoll die \303\204nderung des entsprechenden Kontos auch r\303\274ckg\303\244ngig gemacht werden?";
 static const std::string TEXT_QUESTION_DELETE_ACCOUNT_AND_ALL_CORRESPONDING_TRANSACTIONS_AND_STANDING_ORDERS = "Wollen Sie wirklich das ausgew\303\244hlte Konto und alle damit verbundenen Transaktionen und Dauerauftr\303\244ge l\303\266schen?";
+static const std::string TEXT_QUESTION_DELETE_CONNECTED_TRANSACTION = "Mit dieser Transaktion ist eine weitere Transaktion verbunden. Soll diese ebenfalls gel\303\266scht werden?";
 static const std::string TEXT_QUESTION_DELETE_LABEL = "Wollen Sie die ausgew\303\244hlte Kategorie l\303\266schen? Verbundene Transaktionen und Dauerauftr\303\244ge werden auf die default-Kategorie gesetzt.";
 static const std::string TEXT_QUESTION_DELETE_PROFILE = "Wollen Sie das ausgew\303\244hlte Profil l\303\266schen?";
 static const std::string TEXT_QUESTION_DELETE_STANDING_ORDER = "Wollen Sie den ausgew\303\244hlten Dauerauftrag l\303\266schen? Erzeugte Transaktionen werden nicht gel\303\266scht.";
@@ -196,147 +229,6 @@ static std::string GetStringFromStandingOrderType(StandingOrderType type)
         break;
     }
 }
-
-// TODO remove code from this file
-struct Value
-{
-    int VK;
-    int NK;
-
-    /*
-     * Creates a new instance with the given parameters.
-     *
-     * Parameters:
-     * int vk0 : value before the comma (default = 0)
-     * int nk0 : value after the comma. Should be >= 0 and < 100 (default = 0)
-     */
-    Value(int vk0 = 0, int nk0 = 0) : VK(vk0), NK(nk0) {}
-
-    std::string ToString()
-    {
-        std::string s = "";
-        if (VK < 0 || (VK == 0 && NK < 0)) s.append("-");
-        int v = (VK < 0) ? -VK : VK;
-        std::string d = "";
-        d = std::to_string(v % 10).append(d);
-        v /= 10;
-        int x = 0;
-        while (v > 0)
-        {
-            if (x == 2) d = std::string(".").append(d);
-            d = std::to_string(v % 10).append(d);
-            v /= 10;
-            x++;
-            x %= 3;
-        }
-        s.append(d);
-        s.append(",");
-        if (NK < 0)
-        {
-            if (NK > -10) s.append("0");
-            s.append(std::to_string(-NK));
-        }
-        else
-        {
-            if (NK < 10) s.append("0");
-            s.append(std::to_string(NK));
-        }
-        return s;
-    }
-
-    Value operator +(const Value& a) const
-    {
-        int v1 = VK;
-        int v2 = a.VK;
-        int n1 = (VK < 0) ? -NK : NK;
-        int n2 = (a.VK < 0) ? -a.NK : a.NK;
-        int v = v1 + v2;
-        int n = n1 + n2;
-        if (n >= 100)
-        {
-            n -= 100;
-            v += 1;
-        }
-        if (n <= -100)
-        {
-            n += 100;
-            v -= 1;
-        }
-        if (v >= 0 && n >= 0) return Value(v, n);
-        if (v < 0 && n <= 0) return Value(v, -n);
-        if (v == 0 && n < 0) return Value(v, n);
-        if (v > 0 && n < 0) return Value(v - 1, n + 100);
-
-        // v < 0 && n > 0
-        v += 1;
-        n = 100 - n;
-        if (v == 0) n *= -1;
-        return Value(v, n);
-    }
-
-    Value operator *(const int& x) const
-    {
-        if (x >= 0)
-        {
-            int y = NK * x;
-            return Value(VK * x + (y / 100), y % 100);
-        }
-        else
-        {
-            int y = (VK != 0) ? NK * x * (-1) : NK * x;
-            return Value(-(VK * (-x) + (y / 100)), y % 100);
-        }
-    }
-
-    Value operator *=(const int& x)
-    {
-        *this = *this * x;
-        return *this;
-    }
-
-    Value operator +=(const Value& x)
-    {
-        *this = *this + x;
-        return *this;
-    }
-
-    Value operator -(const Value& a) const
-    {
-        return *this + (a * (-1));
-    }
-
-    bool operator ==(const Value& a) const
-    {
-        return VK == a.VK && NK == a.NK;
-    }
-
-    bool operator !=(const Value& a) const
-    {
-        return !(*this == a);
-    }
-
-    bool operator <(const Value& a) const
-    {
-        if (VK < a.VK) return true;
-        if (VK == a.VK && NK < a.NK) return true;
-        return false;
-    }
-
-    bool operator <=(const Value& a) const
-    {
-        return (*this < a) || (*this == a);
-    }
-
-    bool operator >(const Value& a) const
-    {
-        return !(*this <= a);
-    }
-
-    bool operator >=(const Value& a) const
-    {
-        return !(*this < a);
-    }
-};
 
 //---------------------------------------------------------------------------------------------------------------------
 // Color-functions:
@@ -396,8 +288,9 @@ static QColor ConvertIntToQColor(const int& color)
 }
 
 // vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
-using TransactionVector = std::vector<std::tuple<int, std::string, Value, QDate, int, int>>;
-using AccountVector = std::vector<std::tuple<int, std::string, Value>>;
+using TransactionVector = std::vector<DataClasses::Transaction>;
+// TODO: Add data classes for Account, Label, StandingOrder
+using AccountVector = std::vector<std::tuple<int, std::string, DataClasses::Value>>;
 using LabelVector = std::vector<std::tuple<int, std::string, int>>;
-using StandingOrderVector = std::vector<std::tuple<int, int, int, Value, std::string, StandingOrderType, QDate>>;
+using StandingOrderVector = std::vector<std::tuple<int, int, int, DataClasses::Value, std::string, StandingOrderType, QDate>>;
 using ProfileVector = std::vector<std::pair<std::string, std::filesystem::path>>;

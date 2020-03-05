@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDialog>
@@ -70,6 +71,15 @@ public:
     QSpacerItem *verticalSpacer_3;
     QDateEdit *dateEditNextDate;
     QSpacerItem *verticalSpacer_4;
+    QWidget *widget_9;
+    QVBoxLayout *verticalLayout_7;
+    QGroupBox *groupBoxInternalTransaction;
+    QVBoxLayout *verticalLayout_6;
+    QCheckBox *checkBoxActivateInternalTransaction;
+    QWidget *widgetTargetAccount;
+    QHBoxLayout *horizontalLayout_9;
+    QLabel *lblTargetAccount;
+    QComboBox *comboBoxChooseTargetAccount;
     QWidget *widget_2;
     QHBoxLayout *horizontalLayout_3;
     QSpacerItem *horizontalSpacer_3;
@@ -193,7 +203,6 @@ public:
         font2.setBold(false);
         font2.setWeight(50);
         spinBoxVK->setFont(font2);
-        spinBoxVK->setMinimum(-999999999);
         spinBoxVK->setMaximum(999999999);
 
         horizontalLayout_2->addWidget(spinBoxVK);
@@ -301,6 +310,52 @@ public:
 
         verticalLayout->addWidget(widget_3);
 
+        widget_9 = new QWidget(AddStandingOrderWindow);
+        widget_9->setObjectName(QStringLiteral("widget_9"));
+        verticalLayout_7 = new QVBoxLayout(widget_9);
+        verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
+        groupBoxInternalTransaction = new QGroupBox(widget_9);
+        groupBoxInternalTransaction->setObjectName(QStringLiteral("groupBoxInternalTransaction"));
+        groupBoxInternalTransaction->setFont(font1);
+        verticalLayout_6 = new QVBoxLayout(groupBoxInternalTransaction);
+        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
+        checkBoxActivateInternalTransaction = new QCheckBox(groupBoxInternalTransaction);
+        checkBoxActivateInternalTransaction->setObjectName(QStringLiteral("checkBoxActivateInternalTransaction"));
+        checkBoxActivateInternalTransaction->setFont(font1);
+
+        verticalLayout_6->addWidget(checkBoxActivateInternalTransaction);
+
+        widgetTargetAccount = new QWidget(groupBoxInternalTransaction);
+        widgetTargetAccount->setObjectName(QStringLiteral("widgetTargetAccount"));
+        horizontalLayout_9 = new QHBoxLayout(widgetTargetAccount);
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        horizontalLayout_9->setContentsMargins(0, -1, 0, -1);
+        lblTargetAccount = new QLabel(widgetTargetAccount);
+        lblTargetAccount->setObjectName(QStringLiteral("lblTargetAccount"));
+        lblTargetAccount->setEnabled(false);
+        lblTargetAccount->setMaximumSize(QSize(160, 16777215));
+        lblTargetAccount->setFont(font);
+
+        horizontalLayout_9->addWidget(lblTargetAccount);
+
+        comboBoxChooseTargetAccount = new QComboBox(widgetTargetAccount);
+        comboBoxChooseTargetAccount->addItem(QString());
+        comboBoxChooseTargetAccount->setObjectName(QStringLiteral("comboBoxChooseTargetAccount"));
+        comboBoxChooseTargetAccount->setEnabled(false);
+        comboBoxChooseTargetAccount->setFont(font);
+        comboBoxChooseTargetAccount->setDuplicatesEnabled(true);
+
+        horizontalLayout_9->addWidget(comboBoxChooseTargetAccount);
+
+
+        verticalLayout_6->addWidget(widgetTargetAccount);
+
+
+        verticalLayout_7->addWidget(groupBoxInternalTransaction);
+
+
+        verticalLayout->addWidget(widget_9);
+
         widget_2 = new QWidget(AddStandingOrderWindow);
         widget_2->setObjectName(QStringLiteral("widget_2"));
         widget_2->setMaximumSize(QSize(16777215, 41));
@@ -353,6 +408,11 @@ public:
         lblType->setText(QApplication::translate("AddStandingOrderWindow", "Typ:", nullptr));
         groupBoxNextDate->setTitle(QApplication::translate("AddStandingOrderWindow", "N\303\244chste Ausf\303\274hrung:", nullptr));
         dateEditNextDate->setDisplayFormat(QApplication::translate("AddStandingOrderWindow", "dd MMMM yyyy", nullptr));
+        groupBoxInternalTransaction->setTitle(QApplication::translate("AddStandingOrderWindow", "Profilinterne Transaktion", nullptr));
+        checkBoxActivateInternalTransaction->setText(QApplication::translate("AddStandingOrderWindow", "Aktivieren", nullptr));
+        lblTargetAccount->setText(QApplication::translate("AddStandingOrderWindow", "Verbundenes Konto:", nullptr));
+        comboBoxChooseTargetAccount->setItemText(0, QApplication::translate("AddStandingOrderWindow", "Konto ausw\303\244hlen", nullptr));
+
         buttonAddOrder->setText(QApplication::translate("AddStandingOrderWindow", "Dauerauftrag hinzuf\303\274gen", nullptr));
         buttonCancel->setText(QApplication::translate("AddStandingOrderWindow", "Abbrechen", nullptr));
     } // retranslateUi

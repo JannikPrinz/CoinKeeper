@@ -14,7 +14,7 @@ enum class Options
     DB_Version = 1
 };
 
-static const int32_t LATEST_DB_VERSION = 2;
+static const int32_t LATEST_DB_VERSION = 3;
 
 /*        german characters, UTF-8 octal coded:
 -----------------------------------------------------------------------------
@@ -30,7 +30,8 @@ static const int32_t LATEST_DB_VERSION = 2;
 
 static const std::string DATABASE_FILETYPE = "ckdb";
 static const std::string ALTER_DB_FROM_VERSION_1_TO_2 = "PRAGMA foreign_keys = ON; ALTER TABLE Transactions ADD COLUMN ConnectedTransactionID INTEGER REFERENCES Transactions (TransactionID);";
-static const std::string CREATE_TABLES_OF_A_PROFILE = "PRAGMA foreign_keys = ON; CREATE TABLE IF NOT EXISTS Accounts (AccountID INTEGER PRIMARY KEY, Name TEXT, VK INTEGER, NK INTEGER); CREATE TABLE IF NOT EXISTS Labels (LabelID INTEGER PRIMARY KEY, Name TEXT, Color INTEGER); CREATE TABLE IF NOT EXISTS Transactions (TransactionID INTEGER PRIMARY KEY, Description TEXT, VK INTEGER, NK INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), ConnectedTransactionID INTEGER REFERENCES Transactions (TransactionID)); CREATE TABLE IF NOT EXISTS Options (OptionID INTEGER PRIMARY KEY, OptionValue TEXT); CREATE TABLE IF NOT EXISTS StandingOrders (OrderID INTEGER PRIMARY KEY, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), VK INTEGER, NK INTEGER, Description TEXT, OrderType INTEGER, NextDate INTEGER);";
+static const std::string ALTER_DB_FROM_VERSION_2_TO_3 = "PRAGMA foreign_keys = ON; ALTER TABLE StandingOrders ADD COLUMN ConnectedTransactionAccountID INTEGER REFERENCES Accounts (AccountID);";
+static const std::string CREATE_TABLES_OF_A_PROFILE = "PRAGMA foreign_keys = ON; CREATE TABLE IF NOT EXISTS Accounts (AccountID INTEGER PRIMARY KEY, Name TEXT, VK INTEGER, NK INTEGER); CREATE TABLE IF NOT EXISTS Labels (LabelID INTEGER PRIMARY KEY, Name TEXT, Color INTEGER); CREATE TABLE IF NOT EXISTS Transactions (TransactionID INTEGER PRIMARY KEY, Description TEXT, VK INTEGER, NK INTEGER, Day INTEGER, Month INTEGER, Year INTEGER, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), ConnectedTransactionID INTEGER REFERENCES Transactions (TransactionID)); CREATE TABLE IF NOT EXISTS Options (OptionID INTEGER PRIMARY KEY, OptionValue TEXT); CREATE TABLE IF NOT EXISTS StandingOrders (OrderID INTEGER PRIMARY KEY, AccountID INTEGER REFERENCES Accounts (AccountID), LabelID INTEGER REFERENCES Labels (LabelID), VK INTEGER, NK INTEGER, Description TEXT, OrderType INTEGER, NextDate INTEGER, ConnectedTransactionAccountID INTEGER REFERENCES Accounts (AccountID));";
 static const std::string INSERT_DEFAULT_VALUES = std::string("PRAGMA foreign_keys = ON; INSERT INTO Labels (LabelID, Name, Color) VALUES (1, \"Default\", -1); INSERT INTO Accounts (Name, VK, NK) VALUES (\"Bargeld\", 0, 0); INSERT INTO Options (OptionID, OptionValue) VALUES (") + std::to_string(static_cast<int32_t>(Options::DB_Version)) + ", \"" + std::to_string(LATEST_DB_VERSION) + "\");";
 static const std::string INSERT_NEW_ACCOUNT_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO Accounts (Name, VK, NK) VALUES (\"";
 static const std::string INSERT_NEW_ACCOUNT_PART_2 = "\", ";

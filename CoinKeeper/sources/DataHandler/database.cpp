@@ -652,6 +652,9 @@ namespace DataHandler
         case 1:
             ss << ALTER_DB_FROM_VERSION_1_TO_2;
             [[fallthrough]];
+        case 2:
+            ss << ALTER_DB_FROM_VERSION_2_TO_3;
+            [[fallthrough]];
         default:
             break;
         }

@@ -37,13 +37,14 @@ namespace DataHandler
         void UpdateStandingOrder(const int& orderID);
         void DeleteStandingOrder();
         void RefreshWindow();
+        void UpdateEnabledElements();
 
     private:
         std::shared_ptr<Database> database;
         AccountVector const& currentAccounts;
         LabelVector const& currentLabels;
         StandingOrderVector currentOrders;
-        std::unique_ptr<Ui::ManageStandingOrders> manageStandingOrders;
+        std::unique_ptr<Ui::ManageStandingOrders> manageStandingOrdersWindow;
         std::unique_ptr<Ui::AddStandingOrderWindow> addStandingOrderWindow;
     };
 }

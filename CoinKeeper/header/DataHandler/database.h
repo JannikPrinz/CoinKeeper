@@ -46,14 +46,16 @@ namespace DataHandler
          * This method creates a new standing order at the given profile with the given parameters.
          *
          * Parameters:
-         * std::string& description : description of the transactions
-         * int accountID            : ID of the account
-         * Value const& value       : value of the inserted transactions
-         * QDate const& date        : date of the next execution of the order
-         * int labelID              : id of the label, which all inserted transactions will get
-         * int orderType            : indentifier of the type of the standing order
+         * std::string description     : description of the transactions
+         * int32_t accountID           : ID of the account
+         * Value const& value          : value of the inserted transactions
+         * QDate const& date           : date of the next execution of the order
+         * int32_t labelID             : id of the label, which all inserted transactions will get
+         * StandingOrderType orderType : indentifier of the type of the standing order
+         * std::optional<int32_t>      : connected account id, if standing order is an internal transaction
          */
-        void CreateNewStandingOrder(std::string const& description, int accountID, DataClasses::Value const& value, QDate const& date, int labelID, int orderType);
+        void CreateNewStandingOrder(std::string const& description, int32_t accountID, DataClasses::Value const& value, QDate const& date,
+            int32_t labelID, DataClasses::StandingOrder::StandingOrderType orderType, std::optional<int32_t> const& connectedAccountId);
         /*
          * This method creates a new transaction at the given profile / account with the given description, value, labelID and date of the transaction.
          * Also the value of the account gets updated.
@@ -218,15 +220,9 @@ namespace DataHandler
          * This method updates an existing standing order at the given profile with the given parameters.
          *
          * Parameters:
-         * int orderID                    : id of the standing order
-         * std::string const& description : description of the transactions of the standing order
-         * int accountID                  : ID of the account
-         * Value const& value             : value of the transactions
-         * QDate const& nextDate          : date of the next inserted transaction
-         * int labelID                    : id of the label
-         * int orderType                  : type of the standing order
+         * StandingOrder standingOrder : standing order with the updated values
          */
-        void UpdateStandingOrder(int orderID, std::string const& description, int accountID, DataClasses::Value const& value, QDate const& nextDate, int labelID, int orderType);
+        void UpdateStandingOrder(StandingOrder const& standingOrder);
         /*
          * This method sets the next execution date of the specified standing order to the given date.
          *

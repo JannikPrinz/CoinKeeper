@@ -192,7 +192,7 @@ namespace DataHandler
 
             if (selectedTargetAccountIndex == 0) {
                 QMessageBox msg;
-                msg.setText(QString::fromStdString(TEXT_CHOOSE_CONNECTED_ACCOUNT_FOR_TRANSACTION));
+                msg.setText(QString::fromStdString(TEXT_CHOOSE_CONNECTED_ACCOUNT_FOR_INTERNAL_TRANSACTION));
                 msg.exec();
                 return;
             }

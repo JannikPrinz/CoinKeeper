@@ -3,10 +3,10 @@
 #include <filesystem>
 #include <string>
 #include <QColor>
-#include <qdatetime.h>
 #include <tuple>
 #include <vector>
 
+#include "DataClasses/standingorder.h"
 #include "DataClasses/transaction.h"
 
 enum class Options
@@ -44,12 +44,12 @@ static const std::string INSERT_NEW_TRANSACTION_PART_1 = "PRAGMA foreign_keys = 
 static const std::string INSERT_NEW_TRANSACTION_PART_2 = "\", ";
 static const std::string INSERT_NEW_TRANSACTION_PART_3_TO_8 = ", ";
 static const std::string INSERT_NEW_TRANSACTION_PART_9 = ");";
-static const std::string INSERT_NEW_STANDING_ORDER_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO StandingOrders (AccountID, LabelID, VK, NK, Description, OrderType, NextDate) VALUES (";
+static const std::string INSERT_NEW_STANDING_ORDER_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO StandingOrders (AccountID, LabelID, VK, NK, Description, OrderType, NextDate, ConnectedTransactionAccountID) VALUES (";
 static const std::string INSERT_NEW_STANDING_ORDER_PART_2_TO_4 = ", ";
 static const std::string INSERT_NEW_STANDING_ORDER_PART_5 = ", \"";
 static const std::string INSERT_NEW_STANDING_ORDER_PART_6 = "\", ";
-static const std::string INSERT_NEW_STANDING_ORDER_PART_7 = ", ";
-static const std::string INSERT_NEW_STANDING_ORDER_PART_8 = ");";
+static const std::string INSERT_NEW_STANDING_ORDER_PART_7_TO_8 = ", ";
+static const std::string INSERT_NEW_STANDING_ORDER_PART_9 = ");";
 static const std::string INSERT_NEW_LABEL_PART_1 = "PRAGMA foreign_keys = ON; INSERT INTO Labels (Name, Color) VALUES (\"";
 static const std::string INSERT_NEW_LABEL_PART_2 = "\", ";
 static const std::string INSERT_NEW_LABEL_PART_3 = ");";
@@ -115,8 +115,9 @@ static const std::string UPDATE_STANDING_ORDER_PART_4 = ", NK = ";
 static const std::string UPDATE_STANDING_ORDER_PART_5 = ", Description = \"";
 static const std::string UPDATE_STANDING_ORDER_PART_6 = "\", OrderType = ";
 static const std::string UPDATE_STANDING_ORDER_PART_7 = ", NextDate = ";
-static const std::string UPDATE_STANDING_ORDER_PART_8 = " WHERE OrderID IS ";
-static const std::string UPDATE_STANDING_ORDER_PART_9 = ";";
+static const std::string UPDATE_STANDING_ORDER_PART_8 = ", ConnectedTransactionAccountID = ";
+static const std::string UPDATE_STANDING_ORDER_PART_9 = " WHERE OrderID IS ";
+static const std::string UPDATE_STANDING_ORDER_PART_10 = ";";
 static const std::string UPDATE_STANDING_ORDER_DATE_PART_1 = "PRAGMA foreign_keys = ON; UPDATE StandingOrders SET NextDate = ";
 static const std::string UPDATE_STANDING_ORDER_DATE_PART_2 = " WHERE OrderID IS ";
 static const std::string UPDATE_STANDING_ORDER_DATE_PART_3 = ";";
@@ -151,6 +152,7 @@ static const std::string STANDING_ORDER_NK = "NK";
 static const std::string STANDING_ORDER_DESCRIPTION = "Description";
 static const std::string STANDING_ORDER_TYPE = "OrderType";
 static const std::string STANDING_ORDER_DATE = "NextDate";
+static const std::string STANDING_ORDER_CONNECTED_ACCOUNT = "ConnectedTransactionAccountID";
 static const std::string OPTION_VALUE = "OptionValue";
 static const std::string TEXT_ACCOUNT_NAME_NEEDED = "Bitte geben Sie einen Namen f\303\274r das Konto an.";
 static const std::string TEXT_ADDED_TRANSACTIONS_PART_1 = "Es wurden ";
@@ -164,7 +166,7 @@ static const std::string TEXT_CHANGE_TRANSACTION = "Transaktion \303\244ndern";
 static const std::string TEXT_CONFIRMATION_REMOVE_CONNECTED_ACCOUNT_ON_ACCOUNT_CHANGE_ON_TRANSACTION_CHANGE = "Bei dieser Transaktion besteht eine Verbindung zu einer anderen Transaktion. Da ein anderes Konto ausgew\303\244hlt ist, wird diese Verbindung entfernt.";
 static const std::string TEXT_CHOOSE_ACCOUNT_FOR_STANDING_ORDER = "Bitte w\303\244hlen Sie ein Konto aus, auf dem die Transaktionen des Dauerauftrags ausgef\303\274hrt werden soll.";
 static const std::string TEXT_CHOOSE_ACCOUNT_FOR_TRANSACTION = "Bitte w\303\244hlen Sie ein Konto aus, auf dem die Transaktion ausgef\303\274hrt werden soll.";
-static const std::string TEXT_CHOOSE_CONNECTED_ACCOUNT_FOR_TRANSACTION = "Bitte w\303\244hlen Sie ein verbundenes Konto aus, auf dem die entgegengesetzte Transaktion ausgef\303\274hrt werden soll.";
+static const std::string TEXT_CHOOSE_CONNECTED_ACCOUNT_FOR_INTERNAL_TRANSACTION = "Bitte w\303\244hlen Sie ein verbundenes Konto aus, auf dem die entgegengesetzte Transaktion ausgef\303\274hrt werden soll.";
 static const std::string TEXT_CHOOSE_COLOR = "Farbe ausw\303\244hlen";
 static const std::string TEXT_CREATE_NEW_LABEL = "Neue Kategorie erstellen";
 static const std::string TEXT_CREATE_NEW_PROFILE = "Neues Profil erstellen";
@@ -196,40 +198,6 @@ enum class Presenters
 {
     ProfileChooser, CoinKeeper
 };
-
-const int NUMBER_OF_STANDING_ORDER_TYPES = 6;
-enum class StandingOrderType
-{
-    EveryDay = 0, EveryWeek = 1, EveryMonth = 2, EveryQuarter = 3, Every4Months = 4, EveryYear = 5
-};
-
-static std::string GetStringFromStandingOrderType(StandingOrderType type)
-{
-    switch (type)
-    {
-    case StandingOrderType::EveryDay:
-        return TEXT_STANDING_ORDER_EVERY_DAY;
-        break;
-    case StandingOrderType::EveryWeek:
-        return TEXT_STANDING_ORDER_EVERY_WEEK;
-        break;
-    case StandingOrderType::EveryMonth:
-        return TEXT_STANDING_ORDER_EVERY_MONTH;
-        break;
-    case StandingOrderType::EveryQuarter:
-        return TEXT_STANDING_ORDER_EVERY_QUARTER;
-        break;
-    case StandingOrderType::Every4Months:
-        return TEXT_STANDING_ORDER_EVERY_4_MONTHS;
-        break;
-    case StandingOrderType::EveryYear:
-        return TEXT_STANDING_ORDER_EVERY_YEAR;
-        break;
-    default:
-        return "";
-        break;
-    }
-}
 
 //---------------------------------------------------------------------------------------------------------------------
 // Color-functions:
@@ -288,10 +256,9 @@ static QColor ConvertIntToQColor(const int& color)
     return QColor(r, g, b, a);
 }
 
-// vector of tuples with the id of the transaction, string with the description, Value, date, id of the account, id of the label
 using TransactionVector = std::vector<DataClasses::Transaction>;
-// TODO: Add data classes for Account, Label, StandingOrder
+// TODO: Add data classes for Account, Label
 using AccountVector = std::vector<std::tuple<int, std::string, DataClasses::Value>>;
 using LabelVector = std::vector<std::tuple<int, std::string, int>>;
-using StandingOrderVector = std::vector<std::tuple<int, int, int, DataClasses::Value, std::string, StandingOrderType, QDate>>;
+using StandingOrderVector = std::vector<DataClasses::StandingOrder>;
 using ProfileVector = std::vector<std::pair<std::string, std::filesystem::path>>;

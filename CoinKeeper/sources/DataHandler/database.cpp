@@ -11,6 +11,7 @@ namespace DataHandler
 {
     namespace fs = std::filesystem;
     using Value = DataClasses::Value;
+    using StandingOrder = DataClasses::StandingOrder;
 
     Database::Database(std::string const& profile) :
         openProfile(profile)
@@ -81,7 +82,8 @@ namespace DataHandler
         sqlite3_close(db);
     }
 
-    void Database::CreateNewStandingOrder(std::string const& description, int const accountID, Value const& value, QDate const& date, int const labelID, int const orderType)
+    void Database::CreateNewStandingOrder(std::string const& description, int32_t const accountID, Value const& value, QDate const& date, int32_t const labelID,
+        StandingOrder::StandingOrderType const orderType, std::optional<int32_t> const& connectedAccountId)
     {
         std::stringstream ss;
         ss << INSERT_NEW_STANDING_ORDER_PART_1;
@@ -95,10 +97,12 @@ namespace DataHandler
         ss << INSERT_NEW_STANDING_ORDER_PART_5;
         ss << description;
         ss << INSERT_NEW_STANDING_ORDER_PART_6;
-        ss << orderType;
-        ss << INSERT_NEW_STANDING_ORDER_PART_7;
+        ss << static_cast<int32_t>(orderType);
+        ss << INSERT_NEW_STANDING_ORDER_PART_7_TO_8;
         ss << (date.year() * 10000 + date.month() * 100 + date.day());
-        ss << INSERT_NEW_STANDING_ORDER_PART_8;
+        ss << INSERT_NEW_STANDING_ORDER_PART_7_TO_8;
+        ss << (connectedAccountId.has_value() ? std::to_string(connectedAccountId.value()) : "NULL");
+        ss << INSERT_NEW_STANDING_ORDER_PART_9;
 
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
@@ -387,7 +391,7 @@ namespace DataHandler
     {
         std::stringstream ss;
         ss << UPDATE_CONNECTED_TRANSACTION_PART_1;
-        ss << ((connectedTransactionID.has_value()) ? std::to_string(connectedTransactionID.value()) : "NULL");
+        ss << (connectedTransactionID.has_value() ? std::to_string(connectedTransactionID.value()) : "NULL");
         ss << UPDATE_CONNECTED_TRANSACTION_PART_2;
         ss << transactionID;
         ss << UPDATE_CONNECTED_TRANSACTION_PART_3;
@@ -421,27 +425,28 @@ namespace DataHandler
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
 
-    void Database::UpdateStandingOrder(int const orderID, std::string const& description, int const accountID,
-        Value const& value, QDate const& nextDate, int const labelID, int const orderType)
+    void Database::UpdateStandingOrder(StandingOrder const& standingOrder)
     {
         std::stringstream ss;
         ss << UPDATE_STANDING_ORDER_PART_1;
-        ss << accountID;
+        ss << standingOrder.AccountId;
         ss << UPDATE_STANDING_ORDER_PART_2;
-        ss << labelID;
+        ss << standingOrder.LabelId;
         ss << UPDATE_STANDING_ORDER_PART_3;
-        ss << value.VK;
+        ss << standingOrder.StandingOrderValue.VK;
         ss << UPDATE_STANDING_ORDER_PART_4;
-        ss << value.NK;
+        ss << standingOrder.StandingOrderValue.NK;
         ss << UPDATE_STANDING_ORDER_PART_5;
-        ss << description;
+        ss << standingOrder.Description;
         ss << UPDATE_STANDING_ORDER_PART_6;
-        ss << orderType;
+        ss << static_cast<int32_t>(standingOrder.Type);
         ss << UPDATE_STANDING_ORDER_PART_7;
-        ss << (nextDate.year() * 10000 + nextDate.month() * 100 + nextDate.day());
+        ss << (standingOrder.Date.year() * 10000 + standingOrder.Date.month() * 100 + standingOrder.Date.day());
         ss << UPDATE_STANDING_ORDER_PART_8;
-        ss << orderID;
+        ss << (standingOrder.ConnectedAccountId.has_value() ? std::to_string(standingOrder.ConnectedAccountId.value()) : "NULL");
         ss << UPDATE_STANDING_ORDER_PART_9;
+        ss << standingOrder.StandingOrderId;
+        ss << UPDATE_STANDING_ORDER_PART_10;
 
         ExecuteSQLStatementWithoutReturnValue(ss);
     }
@@ -567,11 +572,12 @@ namespace DataHandler
         CBF_GetStandingOrders = [](void* data, int argc, char** argv, char** azColName) {
             StandingOrderVector* orderPtr = static_cast<StandingOrderVector*>(data);
             int x = 0;
-            while (x + 7 < argc) {
+            while (x + 8 < argc) {
                 if (std::string(azColName[x]) == STANDING_ORDER_ID && std::string(azColName[x + 1]) == ACCOUNTS_ID &&
                     std::string(azColName[x + 2]) == LABEL_ID && std::string(azColName[x + 3]) == STANDING_ORDER_VK &&
                     std::string(azColName[x + 4]) == STANDING_ORDER_NK && std::string(azColName[x + 5]) == STANDING_ORDER_DESCRIPTION &&
-                    std::string(azColName[x + 6]) == STANDING_ORDER_TYPE && std::string(azColName[x + 7]) == STANDING_ORDER_DATE)
+                    std::string(azColName[x + 6]) == STANDING_ORDER_TYPE && std::string(azColName[x + 7]) == STANDING_ORDER_DATE &&
+                    std::string(azColName[x + 8]) == STANDING_ORDER_CONNECTED_ACCOUNT)
                 {
                     // convert int to date. (..YYYYMMDD)
                     int date = atoi(argv[x + 7]);
@@ -579,10 +585,16 @@ namespace DataHandler
                     date -= year * 10000;
                     int month = date / 100;
                     date -= month * 100;
-                    orderPtr->push_back(make_tuple(atoi(argv[x]), atoi(argv[x + 1]), atoi(argv[x + 2]), Value(atoi(argv[x + 3]),
-                        atoi(argv[x + 4])), std::string(argv[x + 5]), static_cast<StandingOrderType>(atoi(argv[x + 6])), QDate(year, month, date)));
+
+                    std::optional<int32_t> connectedAccountId = std::nullopt;
+                    if (argv[x + 8] != NULL) {
+                        connectedAccountId = atoi(argv[x + 8]);
+                    }
+
+                    orderPtr->push_back(StandingOrder(atoi(argv[x]), atoi(argv[x + 1]), atoi(argv[x + 2]), Value(atoi(argv[x + 3]), atoi(argv[x + 4])),
+                        std::string(argv[x + 5]), static_cast<StandingOrder::StandingOrderType>(atoi(argv[x + 6])), QDate(year, month, date), connectedAccountId));
                 }
-                x += 8;
+                x += 9;
             }
             return 0;
         };

@@ -167,6 +167,9 @@
     <ClCompile Include="sources\DataClasses\value.cpp">
       <Filter>Source Files\DataClasses</Filter>
     </ClCompile>
+    <ClCompile Include="sources\DataClasses\standingorder.cpp">
+      <Filter>Source Files\DataClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Form Files\addaccountwindow.ui">
@@ -262,6 +265,9 @@
       <Filter>Header Files\DataClasses</Filter>
     </ClInclude>
     <ClInclude Include="header\DataClasses\value.h">
+      <Filter>Header Files\DataClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="header\DataClasses\standingorder.h">
       <Filter>Header Files\DataClasses</Filter>
     </ClInclude>
   </ItemGroup>
